@@ -648,6 +648,143 @@
   .chat-sugg:hover { background:var(--blue); color:white; border-color:var(--blue); }
   .chat-disclaimer { font-size:11px; color:var(--gray-400); text-align:center; margin-top:8px; }
 
+
+  /* ── PASSWORD GATE ── */
+  #pwGate{position:fixed;inset:0;background:#0D1F3C;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:0}
+  .pw-box{background:white;border-radius:16px;padding:40px 44px;text-align:center;max-width:380px;width:90%}
+  .pw-logo{font-family:Georgia,serif;font-size:22px;color:#0D1F3C;margin-bottom:6px}
+  .pw-sub{font-size:13px;color:#6B7280;margin-bottom:28px}
+  .pw-input{width:100%;padding:11px 14px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;text-align:center;letter-spacing:0.1em;outline:none;margin-bottom:10px;transition:border 0.15s}
+  .pw-input:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+  .pw-btn{width:100%;padding:11px;background:#0D1F3C;color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.15s}
+  .pw-btn:hover{background:#1A3660}
+  .pw-error{font-size:12px;color:#DC2626;margin-top:6px;min-height:18px}
+  .pw-hint{font-size:11px;color:#9CA3AF;margin-top:16px}
+
+  /* ── DARK MODE ── */
+  body.dark{background:#111827;color:#F9FAFB}
+  body.dark .nav-bar{background:#1F2937;border-color:#374151}
+  body.dark .nav-tab{color:#9CA3AF}
+  body.dark .nav-tab.active{color:#93C5FD;border-bottom-color:#93C5FD}
+  body.dark .cover{background:#0D1F3C}
+  body.dark .card{background:#1F2937;border-color:#374151}
+  body.dark .card-body,.dark .section-intro,.dark .timeline-body,.dark .def-body{color:#D1D5DB}
+  body.dark .card-title,.dark .section-title,.dark .timeline-heading{color:#F9FAFB}
+  body.dark .accordion-item{background:#1F2937;border-color:#374151}
+  body.dark .accordion-term{color:#F9FAFB}
+  body.dark .accordion-body.open{background:#1F2937}
+  body.dark .accordion-plain{color:#D1D5DB}
+  body.dark .sh-card{background:#1F2937;border-color:#374151}
+  body.dark .sh-name{color:#F9FAFB}
+  body.dark .sh-desc{color:#D1D5DB}
+  body.dark .reg-layer{background:#1F2937}
+  body.dark .reg-item-name{color:#F9FAFB}
+  body.dark .reg-item-plain{color:#D1D5DB}
+  body.dark .tip-box{background:#1F2937;border-color:#6D28D9}
+  body.dark .two-col .card{background:#1F2937}
+  body.dark table tbody tr{background:#1F2937}
+  body.dark table tbody tr:nth-child(even){background:#111827}
+  body.dark .dt-question{background:#1F2937;border-color:#374151}
+  body.dark .dt-q-text{color:#F9FAFB}
+  body.dark .dt-no{background:#374151;color:#D1D5DB;border-color:#4B5563}
+  body.dark .br-content{background:#1F2937;border-color:#374151}
+  body.dark .br-heading{color:#F9FAFB}
+  body.dark .br-body,.dark .br-check{color:#D1D5DB}
+  body.dark .chat-wrap{background:#1F2937;border-color:#374151}
+  body.dark .chat-input{background:#111827;border-color:#374151;color:#F9FAFB}
+  body.dark .msg.assistant .msg-bubble{background:#374151;color:#F9FAFB}
+  body.dark .chat-input-area{background:#1F2937;border-color:#374151}
+  body.dark .search-box{background:#1F2937;border-color:#374151;color:#F9FAFB}
+  body.dark .filter-pill{background:#1F2937;border-color:#374151;color:#9CA3AF}
+  body.dark .filter-pill.active{background:#F9FAFB;color:#111827}
+  body.dark .week-card{background:#374151}
+  body.dark .week-title{color:#F9FAFB}
+  body.dark .week-items li{color:#D1D5DB}
+  body.dark .quiz-opt{background:#1F2937;border-color:#374151;color:#F9FAFB}
+  body.dark input[type=checkbox]{accent-color:#2563EB}
+  body.dark select{background:#1F2937;border-color:#374151;color:#F9FAFB}
+
+  /* ── DARK MODE TOGGLE ── */
+  .dark-toggle{position:fixed;bottom:20px;right:20px;width:42px;height:42px;border-radius:50%;border:1px solid var(--gray-200);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,0.12);transition:all 0.2s}
+  body.dark .dark-toggle{background:#374151;border-color:#4B5563}
+
+  /* ── MOBILE NAV ── */
+  .hamburger{display:none;padding:14px 16px;font-size:22px;cursor:pointer;background:none;border:none;color:var(--gray-600);flex-shrink:0}
+  .nav-drawer{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.5)}
+  .nav-drawer-inner{position:absolute;top:0;left:0;width:260px;height:100%;background:white;padding:20px 0;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,0.15)}
+  body.dark .nav-drawer-inner{background:#1F2937}
+  .nav-drawer-item{padding:12px 24px;font-size:14px;font-weight:500;cursor:pointer;color:var(--gray-600);display:flex;align-items:center;gap:10px}
+  .nav-drawer-item:hover,.nav-drawer-item.active{background:var(--blue-light);color:var(--blue)}
+  body.dark .nav-drawer-item:hover,body.dark .nav-drawer-item.active{background:#1E3A8A;color:#93C5FD}
+  .nav-drawer-close{position:absolute;top:12px;right:16px;font-size:22px;cursor:pointer;background:none;border:none;color:var(--gray-400)}
+  @media(max-width:680px){
+    .hamburger{display:flex;align-items:center}
+    .nav-bar .nav-tab{display:none}
+    .nav-drawer{display:block;pointer-events:none;opacity:0;transition:opacity 0.2s}
+    .nav-drawer.open{pointer-events:all;opacity:1}
+    .nav-drawer-inner{transform:translateX(-100%);transition:transform 0.25s}
+    .nav-drawer.open .nav-drawer-inner{transform:translateX(0)}
+  }
+
+  /* ── PROGRESS TRACKER ── */
+  .progress-bar-wrap{background:var(--gray-100);border-radius:20px;height:6px;margin-bottom:4px;overflow:hidden}
+  body.dark .progress-bar-wrap{background:#374151}
+  .progress-bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#2563EB,#1D9E75);transition:width 0.4s ease}
+  .progress-section{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--gray-100);cursor:pointer}
+  .progress-section:last-child{border-bottom:none}
+  .prog-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all 0.2s}
+  .prog-check.done{background:var(--green);border-color:var(--green);color:white}
+  .prog-label{font-size:13px;color:var(--gray-600);flex:1}
+  .prog-label.done{color:var(--green);font-weight:500}
+  body.dark .prog-label{color:#D1D5DB}
+
+  /* ── TOOLTIP ── */
+  .tt{position:relative;border-bottom:1px dashed var(--blue);color:var(--blue);cursor:help;display:inline}
+  .tt-pop{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0D1F3C;color:white;font-size:12px;line-height:1.5;padding:8px 12px;border-radius:8px;width:220px;z-index:300;pointer-events:none;opacity:0;transition:opacity 0.15s;white-space:normal;font-style:normal;font-weight:400}
+  .tt-pop::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0D1F3C}
+  .tt:hover .tt-pop{opacity:1}
+
+  /* ── READ TIME ── */
+  .read-time{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--gray-400);margin-top:6px}
+
+  /* ── NOTES ── */
+  .notes-area{width:100%;min-height:100px;padding:12px 14px;font-size:13px;font-family:var(--sans);border:1px solid var(--gray-200);border-radius:8px;background:var(--gray-50);color:var(--text);resize:vertical;outline:none;transition:border 0.15s;line-height:1.6}
+  body.dark .notes-area{background:#374151;border-color:#4B5563;color:#F9FAFB}
+  .notes-area:focus{border-color:var(--blue);background:white;box-shadow:0 0 0 3px rgba(37,99,235,0.08)}
+  body.dark .notes-area:focus{background:#1F2937}
+  .notes-saved{font-size:11px;color:var(--green);margin-top:4px;opacity:0;transition:opacity 0.3s}
+  .notes-saved.show{opacity:1}
+
+  /* ── CHANGELOG ── */
+  .changelog-item{display:flex;gap:14px;padding:10px 0;border-bottom:0.5px solid var(--gray-100)}
+  .changelog-item:last-child{border-bottom:none}
+  .changelog-date{font-size:11px;color:var(--gray-400);white-space:nowrap;min-width:80px;padding-top:2px}
+  .changelog-text{font-size:13px;color:var(--gray-600)}
+  .changelog-badge{display:inline-block;font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;margin-right:6px;text-transform:uppercase}
+
+  /* ── CERTIFICATE ── */
+  .cert-wrap{background:white;border:3px solid var(--navy);border-radius:16px;padding:40px;text-align:center;max-width:600px;margin:0 auto;position:relative;overflow:hidden}
+  .cert-wrap::before{content:'';position:absolute;inset:8px;border:1px solid var(--blue-mid);border-radius:10px;pointer-events:none}
+  .cert-eyebrow{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray-400);margin-bottom:12px}
+  .cert-title{font-family:Georgia,serif;font-size:28px;color:var(--navy);margin-bottom:8px}
+  .cert-name{font-family:Georgia,serif;font-size:22px;color:var(--blue);border-bottom:2px solid var(--blue-mid);display:inline-block;min-width:280px;padding-bottom:4px;margin:16px 0}
+  .cert-body{font-size:14px;color:var(--gray-600);line-height:1.7;margin-bottom:20px}
+  .cert-seal{font-size:48px;margin:10px 0}
+  .cert-date{font-size:12px;color:var(--gray-400)}
+  body.dark .cert-wrap{background:#1F2937;border-color:#374151}
+  body.dark .cert-title{color:#F9FAFB}
+
+  /* ── ORG CHART ── */
+  .org-wrap{overflow-x:auto;padding:10px 0}
+  .org-node{background:white;border:1px solid var(--gray-200);border-radius:10px;padding:10px 14px;text-align:center;min-width:120px;cursor:pointer;transition:all 0.15s;position:relative}
+  body.dark .org-node{background:#1F2937;border-color:#374151}
+  .org-node:hover{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
+  .org-node-title{font-size:12px;font-weight:600;color:var(--navy);margin-bottom:2px}
+  body.dark .org-node-title{color:#F9FAFB}
+  .org-node-sub{font-size:10px;color:var(--gray-400)}
+  .org-tooltip{display:none;position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#0D1F3C;color:white;font-size:12px;padding:8px 12px;border-radius:8px;width:200px;z-index:100;text-align:left;line-height:1.5}
+  .org-node:hover .org-tooltip{display:block}
+
 </style>
 </head>
 <body>
@@ -661,7 +798,8 @@
 </div>
 
 <!-- ══ NAV ══ -->
-<nav class="nav-bar" role="navigation">
+<nav class="nav-bar" role="navigation"><button class="hamburger" onclick="openDrawer()" aria-label="Menu">&#9776;</button>
+
   <div class="nav-tab active" onclick="showSection('welcome',this)">👋 Start Here</div>
   <div class="nav-tab" onclick="showSection('role',this)">Your Role</div>
   <div class="nav-tab" onclick="showSection('training',this)">90-Day Plan</div>
@@ -671,7 +809,37 @@
   <div class="nav-tab" onclick="showSection('quiz',this)">Knowledge Check</div>
   <div class="nav-tab" onclick="showSection('decisions',this)">🔀 Decision Tools</div>
   <div class="nav-tab" onclick="showSection('ask',this)">💬 Ask the Manual</div>
+  <div class="nav-tab" onclick="showSection('lifecycle',this)">🔄 Contract Lifecycle</div>
+  <div class="nav-tab" onclick="showSection('orgchart',this)">🏢 Org Chart</div>
+  <div class="nav-tab" onclick="showSection('quickref',this)">⚡ Quick Reference</div>
+  <div class="nav-tab" onclick="showSection('progress',this)">📊 My Progress</div>
 </nav>
+
+<button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+
+<div class="nav-drawer" id="navDrawer" onclick="closeDrawer(event)">
+  <div class="nav-drawer-inner">
+    <button class="nav-drawer-close" onclick="closeDrawer()" aria-label="Close">✕</button>
+    <div style="padding:20px 24px 16px;border-bottom:1px solid var(--gray-200)">
+      <div style="font-size:14px;font-weight:600;color:var(--navy)">CA Field Manual</div>
+      <div style="font-size:11px;color:var(--gray-400);margin-top:2px">Mary Washington Healthcare</div>
+    </div>
+    <div class="nav-drawer-item" onclick="showSection('welcome',this);closeDrawer()">👋 Start Here</div>
+    <div class="nav-drawer-item" onclick="showSection('role',this);closeDrawer()">📋 Your Role</div>
+    <div class="nav-drawer-item" onclick="showSection('training',this);closeDrawer()">📅 90-Day Plan</div>
+    <div class="nav-drawer-item" onclick="showSection('glossary',this);closeDrawer()">📖 Glossary</div>
+    <div class="nav-drawer-item" onclick="showSection('stakeholders',this);closeDrawer()">👥 Who You'll Work With</div>
+    <div class="nav-drawer-item" onclick="showSection('regulations',this);closeDrawer()">⚖️ Rules & Laws</div>
+    <div class="nav-drawer-item" onclick="showSection('quiz',this);closeDrawer()">✅ Knowledge Check</div>
+    <div class="nav-drawer-item" onclick="showSection('decisions',this);closeDrawer()">🔀 Decision Tools</div>
+    <div class="nav-drawer-item" onclick="showSection('ask',this);closeDrawer()">💬 Ask the Manual</div>
+    <div class="nav-drawer-item" onclick="showSection('lifecycle',this);closeDrawer()">🔄 Contract Lifecycle</div>
+    <div class="nav-drawer-item" onclick="showSection('orgchart',this);closeDrawer()">🏢 Org Chart</div>
+    <div class="nav-drawer-item" onclick="showSection('quickref',this);closeDrawer()">⚡ Quick Reference</div>
+    <div class="nav-drawer-item" onclick="showSection('progress',this);closeDrawer()">📊 My Progress</div>
+  </div>
+</div>
+
 
 <!-- ══════════════════════════════════════════ -->
 <!-- SECTION 1: WELCOME -->
@@ -1654,6 +1822,205 @@ function removeTyping(id) {
 }
 
 
+
+
+
+/* ══ PASSWORD GATE ══ */
+(function(){
+  const PW = 'MWHC2025';
+  const KEY = 'ca_auth';
+  if(sessionStorage.getItem(KEY)==='1') return;
+  const gate = document.createElement('div');
+  gate.id = 'pwGate';
+  gate.innerHTML = '<div class="pw-box"><div class="pw-logo">CA Field Manual</div><div class="pw-sub">Mary Washington Healthcare · Supply Chain</div><input class="pw-input" type="password" id="pwIn" placeholder="Enter access password" onkeydown="if(event.key===\'Enter\')checkPw()"><div class="pw-error" id="pwErr"></div><button class="pw-btn" onclick="checkPw()">Access Field Manual</button><div class="pw-hint">Contact your Supply Chain Director if you need the password.</div></div>';
+  document.body.prepend(gate);
+  window.checkPw = function(){
+    const v = document.getElementById('pwIn').value;
+    if(v===PW){sessionStorage.setItem(KEY,'1');document.getElementById('pwGate').remove();loadSavedNotes();}
+    else{const e=document.getElementById('pwErr');e.textContent='Incorrect password. Please try again.';document.getElementById('pwIn').value='';document.getElementById('pwIn').focus();}
+  };
+})();
+
+/* ══ DARK MODE ══ */
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const btn = document.querySelector('.dark-toggle');
+  btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  localStorage.setItem('ca_dark', document.body.classList.contains('dark') ? '1' : '0');
+}
+if(localStorage.getItem('ca_dark')==='1'){document.body.classList.add('dark');document.querySelector('.dark-toggle') && (document.querySelector('.dark-toggle').textContent='☀️');}
+
+/* ══ MOBILE NAV ══ */
+function openDrawer(){document.getElementById('navDrawer').classList.add('open');}
+function closeDrawer(e){if(!e||e.target===document.getElementById('navDrawer')||e.target.classList.contains('nav-drawer-close'))document.getElementById('navDrawer').classList.remove('open');}
+
+/* ══ NOTES ══ */
+function saveNote(key,val){
+  localStorage.setItem('ca_note_'+key,val);
+  const el=document.getElementById('note-saved-'+key);
+  if(el){el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1500);}
+}
+function loadSavedNotes(){
+  ['lifecycle','orgchart','contacts'].forEach(k=>{
+    const v=localStorage.getItem('ca_note_'+k);
+    const el=document.getElementById('notes-'+k);
+    if(v&&el)el.value=v;
+  });
+}
+document.addEventListener('DOMContentLoaded', loadSavedNotes);
+
+/* ══ CONTRACT LIFECYCLE DETAIL ══ */
+const LC_DATA = {
+  1:{title:'Stage 1 — Identify the Need',color:'#7F77DD',bg:'#EDE9FE',
+     what:'A department manager comes to you with a business need. Your job is to understand exactly what they need, why they need it, and define the scope before any procurement begins.',
+     you:'Meet with the manager. Ask: What is needed? By when? What budget? Who are potential vendors? Document the requirement clearly.',
+     risk:'Vague or incomplete scope at this stage causes problems throughout the entire lifecycle — scope creep, disputes, wrong vendor selection.'},
+  2:{title:'Stage 2 — Procure',color:'#1D9E75',bg:'#E1F5EE',
+     what:'You determine how to find and select the right vendor. Depending on what you need, this could be an RFI (research), RFQ (get prices), or RFP (get full proposals). Above certain dollar thresholds, competitive bidding is required.',
+     you:'Issue the appropriate solicitation. Evaluate responses. Select the vendor. Document your selection rationale.',
+     risk:'Skipping competitive bidding when required is a policy violation. Sole source justification must be documented before bypassing this stage.'},
+  3:{title:'Stage 3 — Draft',color:'#B45309',bg:'#FEF3C7',
+     what:'You write or negotiate the contract. This includes the SOW (what the vendor will do), T&Cs (the rules), pricing, timelines, and any special provisions required by law (like a BAA for HIPAA).',
+     you:'Use approved MWHC templates. Redline the vendor's contract if they send their version. Make sure all required clauses are present.',
+     risk:'Missing a BAA, inadequate indemnification, or accepting a vendor's limitation of liability that is too low are common drafting errors that create major exposure.'},
+  4:{title:'Stage 4 — Review',color:'#DC2626',bg:'#FEE2E2',
+     what:'The contract goes to Legal for language review, Compliance for regulatory check (HIPAA, Stark, AKS), Finance for financial terms, and Risk Management for insurance verification.',
+     you:'Route the contract following the DOA policy. Follow up to keep the review moving. Never pressure reviewers to skip steps.',
+     risk:'Bypassing any required review — especially Legal or Compliance — to save time is a serious error. It can result in an unenforceable contract or regulatory liability for the hospital.'},
+  5:{title:'Stage 5 — Approve & Sign',color:'#2563EB',bg:'#DBEAFE',
+     what:'Based on the contract value and risk level, the appropriate authority approves and signs the contract. Under $25K = Manager. Over $1M = CEO. Signatures must come from authorized signatories only.',
+     you:'Confirm the right person is signing based on the DOA policy. Ensure final executed copy is saved in the CMS.',
+     risk:'A contract signed by someone without authority is invalid. Always verify signatory authority before sending for signature.'},
+  6:{title:'Stage 6 — Execute & Kick Off',color:'#059669',bg:'#D1FAE5',
+     what:'The contract is now live. You host or facilitate a kickoff meeting with the vendor to align on expectations, key contacts, deliverable timelines, and how issues will be communicated.',
+     you:'Host kickoff. Send the vendor a kickoff summary email. Set your contract expiration reminder in the CMS. Ensure vendor credentialing is complete before work begins.',
+     risk:'Work starting without a kickoff means the vendor may not understand expectations — leading to early performance issues.'},
+  7:{title:'Stage 7 — Monitor, Audit & Renew',color:'#4B5563',bg:'#F3F4F6',
+     what:'Ongoing management of the contract. You track performance against the SOW, conduct periodic compliance audits, manage the vendor relationship, and prepare for renewal or closeout well before expiration.',
+     you:'Set 90/60/30-day renewal alerts. Conduct periodic performance reviews. Document any issues. Renew, renegotiate, or close out with deliberate intent.',
+     risk:'Letting contracts expire without a decision is one of the most common and costly mistakes. It creates service gaps, unprotected vendor relationships, and potential regulatory exposure.'}
+};
+
+function lcClick(n){
+  const d=LC_DATA[n];
+  const el=document.getElementById('lcDetail');
+  el.style.display='block';
+  el.innerHTML=`<div class="card" style="border-left:4px solid ${d.color};background:${d.bg}20;margin-top:4px">
+    <div style="font-size:16px;font-weight:600;color:${d.color};margin-bottom:12px">${d.title}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9CA3AF;margin-bottom:5px">What happens</div><div style="font-size:13px;color:var(--gray-600);line-height:1.6">${d.what}</div></div>
+      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9CA3AF;margin-bottom:5px">Your role</div><div style="font-size:13px;color:var(--gray-600);line-height:1.6">${d.you}</div></div>
+      <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#DC2626;margin-bottom:5px">Risk if skipped</div><div style="font-size:13px;color:var(--gray-600);line-height:1.6">${d.risk}</div></div>
+    </div>
+  </div>`;
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ══ PROGRESS TRACKER ══ */
+const PROG_ITEMS = {
+  'Phase 1 — Days 1–14: Orientation':[
+    'Meet your Supply Chain Director and team','Tour key departments','Review the organizational chart',
+    'Walk through the contract management system (CMS)','Read and understand the DOA policy',
+    'Shadow a senior admin on 3 live contracts','Review 5 executed contracts from different categories'
+  ],
+  'Phase 2 — Days 15–45: Core Skills':[
+    'Complete contract analysis training','Practice markup on 3 anonymized contracts',
+    'Meet with General Counsel for compliance overview','Draft a Statement of Work (SOW)',
+    'Learn the full template library','Understand RFI vs RFQ vs RFP','Run a mock RFP exercise',
+    'Complete negotiation role-play with trainer'
+  ],
+  'Phase 3 — Days 46–75: Applied Practice':[
+    'Manage first real contract (supervised)','Manage second real contract (supervised)',
+    'Meet with department managers and directors','Complete first vendor relationship meeting',
+    'Conduct first compliance audit (5 active contracts)','Present audit findings to supervisor'
+  ],
+  'Phase 4 — Days 76–90: Independence':[
+    'Manage full portfolio independently','Complete 90-day self-assessment',
+    'Set year-1 development goals','Build personal contract playbook',
+    'Review certification pathway with supervisor','Receive formal supervisor sign-off'
+  ]
+};
+
+const SIGNOFF_ITEMS = [
+  {label:'Day 30 Check-In',desc:'Supervisor confirms: understands org, contract lifecycle, and CMS basics'},
+  {label:'Day 60 Review',desc:'Supervisor confirms: has completed supervised contracts and core skills training'},
+  {label:'Day 90 Sign-Off',desc:'Supervisor confirms: operating independently and ready for full portfolio'},
+];
+
+function renderProgress(){
+  const container=document.getElementById('progressSections');
+  if(!container)return;
+  let html='';
+  let total=0,done=0;
+  Object.entries(PROG_ITEMS).forEach(([phase,items])=>{
+    const phaseKey=phase.replace(/\s+/g,'_');
+    html+=`<div style="margin-bottom:20px"><div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--gray-200)">${phase}</div>`;
+    items.forEach((item,i)=>{
+      const key=`prog_${phaseKey}_${i}`;
+      const checked=localStorage.getItem(key)==='1';
+      if(checked)done++;
+      total++;
+      html+=`<div class="progress-section" onclick="toggleProg('${key}',this)">
+        <div class="prog-check${checked?' done':''}"> ${checked?'✓':''}</div>
+        <div class="prog-label${checked?' done':''}">${item}</div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  container.innerHTML=html;
+  updateProgBar(done,total);
+
+  // Sign-off
+  const so=document.getElementById('signoffChecks');
+  if(so){
+    so.innerHTML=SIGNOFF_ITEMS.map((s,i)=>{
+      const key=`signoff_${i}`;
+      const checked=localStorage.getItem(key)==='1';
+      return `<div class="progress-section" onclick="toggleProg('${key}',this)">
+        <div class="prog-check${checked?' done':''}"> ${checked?'✓':''}</div>
+        <div style="flex:1"><div class="prog-label${checked?' done':''}" style="font-weight:500">${s.label}</div><div style="font-size:12px;color:var(--gray-400)">${s.desc}</div></div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function toggleProg(key,row){
+  const newVal=localStorage.getItem(key)==='1'?'0':'1';
+  localStorage.setItem(key,newVal);
+  const check=row.querySelector('.prog-check');
+  const label=row.querySelector('.prog-label');
+  if(newVal==='1'){check.classList.add('done');check.textContent='✓';if(label)label.classList.add('done');}
+  else{check.classList.remove('done');check.textContent='';if(label)label.classList.remove('done');}
+  let total=0,done=0;
+  Object.entries(PROG_ITEMS).forEach(([phase,items])=>{
+    const pk=phase.replace(/\s+/g,'_');
+    items.forEach((_,i)=>{total++;if(localStorage.getItem(`prog_${pk}_${i}`)==='1')done++;});
+  });
+  updateProgBar(done,total);
+}
+
+function updateProgBar(done,total){
+  const pct=total?Math.round(done/total*100):0;
+  const bar=document.getElementById('mainProgBar');
+  const pctEl=document.getElementById('progPct');
+  const cnt=document.getElementById('progCount');
+  if(bar)bar.style.width=pct+'%';
+  if(pctEl)pctEl.textContent=pct+'%';
+  if(cnt)cnt.textContent=done+' of '+total+' tasks completed';
+  const cert=document.getElementById('certSection');
+  if(cert)cert.style.display=pct>=100?'block':'none';
+}
+
+function setCertName(){
+  const n=document.getElementById('certNameInput').value.trim();
+  if(n){
+    document.getElementById('certName').textContent=n;
+    document.getElementById('certDate').textContent='Completed: '+new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  }
+}
+
+document.addEventListener('DOMContentLoaded', renderProgress);
+
 </script>
 
 <!-- ══════════════════════════════════════════ -->
@@ -2136,6 +2503,339 @@ function removeTyping(id) {
       </div>
       <div class="chat-disclaimer">Answers are generated by AI based on the content of this Field Manual. Always verify important decisions with your supervisor or Legal.</div>
     </div>
+  </div>
+</section>
+
+
+<!-- ══ CONTRACT LIFECYCLE ══ -->
+<section class="section" id="sec-lifecycle">
+  <div class="section-hero">
+    <div class="section-eyebrow">Contract Lifecycle</div>
+    <h2 class="section-title">The cradle-to-grave journey of every contract.</h2>
+    <p class="section-intro">Every contract you manage follows this path. Click any stage to understand what happens there, what your role is, and what can go wrong.</p>
+    <span class="read-time"><i class="ti ti-clock" aria-hidden="true"></i> ~6 min</span>
+  </div>
+  <div style="overflow-x:auto;padding:10px 0 20px">
+    <svg viewBox="0 0 820 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;font-family:var(--sans)">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#9CA3AF"/>
+        </marker>
+      </defs>
+      <!-- Stage boxes -->
+      <g id="lc1" class="lc-stage" onclick="lcClick(1)" style="cursor:pointer">
+        <rect x="10" y="60" width="100" height="60" rx="10" fill="#EDE9FE" stroke="#7F77DD" stroke-width="1.5"/>
+        <text x="60" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#3C3489">IDENTIFY</text>
+        <text x="60" y="100" text-anchor="middle" font-size="9" fill="#534AB7">Need &amp; Scope</text>
+        <text x="60" y="140" text-anchor="middle" font-size="9" fill="#7F77DD">Stage 1</text>
+      </g>
+      <line x1="110" y1="90" x2="128" y2="90" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arr)"/>
+      <g id="lc2" class="lc-stage" onclick="lcClick(2)" style="cursor:pointer">
+        <rect x="130" y="60" width="100" height="60" rx="10" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
+        <text x="180" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#085041">PROCURE</text>
+        <text x="180" y="100" text-anchor="middle" font-size="9" fill="#0F6E56">RFI / RFQ / RFP</text>
+        <text x="180" y="140" text-anchor="middle" font-size="9" fill="#1D9E75">Stage 2</text>
+      </g>
+      <line x1="230" y1="90" x2="248" y2="90" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arr)"/>
+      <g id="lc3" class="lc-stage" onclick="lcClick(3)" style="cursor:pointer">
+        <rect x="250" y="60" width="100" height="60" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="1.5"/>
+        <text x="300" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#78350F">DRAFT</text>
+        <text x="300" y="100" text-anchor="middle" font-size="9" fill="#B45309">Write &amp; Redline</text>
+        <text x="300" y="140" text-anchor="middle" font-size="9" fill="#B45309">Stage 3</text>
+      </g>
+      <line x1="350" y1="90" x2="368" y2="90" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arr)"/>
+      <g id="lc4" class="lc-stage" onclick="lcClick(4)" style="cursor:pointer">
+        <rect x="370" y="60" width="100" height="60" rx="10" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+        <text x="420" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#7F1D1D">REVIEW</text>
+        <text x="420" y="100" text-anchor="middle" font-size="9" fill="#DC2626">Legal &amp; Compliance</text>
+        <text x="420" y="140" text-anchor="middle" font-size="9" fill="#DC2626">Stage 4</text>
+      </g>
+      <line x1="470" y1="90" x2="488" y2="90" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arr)"/>
+      <g id="lc5" class="lc-stage" onclick="lcClick(5)" style="cursor:pointer">
+        <rect x="490" y="60" width="100" height="60" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/>
+        <text x="540" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#1E3A8A">APPROVE</text>
+        <text x="540" y="100" text-anchor="middle" font-size="9" fill="#1D4ED8">Route &amp; Sign</text>
+        <text x="540" y="140" text-anchor="middle" font-size="9" fill="#2563EB">Stage 5</text>
+      </g>
+      <line x1="590" y1="90" x2="608" y2="90" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arr)"/>
+      <g id="lc6" class="lc-stage" onclick="lcClick(6)" style="cursor:pointer">
+        <rect x="610" y="60" width="100" height="60" rx="10" fill="#D1FAE5" stroke="#059669" stroke-width="1.5"/>
+        <text x="660" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#064E3B">EXECUTE</text>
+        <text x="660" y="100" text-anchor="middle" font-size="9" fill="#065F46">Signed &amp; Live</text>
+        <text x="660" y="140" text-anchor="middle" font-size="9" fill="#059669">Stage 6</text>
+      </g>
+      <line x1="710" y1="90" x2="728" y2="90" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arr)"/>
+      <g id="lc7" class="lc-stage" onclick="lcClick(7)" style="cursor:pointer">
+        <rect x="730" y="60" width="80" height="60" rx="10" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+        <text x="770" y="85" text-anchor="middle" font-size="10" font-weight="600" fill="#1F2937">MONITOR</text>
+        <text x="770" y="100" text-anchor="middle" font-size="9" fill="#6B7280">Audit &amp; Track</text>
+        <text x="770" y="140" text-anchor="middle" font-size="9" fill="#6B7280">Stage 7</text>
+      </g>
+      <!-- Renewal loop arrow -->
+      <path d="M810,90 Q820,220 420,240 Q20,220 10,150" stroke="#9CA3AF" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+      <text x="420" y="270" text-anchor="middle" font-size="9" fill="#9CA3AF">Renew or close out at expiration</text>
+      <!-- Instruction -->
+      <text x="410" y="30" text-anchor="middle" font-size="11" fill="#6B7280">Click any stage to learn more</text>
+    </svg>
+  </div>
+  <div id="lcDetail" style="display:none"></div>
+  <div class="section-label" style="margin-top:24px">Notes for this section</div>
+  <textarea class="notes-area" id="notes-lifecycle" placeholder="Jot your thoughts, questions, or observations here…" oninput="saveNote('lifecycle',this.value)"></textarea>
+  <div class="notes-saved" id="note-saved-lifecycle">Saved ✓</div>
+</section>
+
+<!-- ══ ORG CHART ══ -->
+<section class="section" id="sec-orgchart">
+  <div class="section-hero">
+    <div class="section-eyebrow">Org Chart</div>
+    <h2 class="section-title">How everyone connects — and where you fit.</h2>
+    <p class="section-intro">Hover any box to see how that role relates to your daily work as a Contract Administrator.</p>
+    <span class="read-time"><i class="ti ti-clock" aria-hidden="true"></i> ~4 min</span>
+  </div>
+  <div class="org-wrap">
+    <svg viewBox="0 0 780 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;font-family:var(--sans)">
+      <!-- Lines -->
+      <line x1="390" y1="70" x2="390" y2="100" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="130" y1="100" x2="650" y2="100" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="130" y1="100" x2="130" y2="130" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="270" y1="100" x2="270" y2="130" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="390" y1="100" x2="390" y2="130" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="520" y1="100" x2="520" y2="130" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="650" y1="100" x2="650" y2="130" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="390" y1="210" x2="390" y2="250" stroke="#2563EB" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="200" y1="250" x2="580" y2="250" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="200" y1="250" x2="200" y2="280" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="390" y1="250" x2="390" y2="280" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="580" y1="250" x2="580" y2="280" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="390" y1="360" x2="390" y2="400" stroke="#9CA3AF" stroke-width="1.5"/>
+      <line x1="280" y1="400" x2="500" y2="400" stroke="#9CA3AF" stroke-width="1.5"/>
+      <line x1="280" y1="400" x2="280" y2="420" stroke="#9CA3AF" stroke-width="1.5"/>
+      <line x1="390" y1="400" x2="390" y2="420" stroke="#9CA3AF" stroke-width="1.5"/>
+      <line x1="500" y1="400" x2="500" y2="420" stroke="#9CA3AF" stroke-width="1.5"/>
+
+      <!-- CEO -->
+      <g>
+        <rect x="320" y="20" width="140" height="50" rx="8" fill="#0D1F3C"/>
+        <text x="390" y="42" text-anchor="middle" font-size="11" font-weight="600" fill="white">CEO / President</text>
+        <text x="390" y="58" text-anchor="middle" font-size="9" fill="#93C5FD">Signs contracts over $1M</text>
+      </g>
+      <!-- L2 -->
+      <g>
+        <rect x="70" y="130" width="120" height="50" rx="8" fill="#1A3660"/>
+        <text x="130" y="152" text-anchor="middle" font-size="10" font-weight="600" fill="white">CFO / Finance</text>
+        <text x="130" y="166" text-anchor="middle" font-size="9" fill="#93C5FD">$500K+ approvals</text>
+      </g>
+      <g>
+        <rect x="210" y="130" width="120" height="50" rx="8" fill="#1A3660"/>
+        <text x="270" y="152" text-anchor="middle" font-size="10" font-weight="600" fill="white">General Counsel</text>
+        <text x="270" y="166" text-anchor="middle" font-size="9" fill="#93C5FD">All legal review</text>
+      </g>
+      <g>
+        <rect x="330" y="130" width="120" height="50" rx="8" fill="#1A3660"/>
+        <text x="390" y="152" text-anchor="middle" font-size="10" font-weight="600" fill="white">Supply Chain VP</text>
+        <text x="390" y="166" text-anchor="middle" font-size="9" fill="#93C5FD">Your department head</text>
+      </g>
+      <g>
+        <rect x="460" y="130" width="120" height="50" rx="8" fill="#1A3660"/>
+        <text x="520" y="152" text-anchor="middle" font-size="10" font-weight="600" fill="white">Compliance</text>
+        <text x="520" y="166" text-anchor="middle" font-size="9" fill="#93C5FD">HIPAA / regulatory</text>
+      </g>
+      <g>
+        <rect x="590" y="130" width="120" height="50" rx="8" fill="#1A3660"/>
+        <text x="650" y="152" text-anchor="middle" font-size="10" font-weight="600" fill="white">Clinical Leadership</text>
+        <text x="650" y="166" text-anchor="middle" font-size="9" fill="#93C5FD">Clinical contracts</text>
+      </g>
+      <!-- Supply Chain Director -->
+      <g>
+        <rect x="320" y="210" width="140" height="50" rx="8" fill="#2563EB"/>
+        <text x="390" y="232" text-anchor="middle" font-size="11" font-weight="600" fill="white">Supply Chain Dir.</text>
+        <text x="390" y="247" text-anchor="middle" font-size="9" fill="#BFDBFE">Your direct manager</text>
+      </g>
+      <!-- YOU + peers -->
+      <g>
+        <rect x="130" y="280" width="140" height="55" rx="8" fill="#2563EB" stroke="#93C5FD" stroke-width="2.5"/>
+        <text x="200" y="303" text-anchor="middle" font-size="11" font-weight="700" fill="white">YOU</text>
+        <text x="200" y="318" text-anchor="middle" font-size="10" font-weight="500" fill="#BFDBFE">Contract Admin</text>
+        <text x="200" y="330" text-anchor="middle" font-size="9" fill="#93C5FD">$300M+ portfolio</text>
+      </g>
+      <g>
+        <rect x="320" y="280" width="140" height="55" rx="8" fill="#374151"/>
+        <text x="390" y="303" text-anchor="middle" font-size="10" font-weight="600" fill="white">Sr. Contract Admin</text>
+        <text x="390" y="318" text-anchor="middle" font-size="9" fill="#D1D5DB">Your mentor/peer</text>
+        <text x="390" y="330" text-anchor="middle" font-size="9" fill="#9CA3AF">Shadow in wk 1-2</text>
+      </g>
+      <g>
+        <rect x="510" y="280" width="140" height="55" rx="8" fill="#374151"/>
+        <text x="580" y="303" text-anchor="middle" font-size="10" font-weight="600" fill="white">Accounts Payable</text>
+        <text x="580" y="318" text-anchor="middle" font-size="9" fill="#D1D5DB">Executes payments</text>
+        <text x="580" y="330" text-anchor="middle" font-size="9" fill="#9CA3AF">Align on pay terms</text>
+      </g>
+      <!-- External -->
+      <g>
+        <rect x="220" y="420" width="120" height="45" rx="8" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1.5"/>
+        <text x="280" y="440" text-anchor="middle" font-size="10" font-weight="600" fill="#1F2937">Dept. Managers</text>
+        <text x="280" y="454" text-anchor="middle" font-size="9" fill="#6B7280">Your customers</text>
+      </g>
+      <g>
+        <rect x="350" y="420" width="120" height="45" rx="8" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1.5"/>
+        <text x="410" y="440" text-anchor="middle" font-size="10" font-weight="600" fill="#1F2937">Vendors</text>
+        <text x="410" y="454" text-anchor="middle" font-size="9" fill="#6B7280">Your counterparties</text>
+      </g>
+      <g>
+        <rect x="480" y="420" width="120" height="45" rx="8" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1.5"/>
+        <text x="540" y="440" text-anchor="middle" font-size="10" font-weight="600" fill="#1F2937">Risk Management</text>
+        <text x="540" y="454" text-anchor="middle" font-size="9" fill="#6B7280">Insurance review</text>
+      </g>
+      <!-- Legend -->
+      <rect x="10" y="440" width="12" height="12" rx="2" fill="#1A3660"/>
+      <text x="26" y="451" font-size="9" fill="#6B7280">Senior leadership</text>
+      <rect x="10" y="458" width="12" height="12" rx="2" fill="#2563EB"/>
+      <text x="26" y="469" font-size="9" fill="#6B7280">Your chain</text>
+      <line x1="10" y1="477" x2="22" y2="477" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <text x="26" y="480" font-size="9" fill="#6B7280">Daily partners</text>
+    </svg>
+  </div>
+  <div class="section-label">Notes for this section</div>
+  <textarea class="notes-area" id="notes-orgchart" placeholder="Jot names, phone numbers, or observations about key contacts…" oninput="saveNote('orgchart',this.value)"></textarea>
+  <div class="notes-saved" id="note-saved-orgchart">Saved ✓</div>
+</section>
+
+<!-- ══ QUICK REFERENCE ══ -->
+<section class="section" id="sec-quickref">
+  <div class="section-hero">
+    <div class="section-eyebrow">Quick Reference</div>
+    <h2 class="section-title">Everything you need in one place.</h2>
+    <p class="section-intro">Print this page and keep it at your desk. These are the things you'll look up most often in your first 90 days.</p>
+    <span class="read-time"><i class="ti ti-clock" aria-hidden="true"></i> ~2 min · <a href="#" onclick="window.print();return false" style="color:var(--blue);font-size:12px">🖨 Print this page</a></span>
+  </div>
+  <div class="two-col">
+    <div class="card" style="border-left:4px solid var(--navy)">
+      <div class="card-title" style="font-size:14px;margin-bottom:12px">⚡ Approval Thresholds</div>
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <tr style="background:var(--navy);color:white"><th style="padding:6px 8px;text-align:left;border-radius:4px 0 0 0">Value</th><th style="padding:6px 8px;text-align:left;border-radius:0 4px 0 0">Who Signs</th></tr>
+        <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 8px;font-weight:500">Under $25K</td><td style="padding:6px 8px;color:var(--gray-600)">Department Manager</td></tr>
+        <tr style="background:var(--gray-50);border-bottom:1px solid var(--gray-100)"><td style="padding:6px 8px;font-weight:500">$25K–$100K</td><td style="padding:6px 8px;color:var(--gray-600)">Director</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:6px 8px;font-weight:500">$100K–$500K</td><td style="padding:6px 8px;color:var(--gray-600)">VP + Legal</td></tr>
+        <tr style="background:var(--gray-50);border-bottom:1px solid var(--gray-100)"><td style="padding:6px 8px;font-weight:500">$500K–$1M</td><td style="padding:6px 8px;color:var(--gray-600)">CFO + Legal</td></tr>
+        <tr><td style="padding:6px 8px;font-weight:500">Over $1M</td><td style="padding:6px 8px;color:var(--gray-600)">CEO + CFO + Legal</td></tr>
+      </table>
+    </div>
+    <div class="card" style="border-left:4px solid var(--coral)">
+      <div class="card-title" style="font-size:14px;margin-bottom:12px">🚨 Breach Response Steps</div>
+      <ol style="list-style:none;counter-reset:breach;padding:0">
+        <li style="counter-increment:breach;display:flex;gap:8px;padding:5px 0;font-size:12px;color:var(--gray-600);border-bottom:1px solid var(--gray-100)"><span style="background:var(--coral);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">1</span>Document failure in writing — same day</li>
+        <li style="counter-increment:breach;display:flex;gap:8px;padding:5px 0;font-size:12px;color:var(--gray-600);border-bottom:1px solid var(--gray-100)"><span style="background:var(--coral);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">2</span>Notify vendor in writing, CC your director</li>
+        <li style="counter-increment:breach;display:flex;gap:8px;padding:5px 0;font-size:12px;color:var(--gray-600);border-bottom:1px solid var(--gray-100)"><span style="background:var(--coral);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">3</span>Check cure period (usually 10–30 days)</li>
+        <li style="counter-increment:breach;display:flex;gap:8px;padding:5px 0;font-size:12px;color:var(--gray-600);border-bottom:1px solid var(--gray-100)"><span style="background:var(--coral);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">4</span>Monitor — did they fix it?</li>
+        <li style="counter-increment:breach;display:flex;gap:8px;padding:5px 0;font-size:12px;color:var(--gray-600)"><span style="background:var(--coral);color:white;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">5</span>If not fixed → escalate to Legal. Never terminate verbally.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="two-col" style="margin-top:0">
+    <div class="card" style="border-left:4px solid var(--teal)">
+      <div class="card-title" style="font-size:14px;margin-bottom:12px">📋 RFI vs RFQ vs RFP</div>
+      <div style="font-size:12px;color:var(--gray-600)">
+        <div style="padding:6px 0;border-bottom:1px solid var(--gray-100)"><strong style="color:var(--teal)">RFI</strong> — Exploring the market. No commitment. "What's out there?"</div>
+        <div style="padding:6px 0;border-bottom:1px solid var(--gray-100)"><strong style="color:var(--teal)">RFQ</strong> — Know exactly what you need. Want prices. "How much?"</div>
+        <div style="padding:6px 0"><strong style="color:var(--teal)">RFP</strong> — Complex need. Evaluating solutions + price. "Show me how you'd do it."</div>
+      </div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--purple)">
+      <div class="card-title" style="font-size:14px;margin-bottom:12px">🔑 Top 10 Terms to Know Cold</div>
+      <div style="font-size:12px;color:var(--gray-600);columns:2;gap:12px">
+        <div style="padding:2px 0">BAA</div>
+        <div style="padding:2px 0">SOW</div>
+        <div style="padding:2px 0">Indemnification</div>
+        <div style="padding:2px 0">Cure Period</div>
+        <div style="padding:2px 0">DOA Policy</div>
+        <div style="padding:2px 0">Evergreen Clause</div>
+        <div style="padding:2px 0">Redline</div>
+        <div style="padding:2px 0">Stark Law</div>
+        <div style="padding:2px 0">Force Majeure</div>
+        <div style="padding:2px 0">IDIQ</div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:0;border-left:4px solid var(--amber)">
+    <div class="card-title" style="font-size:14px;margin-bottom:10px">☑️ Daily 5-Minute Checklist</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;font-size:12px;color:var(--gray-600)">
+      <div>☐ Contracts expiring in 90 days — any action needed?</div>
+      <div>☐ All today's activity entered in CMS?</div>
+      <div>☐ Any outstanding approvals to follow up?</div>
+      <div>☐ All requests responded to within 24 hours?</div>
+      <div>☐ Any risk or legal concerns to flag to supervisor?</div>
+      <div>☐ Any vendor performance issues to document?</div>
+    </div>
+  </div>
+  <div class="section-label" style="margin-top:20px">My Key Contacts (fill in your own)</div>
+  <div class="two-col">
+    <div class="card" style="padding:14px">
+      <textarea class="notes-area" id="notes-contacts" style="min-height:140px" placeholder="Supply Chain Director: &#10;General Counsel: &#10;Compliance Officer: &#10;IT Security contact: &#10;Risk Management: &#10;Accounts Payable:" oninput="saveNote('contacts',this.value)"></textarea>
+      <div class="notes-saved" id="note-saved-contacts">Saved ✓</div>
+    </div>
+    <div class="card" style="padding:14px">
+      <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">🚨 When to call Legal immediately</div>
+      <ul style="font-size:12px;color:var(--gray-600);padding-left:16px;line-height:2">
+        <li>Anything involving physician payments</li>
+        <li>Vendor touching PHI without a BAA</li>
+        <li>Contract with unusual or missing clauses</li>
+        <li>Vendor threatens to sue</li>
+        <li>You're unsure about any regulatory compliance</li>
+        <li>Termination is being considered</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MY PROGRESS ══ -->
+<section class="section" id="sec-progress">
+  <div class="section-hero">
+    <div class="section-eyebrow">My Progress</div>
+    <h2 class="section-title">Track your 90-day journey.</h2>
+    <p class="section-intro">Check off each item as you complete it. Your progress saves automatically so you can pick up where you left off.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:15px;font-weight:600;color:var(--navy)" id="progTitle">Overall Progress</div>
+      <div style="font-size:22px;font-weight:700;color:var(--blue)" id="progPct">0%</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="mainProgBar" style="width:0%"></div></div>
+    <div style="font-size:12px;color:var(--gray-400);margin-top:6px" id="progCount">0 of 0 tasks completed</div>
+  </div>
+
+  <div id="progressSections"></div>
+
+  <div id="certSection" style="display:none;margin-top:32px">
+    <div class="section-label">🎉 Congratulations — You've completed the Field Manual!</div>
+    <div class="cert-wrap" id="certWrap">
+      <div class="cert-eyebrow">Mary Washington Healthcare · Supply Chain Management</div>
+      <div class="cert-seal">🏅</div>
+      <div class="cert-title">Certificate of Completion</div>
+      <div style="font-size:13px;color:var(--gray-400);margin-bottom:4px">This certifies that</div>
+      <div class="cert-name" id="certName">——————————————</div>
+      <div class="cert-body">has successfully completed the Contract Administrator Field Manual onboarding program, demonstrating knowledge of contract administration principles, regulatory compliance, procurement procedures, and the policies of Mary Washington Healthcare.</div>
+      <div class="cert-date" id="certDate"></div>
+      <div style="margin-top:20px;display:flex;justify-content:center;gap:16px">
+        <input id="certNameInput" type="text" placeholder="Enter your name…" style="padding:8px 14px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;width:200px">
+        <button onclick="setCertName()" style="padding:8px 18px;background:var(--navy);color:white;border:none;border-radius:8px;font-size:13px;cursor:pointer">Add My Name</button>
+        <button onclick="window.print()" style="padding:8px 18px;background:white;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;cursor:pointer">🖨 Print</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:28px">📅 Supervisor Sign-Off Milestones</div>
+  <div class="card">
+    <div id="signoffChecks"></div>
+  </div>
+
+  <div class="section-label">Changelog — Last Updated</div>
+  <div class="card">
+    <div class="changelog-item"><div class="changelog-date">Jun 2025</div><div class="changelog-text"><span class="changelog-badge" style="background:#D1FAE5;color:#065F46">New</span>AI Ask the Manual chat assistant added</div></div>
+    <div class="changelog-item"><div class="changelog-date">Jun 2025</div><div class="changelog-text"><span class="changelog-badge" style="background:#D1FAE5;color:#065F46">New</span>Decision tools — 7 interactive flowcharts and calculators</div></div>
+    <div class="changelog-item"><div class="changelog-date">Jun 2025</div><div class="changelog-text"><span class="changelog-badge" style="background:#D1FAE5;color:#065F46">New</span>Progress tracker, dark mode, mobile navigation, org chart, lifecycle diagram</div></div>
+    <div class="changelog-item"><div class="changelog-date">Jun 2025</div><div class="changelog-text"><span class="changelog-badge" style="background:#DBEAFE;color:#1E3A8A">Update</span>Password protection added</div></div>
+    <div class="changelog-item"><div class="changelog-date">Jun 2025</div><div class="changelog-text"><span class="changelog-badge" style="background:#DBEAFE;color:#1E3A8A">Update</span>87-term glossary, 24 stakeholder profiles, 5-layer regulations</div></div>
   </div>
 </section>
 
