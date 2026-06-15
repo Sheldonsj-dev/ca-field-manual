@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contract Administrator Field Manual — Mary Washington Healthcare</title>
+<style>
+  :root {
+    --navy: #0D1F3C;
+    --navy-mid: #1A3660;
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-mid: #BFDBFE;
+    --teal: #0F766E;
+    --teal-light: #F0FDFA;
+    --amber: #B45309;
+    --amber-light: #FFFBEB;
+    --amber-mid: #FDE68A;
+    --coral: #DC2626;
+    --coral-light: #FEF2F2;
+    --purple: #6D28D9;
+    --purple-light: #F5F3FF;
+    --green: #15803D;
+    --green-light: #F0FDF4;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-400: #9CA3AF;
+    --gray-600: #4B5563;
+    --gray-800: #1F2937;
+    --text: #111827;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --mono: 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    background: var(--gray-50);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--navy);
+    color: white;
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 400px; height: 400px;
+    border: 60px solid rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border: 40px solid rgba(37,99,235,0.2);
+    border-radius: 50%;
+  }
+  .cover-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--blue-mid);
+    margin-bottom: 20px;
+    position: relative; z-index: 1;
+  }
+  .cover-title {
+    font-family: var(--serif);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: normal;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .cover-title em {
+    font-style: italic;
+    color: #93C5FD;
+  }
+  .cover-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    margin: 0 auto 40px;
+    position: relative; z-index: 1;
+  }
+  .cover-badge {
+    display: inline-block;
+    background: rgba(37,99,235,0.25);
+    border: 1px solid rgba(37,99,235,0.4);
+    color: #BFDBFE;
+    font-size: 13px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    position: relative; z-index: 1;
+  }
+
+  /* ── NAV ── */
+  .nav-bar {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    scrollbar-width: none;
+  }
+  .nav-bar::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-600);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── SECTIONS ── */
+  .section { display: none; max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+  .section.active { display: block; }
+
+  .section-hero {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: normal;
+    line-height: 1.25;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+  .section-intro {
+    font-size: 17px;
+    color: var(--gray-600);
+    max-width: 640px;
+    line-height: 1.7;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .card-body { font-size: 14px; color: var(--gray-600); line-height: 1.65; }
+  .card-analogy {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: var(--amber-light);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    color: #78350F;
+  }
+  .card-analogy strong { color: var(--amber); }
+  .card-remember {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--blue-light);
+    border-radius: 6px;
+    font-size: 13px;
+    color: #1E40AF;
+  }
+
+  /* ── TWO-COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── PHASE TIMELINE ── */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: var(--gray-200);
+  }
+  .timeline-item { position: relative; margin-bottom: 32px; }
+  .timeline-dot {
+    position: absolute;
+    left: -32px; top: 4px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+  }
+  .timeline-week {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 4px;
+  }
+  .timeline-heading {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .timeline-body { font-size: 14px; color: var(--gray-600); line-height: 1.65; }
+  .timeline-tasks {
+    margin-top: 10px;
+    list-style: none;
+  }
+  .timeline-tasks li {
+    font-size: 13px;
+    color: var(--gray-600);
+    padding: 4px 0;
+    padding-left: 18px;
+    position: relative;
+  }
+  .timeline-tasks li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gray-400);
+  }
+
+  /* ── ACCORDION ── */
+  .accordion-item {
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    background: white;
+  }
+  .accordion-head {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    user-select: none;
+  }
+  .accordion-head:hover { background: var(--gray-50); }
+  .accordion-head-left { display: flex; align-items: center; gap: 12px; }
+  .accordion-term { font-size: 15px; font-weight: 600; color: var(--navy); }
+  .accordion-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .accordion-chevron {
+    font-size: 18px;
+    color: var(--gray-400);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .accordion-chevron.open { transform: rotate(180deg); }
+  .accordion-body {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.2s;
+  }
+  .accordion-body.open { max-height: 600px; padding: 0 20px 20px; }
+  .accordion-plain { font-size: 14px; color: var(--gray-600); margin-bottom: 10px; line-height: 1.65; }
+  .accordion-example {
+    font-size: 13px;
+    padding: 10px 14px;
+    background: var(--green-light);
+    border-radius: 6px;
+    color: #14532D;
+  }
+
+  /* ── STAKEHOLDER GRID ── */
+  .sh-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .sh-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .sh-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .sh-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .sh-name { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .sh-role { font-size: 11px; color: var(--gray-400); }
+  .sh-desc { font-size: 13px; color: var(--gray-600); line-height: 1.55; }
+  .sh-heat {
+    margin-top: 8px;
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .heat-high { background: #FEE2E2; color: #991B1B; }
+  .heat-med  { background: #FEF3C7; color: #92400E; }
+  .heat-low  { background: #D1FAE5; color: #065F46; }
+
+  /* ── REG LAYERS ── */
+  .reg-layer {
+    border-left: 4px solid;
+    border-radius: 0 10px 10px 0;
+    background: white;
+    border-top: 1px solid var(--gray-200);
+    border-right: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .reg-layer-head {
+    padding: 14px 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    user-select: none;
+  }
+  .reg-layer-head:hover { background: var(--gray-50); }
+  .reg-layer-title { font-size: 15px; font-weight: 600; }
+  .reg-layer-sub { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+  .reg-layer-body { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s; }
+  .reg-layer-body.open { max-height: 2000px; padding: 0 20px 20px; }
+  .reg-item { padding: 12px 0; border-bottom: 1px solid var(--gray-100); }
+  .reg-item:last-child { border-bottom: none; }
+  .reg-item-name { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+  .reg-item-plain { font-size: 13px; color: var(--gray-600); line-height: 1.6; margin-bottom: 6px; }
+  .reg-item-impact {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    background: var(--coral-light);
+    color: #7F1D1D;
+  }
+  .reg-item-impact strong { color: var(--coral); }
+
+  /* ── QUIZ ── */
+  .quiz-q { margin-bottom: 28px; }
+  .quiz-q-text { font-size: 16px; font-weight: 600; color: var(--navy); margin-bottom: 14px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    padding: 12px 16px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    background: white;
+    text-align: left;
+    transition: all 0.15s;
+    color: var(--gray-800);
+  }
+  .quiz-opt:hover { border-color: var(--blue); background: var(--blue-light); }
+  .quiz-opt.correct { border-color: var(--green); background: var(--green-light); color: #14532D; font-weight: 500; }
+  .quiz-opt.wrong { border-color: var(--coral); background: var(--coral-light); color: #7F1D1D; }
+  .quiz-opt.disabled { cursor: default; pointer-events: none; }
+  .quiz-feedback {
+    margin-top: 10px;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    display: none;
+    line-height: 1.5;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: var(--green-light); color: #14532D; }
+  .quiz-feedback.wrong { background: var(--coral-light); color: #7F1D1D; }
+
+  /* ── UTILITY ── */
+  .tag-contract { background: #EDE9FE; color: #4C1D95; }
+  .tag-legal    { background: #FEE2E2; color: #7F1D1D; }
+  .tag-proc     { background: #D1FAE5; color: #064E3B; }
+  .tag-finance  { background: #FEF3C7; color: #78350F; }
+  .tag-risk     { background: #FCE7F3; color: #831843; }
+  .tag-process  { background: #DBEAFE; color: #1E3A8A; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+  .filter-pill {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--gray-200);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: white;
+    color: var(--gray-600);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .filter-pill.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  .search-box {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 14px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    background: white;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .search-box:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin: 28px 0 12px;
+  }
+
+  .tip-box {
+    background: var(--purple-light);
+    border-left: 3px solid var(--purple);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #4C1D95;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .tip-box strong { color: var(--purple); }
+
+  .checklist { list-style: none; }
+  .checklist li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 14px;
+    color: var(--gray-600);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '☐';
+    font-size: 16px;
+    color: var(--gray-400);
+    flex-shrink: 0;
+    margin-top: -1px;
+  }
+
+  .big-number { font-size: 42px; font-weight: 700; color: var(--navy); font-family: var(--serif); }
+  .big-label  { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-cell { background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 16px 20px; }
+
+  .divider { border: none; border-top: 1px solid var(--gray-200); margin: 32px 0; }
+
+  @media print {
+    .nav-bar { display: none; }
+    .section { display: block !important; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-eyebrow">Mary Washington Healthcare · Supply Chain Management</div>
+  <h1 class="cover-title">Your <em>Field Manual</em> as a<br>Contract Administrator</h1>
+  <p class="cover-sub">Everything you need to understand this role — explained plainly, with real-world examples, from day one through your first 90 days.</p>
+  <span class="cover-badge">New Employee Edition</span>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav class="nav-bar" role="navigation">
+  <div class="nav-tab active" onclick="showSection('welcome',this)">👋 Start Here</div>
+  <div class="nav-tab" onclick="showSection('role',this)">Your Role</div>
+  <div class="nav-tab" onclick="showSection('training',this)">90-Day Plan</div>
+  <div class="nav-tab" onclick="showSection('glossary',this)">Glossary</div>
+  <div class="nav-tab" onclick="showSection('stakeholders',this)">Who You'll Work With</div>
+  <div class="nav-tab" onclick="showSection('regulations',this)">Rules & Laws</div>
+  <div class="nav-tab" onclick="showSection('quiz',this)">Knowledge Check</div>
+</nav>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECTION 1: WELCOME -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section active" id="sec-welcome">
+  <div class="section-hero">
+    <div class="section-eyebrow">Start Here</div>
+    <h2 class="section-title">Welcome to one of the most important jobs in the hospital.</h2>
+    <p class="section-intro">You might not know it yet, but the contracts you manage keep this hospital running — the equipment doctors use, the software nurses rely on, the services that keep the building clean and safe. This guide explains everything in plain English.</p>
+  </div>
+
+  <div class="tip-box">
+    <strong>How to use this guide:</strong> Read each tab in order your first week. Then use it as a reference — the glossary and "Who You'll Work With" tabs are especially useful to bookmark and revisit throughout your first 90 days.
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-cell">
+      <div class="big-number">$300M+</div>
+      <div class="big-label">Value of contracts you'll oversee</div>
+    </div>
+    <div class="stat-cell">
+      <div class="big-number">87</div>
+      <div class="big-label">Key terms in your glossary</div>
+    </div>
+    <div class="stat-cell">
+      <div class="big-number">24</div>
+      <div class="big-label">Different stakeholders you'll partner with</div>
+    </div>
+    <div class="stat-cell">
+      <div class="big-number">90</div>
+      <div class="big-label">Days to become fully independent</div>
+    </div>
+  </div>
+
+  <div class="section-label">The Big Picture — What Is This Job, Really?</div>
+
+  <div class="card">
+    <div class="card-title">
+      <div class="card-icon" style="background:#EFF6FF">🏥</div>
+      Think of yourself as the hospital's deal-maker and deal-keeper
+    </div>
+    <div class="card-body">Every time the hospital needs something from an outside company — a new MRI machine, a cleaning service, a software system, a staffing agency — someone has to write up the agreement that protects the hospital. That's you. You make sure every deal is fair, legal, clearly written, and then followed through on. When a vendor doesn't do what they promised, you're the one who holds them accountable.</div>
+    <div class="card-analogy"><strong>Real-world analogy:</strong> Think about buying a house. There's a contract that says the seller will fix the roof before closing. The contract administrator is the person who makes sure that contract says exactly the right thing, gets signed by the right people, and that the roof actually gets fixed — or takes action if it doesn't.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <div class="card-icon" style="background:#F0FDF4">⚖️</div>
+      Why does this role exist in a hospital specifically?
+    </div>
+    <div class="card-body">Hospitals are unlike most businesses. They receive federal money (Medicare and Medicaid), they handle people's private health information, and they're held to strict safety and quality standards. One poorly written contract — or a missing clause — can expose the hospital to millions of dollars in fines, lawsuits, or even loss of its Medicare funding. This role exists to prevent that from ever happening.</div>
+    <div class="card-analogy"><strong>Real-world analogy:</strong> A regular business might sign a simple deal with a cleaning company on a handshake. A hospital can't do that — there are federal laws that require the cleaning company to protect patient privacy, follow safety protocols, and prove they're insured. Your job is to make all of that happen in writing.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <div class="card-icon" style="background:#FFFBEB">📋</div>
+      What does a typical day look like?
+    </div>
+    <div class="card-body">No two days are exactly alike, but you'll generally be doing one or more of these things: reviewing a contract a vendor sent over and marking up the parts that need to change; helping a department manager put into words exactly what they need from a supplier; negotiating terms with a vendor's legal team; routing a contract through the approval process; tracking which contracts are about to expire; or auditing whether vendors are actually doing what their contracts say.</div>
+    <div class="card-remember">💡 <strong>Remember:</strong> You are not working alone. You have legal counsel, finance, compliance, and your Supply Chain director all backing you up. Your job is to coordinate and drive — not to know everything yourself from day one.</div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECTION 2: ROLE -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-role">
+  <div class="section-hero">
+    <div class="section-eyebrow">Your Role</div>
+    <h2 class="section-title">What you actually do — broken down simply.</h2>
+    <p class="section-intro">Your job description uses a lot of big words. Here's what each responsibility actually means in practice.</p>
+  </div>
+
+  <div class="section-label">Core Responsibilities — Plain English</div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon" style="background:#EDE9FE">📝</div>Making Sure Every Deal Has a Contract</div>
+    <div class="card-body">You are responsible for making sure that every time the hospital buys something or hires a company to do something, there is a written contract in place before work starts. No verbal agreements, no handshakes, no "we'll figure it out." Everything in writing.</div>
+    <div class="card-analogy"><strong>Think of it like this:</strong> Before a contractor comes to renovate your kitchen, you'd want a written contract that says exactly what they'll do, when they'll finish, how much it costs, and what happens if they do it wrong. You do the same thing — but for a $300M portfolio of deals.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon" style="background:#D1FAE5">🔍</div>Reading and Analyzing Contracts</div>
+    <div class="card-body">Vendors often send their own contracts written to favor themselves. Your job is to read those contracts carefully, spot anything that's unfair or legally risky for the hospital, and flag or change those terms before anyone signs. You look for things like: who is responsible if something goes wrong? What does the vendor promise to deliver? What happens if they don't? Can the hospital get out of the deal if needed?</div>
+    <div class="card-analogy"><strong>Think of it like this:</strong> Like reading the fine print before you sign a phone contract — except the stakes are millions of dollars and federal compliance, not a two-year phone plan.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon" style="background:#FEF3C7">🤝</div>Negotiating</div>
+    <div class="card-body">Contracts are not take-it-or-leave-it. You negotiate. That means going back to the vendor and saying "we need this clause changed" or "that price isn't acceptable" or "we need a 30-day out clause in case this doesn't work." You prepare a strategy before every negotiation, know what the hospital's must-haves are, and push for the best deal possible.</div>
+    <div class="card-analogy"><strong>Think of it like this:</strong> Buying a car. The sticker price isn't the final price. You know what you want, what you'll pay, and what you'll walk away from. That's negotiation — and you do it for contracts worth hundreds of thousands of dollars.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon" style="background:#FEE2E2">📬</div>Routing for Approval</div>
+    <div class="card-body">Once a contract is drafted and negotiated, it can't just be signed by anyone. Depending on the dollar value and risk level, it has to go through specific people for review and approval — legal, finance, a VP, maybe the CEO. You manage this process, make sure the right eyes see it, and nothing slips through without proper sign-off.</div>
+    <div class="card-analogy"><strong>Think of it like this:</strong> A big purchase at a company has to go through a chain of approvals. Under $500? A manager can approve it. Over $50,000? It needs the CFO. You know the exact rules and make sure every contract follows them.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon" style="background:#DBEAFE">📊</div>Managing the Portfolio</div>
+    <div class="card-body">Once contracts are signed, they don't disappear. You track every active contract in a contract management system — when it expires, when it needs to be renewed, whether the vendor is delivering what they promised. Think of it like managing a filing system, except the files are worth hundreds of millions of dollars and missing a renewal deadline can mean the hospital loses a critical service overnight.</div>
+    <div class="card-remember">💡 <strong>Key habit to build:</strong> Set calendar reminders 90, 60, and 30 days before every contract expires. Never let a contract lapse without a decision to renew, renegotiate, or end it.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="card-icon" style="background:#F0FDF4">🔎</div>Auditing and Compliance Checks</div>
+    <div class="card-body">Periodically, you review active contracts to make sure both sides are doing what they promised. Is the vendor hitting their service levels? Is the hospital fulfilling its payment obligations? Are there any regulatory changes that now affect the terms? This is how you catch problems early before they become expensive disputes.</div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECTION 3: 90-DAY TRAINING PLAN -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-training">
+  <div class="section-hero">
+    <div class="section-eyebrow">90-Day Plan</div>
+    <h2 class="section-title">Your first three months, week by week.</h2>
+    <p class="section-intro">You won't be expected to know everything on day one. Here's the path from "I just started" to "I've got this."</p>
+  </div>
+
+  <div class="tip-box"><strong>The golden rule of your first 90 days:</strong> Ask questions before you act, and document everything. There's no such thing as a stupid question here — a wrong assumption on a $500,000 contract is far more costly than looking like a beginner.</div>
+
+  <div class="section-label">Phase 1 — Days 1 to 14: Understand the World You're In</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--purple)">1</div>
+      <div class="timeline-week">Week 1</div>
+      <div class="timeline-heading">Learn the organization</div>
+      <div class="timeline-body">Before you can protect the hospital through contracts, you need to understand how it works. Who are the key people? How does Supply Chain fit in? What kinds of things does the hospital buy and from whom?</div>
+      <ul class="timeline-tasks">
+        <li>Meet your Supply Chain director and key team members</li>
+        <li>Tour the departments you'll be contracting for</li>
+        <li>Review the organizational chart — understand who reports to whom</li>
+        <li>Learn the $300M+ contract portfolio at a high level — what categories exist?</li>
+        <li>Walk through the contract management system (CMS) with your supervisor</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--purple)">2</div>
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-heading">Shadow and observe real contracts</div>
+      <div class="timeline-body">The best way to learn contracts is to see them in action. Follow a senior administrator through at least 3 live contracts from start to finish. Take notes. Ask "why" at every step.</div>
+      <ul class="timeline-tasks">
+        <li>Shadow a contract from RFP through execution</li>
+        <li>Read 5 executed contracts from different categories</li>
+        <li>Learn the difference between an agreement and a contract</li>
+        <li>Review the delegation of authority (DOA) policy — who can approve what</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Phase 2 — Days 15 to 45: Learn the Mechanics</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--teal)">3</div>
+      <div class="timeline-week">Week 3</div>
+      <div class="timeline-heading">How to read and analyze a contract</div>
+      <div class="timeline-body">Learn the language. Practice spotting red flags — the clauses that put the hospital at risk — in real anonymized contracts.</div>
+      <ul class="timeline-tasks">
+        <li>Learn the standard sections of a contract and what each one covers</li>
+        <li>Practice markup on 3 real anonymized contracts using the red flag checklist</li>
+        <li>Meet with General Counsel for a 1-hour compliance overview</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--teal)">4</div>
+      <div class="timeline-week">Week 4</div>
+      <div class="timeline-heading">Drafting — writing your first contracts</div>
+      <div class="timeline-body">You'll learn to use the hospital's contract templates and understand when a custom clause is needed. You'll draft your first Statement of Work.</div>
+      <ul class="timeline-tasks">
+        <li>Deep dive into the template library — what exists and when to use each</li>
+        <li>Draft a Statement of Work (SOW) for a real or hypothetical scenario</li>
+        <li>Peer review with senior admin — get feedback</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--teal)">5</div>
+      <div class="timeline-week">Week 5</div>
+      <div class="timeline-heading">Procurement — how to find and select vendors</div>
+      <div class="timeline-body">Learn the RFI, RFQ, and RFP process — the formal ways the hospital solicits and evaluates vendors before signing a deal.</div>
+      <ul class="timeline-tasks">
+        <li>Understand when to use RFI vs. RFQ vs. RFP</li>
+        <li>Run a mock RFP from start to finish</li>
+        <li>Learn risk assessment and contract type selection</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--teal)">6</div>
+      <div class="timeline-week">Week 6</div>
+      <div class="timeline-heading">Negotiation — your most powerful skill</div>
+      <div class="timeline-body">Practice negotiation through role-play scenarios. Learn how to handle pushback, protect must-have terms, and build relationships with vendors while still holding firm.</div>
+      <ul class="timeline-tasks">
+        <li>Learn the hospital's negotiation framework and strategy approach</li>
+        <li>Role-play 3 supplier pushback scenarios with your trainer</li>
+        <li>Debrief after each — what worked, what would you change?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label">Phase 3 — Days 46 to 75: Do Real Work With Support</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--amber)">7</div>
+      <div class="timeline-week">Weeks 7 & 8</div>
+      <div class="timeline-heading">Your first real contracts</div>
+      <div class="timeline-body">You'll be assigned 2-3 real contracts to manage from start to finish — with your supervisor reviewing each step. You make the decisions; they coach you through them.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--amber)">8</div>
+      <div class="timeline-week">Weeks 9 & 10</div>
+      <div class="timeline-heading">Stakeholder management</div>
+      <div class="timeline-body">Start building your relationships — meet with department managers, directors, and vendor account managers. Learn how to manage competing priorities and resolve conflicts professionally.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--amber)">9</div>
+      <div class="timeline-week">Week 11</div>
+      <div class="timeline-heading">Your first compliance audit</div>
+      <div class="timeline-body">Review 5 active contracts against their terms. Are vendors performing? Are there any regulatory gaps? Present your findings to your supervisor.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Phase 4 — Days 76 to 90: Own It</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--coral)">10</div>
+      <div class="timeline-week">Weeks 12 & 13</div>
+      <div class="timeline-heading">Full independence</div>
+      <div class="timeline-body">By now, you manage your portfolio independently. Your supervisor is a resource, not a reviewer. You complete your 90-day self-assessment, set your year-one goals, and present your personal contract playbook — a reference binder you've built throughout training.</div>
+    </div>
+  </div>
+
+  <div class="section-label">End-of-Day Habit — Your Daily 5-Minute Check</div>
+  <ul class="checklist">
+    <li>Are there any contracts expiring in the next 90 days that need action?</li>
+    <li>Did I enter all today's activity into the contract management system?</li>
+    <li>Are there any outstanding approvals I need to follow up on?</li>
+    <li>Did I respond to all internal customer and vendor requests within 24 hours?</li>
+    <li>Is anything I'm working on creating risk for the hospital that I haven't flagged to my supervisor?</li>
+  </ul>
+
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECTION 4: GLOSSARY -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-glossary">
+  <div class="section-hero">
+    <div class="section-eyebrow">Glossary</div>
+    <h2 class="section-title">Every term you'll hear — explained plainly.</h2>
+    <p class="section-intro">This is your vocabulary guide. Every term has a plain-English explanation and a real-life example. Search by keyword or filter by category.</p>
+  </div>
+
+  <input class="search-box" type="text" placeholder="Search any term or keyword…" oninput="filterGlossary(this.value)" id="glSearch">
+
+  <div class="pill-row" id="glFilters">
+    <span class="filter-pill active" data-cat="all" onclick="setGlCat('all',this)">All</span>
+    <span class="filter-pill" data-cat="contract" onclick="setGlCat('contract',this)">Contract</span>
+    <span class="filter-pill" data-cat="legal" onclick="setGlCat('legal',this)">Legal</span>
+    <span class="filter-pill" data-cat="proc" onclick="setGlCat('proc',this)">Procurement</span>
+    <span class="filter-pill" data-cat="finance" onclick="setGlCat('finance',this)">Finance</span>
+    <span class="filter-pill" data-cat="risk" onclick="setGlCat('risk',this)">Risk</span>
+    <span class="filter-pill" data-cat="process" onclick="setGlCat('process',this)">Process</span>
+  </div>
+
+  <div id="glossaryItems"></div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECTION 5: STAKEHOLDERS -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-stakeholders">
+  <div class="section-hero">
+    <div class="section-eyebrow">Who You'll Work With</div>
+    <h2 class="section-title">Your network — and how each person fits in.</h2>
+    <p class="section-intro">You'll work with a wide range of people inside and outside the hospital. Here's who they are, what they care about, and how you'll interact with them.</p>
+  </div>
+
+  <div class="tip-box"><strong>A key mindset shift:</strong> Think of every person on this page as a customer or a partner — not an obstacle. The department manager wants their vendor relationship to work. Legal wants to protect the hospital. Finance wants value. Your job is to make all of them feel heard and served through great contract work.</div>
+
+  <div class="section-label">Inside the Hospital — People You'll Work With Every Day</div>
+  <div class="sh-grid" id="sh-internal-high"></div>
+
+  <div class="section-label">Inside the Hospital — Regular Partners</div>
+  <div class="sh-grid" id="sh-internal-med"></div>
+
+  <div class="section-label">Outside the Hospital — Vendors and External Partners</div>
+  <div class="sh-grid" id="sh-external"></div>
+
+  <div class="section-label">Regulatory Bodies — The Rules They Set Affect Every Contract</div>
+  <div class="sh-grid" id="sh-regulatory"></div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECTION 6: REGULATIONS -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-regulations">
+  <div class="section-hero">
+    <div class="section-eyebrow">Rules & Laws</div>
+    <h2 class="section-title">Where all the rules come from — and why they matter to you.</h2>
+    <p class="section-intro">Healthcare contracting has more rules than almost any other industry. Here's why — and where every rule originates. Think of it as five layers, each one adding more obligations.</p>
+  </div>
+
+  <div class="tip-box"><strong>The key insight:</strong> You don't need to be a lawyer. But you need to know enough to recognize when something in a contract might violate one of these rules — and know to call Legal before you proceed. When in doubt, escalate.</div>
+
+  <div class="card" style="margin-bottom:28px">
+    <div class="card-title"><div class="card-icon" style="background:#EFF6FF">🏛️</div>The 5-Layer Stack — How Rules Are Built</div>
+    <div class="card-body" style="margin-bottom:12px">Think of the regulatory system like a stack of filters. Every contract has to pass through all five layers before it's truly compliant:</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="padding:8px 14px;background:#0D1F3C;color:white;border-radius:6px;font-size:13px;font-weight:600">① U.S. Federal Laws — Congress passes these. They apply everywhere.</div>
+      <div style="padding:8px 14px;background:#1A3660;color:white;border-radius:6px;font-size:13px;font-weight:600">② Federal Agency Rules — Government agencies fill in the details.</div>
+      <div style="padding:8px 14px;background:#2563EB;color:white;border-radius:6px;font-size:13px;font-weight:600">③ Accreditation Standards — The Joint Commission sets additional requirements.</div>
+      <div style="padding:8px 14px;background:#1D4ED8;color:white;border-radius:6px;font-size:13px;font-weight:600">④ Virginia State Laws — State-level rules layered on top of federal.</div>
+      <div style="padding:8px 14px;background:#93C5FD;color:#1E3A8A;border-radius:6px;font-size:13px;font-weight:600">⑤ MWHC Internal Policy — The hospital's own rules that govern your daily workflow.</div>
+    </div>
+  </div>
+
+  <div id="regLayers"></div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECTION 7: QUIZ -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-quiz">
+  <div class="section-hero">
+    <div class="section-eyebrow">Knowledge Check</div>
+    <h2 class="section-title">Test what you've learned.</h2>
+    <p class="section-intro">These questions are written the way real situations come up on the job. There's no grade — this is just to help you figure out what to study more.</p>
+  </div>
+
+  <div id="quizContainer"></div>
+</section>
+
+
+<!-- ══ DATA & SCRIPTS ══ -->
+<script>
+/* ── NAV ── */
+function showSection(id, tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  tab.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── GLOSSARY DATA ── */
+const TERMS = [
+  {term:'Contract',cat:'contract',plain:'A written, legally binding promise between two parties.',example:'The hospital signs a contract with a cleaning company: the company promises to clean 3 floors nightly, and the hospital promises to pay $10,000/month.'},
+  {term:'Agreement',cat:'contract',plain:'A broader word — some agreements are contracts, some aren\'t. Your job is to tell the difference.',example:'A hospital\'s "letter of intent" with a vendor is an agreement, not yet a binding contract. Nothing is owed yet.'},
+  {term:'Contract lifecycle',cat:'contract',plain:'Every contract goes through stages: someone identifies a need → a contract is drafted → reviewed → approved → signed → monitored → and eventually ended or renewed.',example:'Think of it like buying a house: you identify a house, negotiate, sign, move in, pay monthly, then eventually sell or refinance.'},
+  {term:'Executed contract',cat:'contract',plain:'A contract that\'s been signed by everyone required. It\'s now officially "on."',example:'Once the VP signs the software agreement on Monday, it\'s executed — the vendor can start work.'},
+  {term:'Master Service Agreement (MSA)',cat:'contract',plain:'A big umbrella contract that sets the ground rules for an ongoing relationship, so you don\'t have to renegotiate the basics every time.',example:'Imagine you agree upfront with a caterer: always net-30 payment, always carry $1M insurance. Then each individual event just needs a simple work order.'},
+  {term:'Amendment',cat:'contract',plain:'An official change to an already-signed contract. Like a formal "we agreed to update this."',example:'The original contract said deliveries 3x/week. An amendment changes it to 5x/week — without throwing out the rest of the contract.'},
+  {term:'Addendum',cat:'contract',plain:'Something added to a contract that wasn\'t there before — new terms, not changing old ones.',example:'You signed a catering contract, then added a new addendum covering dietary restrictions for a new patient wing.'},
+  {term:'Renewal',cat:'contract',plain:'Extending a contract when it\'s about to expire so the service keeps going.',example:'Your 2-year MRI maintenance contract expires in December. You renew it for 2 more years in October so there\'s no gap in coverage.'},
+  {term:'Evergreen clause',cat:'contract',plain:'A contract that automatically renews unless you tell them to stop. Watch these carefully — they can lock you in without you realizing.',example:'Your copier lease auto-renews every year unless you cancel 90 days in advance. Miss that window? You\'re in for another year.'},
+  {term:'Contract management system (CMS)',cat:'contract',plain:'The software where all contracts live — you track, store, search, and manage everything in here.',example:'Like a digital filing cabinet, except it also sends you alerts when something is about to expire.'},
+  {term:'Counterparty',cat:'contract',plain:'The other party — whoever signed the contract with the hospital.',example:'If the hospital signs a deal with MedSupply Inc., MedSupply Inc. is the counterparty.'},
+  {term:'Contract portfolio',cat:'contract',plain:'All the active contracts the hospital is managing at any given time.',example:'Your portfolio might include 200+ contracts ranging from $5,000 office supply deals to $50M equipment agreements.'},
+  {term:'Contract vehicle',cat:'contract',plain:'A pre-built contract structure you can use to quickly set up a new deal without starting from scratch.',example:'The hospital\'s GPO (group purchasing org) has a pre-negotiated contract with a glove supplier. Using that contract is "using a vehicle."'},
+  {term:'Terms and conditions (T&Cs)',cat:'legal',plain:'The detailed rules in a contract — who does what, what happens if something goes wrong, who pays for what.',example:'"The vendor shall respond to all service calls within 4 hours" is a term. "Either party may terminate with 30 days\' notice" is a condition.'},
+  {term:'Indemnification clause',cat:'legal',plain:'One party agrees to pay if the other gets sued or loses money because of something they did.',example:'The hospital\'s cleaning vendor injures an employee. The indemnification clause says the cleaning company — not the hospital — pays any lawsuit costs.'},
+  {term:'Hold harmless clause',cat:'legal',plain:'One party says "if something goes wrong because of us, we won\'t blame you." Protects the hospital from being dragged into the vendor\'s problems.',example:'A staffing agency places a nurse who turns out to have a falsified license. The hold harmless clause means the agency — not MWHC — is responsible.'},
+  {term:'Limitation of liability',cat:'legal',plain:'A cap on how much one party can be held responsible for if things go wrong.',example:'A software vendor caps their total liability at the amount you paid them in the last 12 months. Even if you lose $10M due to their error, you can only collect $50,000.'},
+  {term:'Force majeure',cat:'legal',plain:'The "act of God" clause — if something totally unexpected (hurricane, pandemic) makes it impossible to perform, neither party is penalized.',example:'A vendor can\'t deliver supplies during a hurricane. Force majeure means they aren\'t in breach of contract.'},
+  {term:'Business Associate Agreement (BAA)',cat:'legal',plain:'A legally required contract that any vendor touching patient information must sign. Without it, the hospital can be fined millions.',example:'A cloud software company stores patient appointment records. They MUST have a signed BAA before going live — no exceptions.'},
+  {term:'HIPAA',cat:'legal',plain:'The federal law that protects patient privacy. Affects nearly every vendor contract because almost all services touch patient data in some way.',example:'Your janitorial company uses key fobs to access patient rooms. Their contract must include HIPAA-compliant access and data handling requirements.'},
+  {term:'Breach of contract',cat:'legal',plain:'When one side doesn\'t do what they promised. This triggers your right to demand they fix it — or end the deal and potentially sue.',example:'A vendor promised 99.9% system uptime but the system was down for 3 days. That\'s a breach — you can now enforce the contract\'s remedies.'},
+  {term:'Cure period',cat:'legal',plain:'The time given to a party to fix a problem before the contract is terminated.',example:'"Vendor has 30 days to cure any material breach" — meaning they get 30 days to fix it before you can cancel.'},
+  {term:'Termination for cause',cat:'legal',plain:'Ending a contract because the other side did something wrong.',example:'Vendor consistently misses deliveries and fails to improve after the cure period. You terminate for cause.'},
+  {term:'Termination for convenience',cat:'legal',plain:'Ending a contract simply because you don\'t need it anymore — no fault needed. The hospital usually needs this flexibility.',example:'The hospital decides to bring a service in-house. With this clause, you can exit the vendor contract with 60 days\' notice.'},
+  {term:'RFI (Request for Information)',cat:'proc',plain:'A casual survey sent to vendors to understand what\'s available in the market — no commitment to buy.',example:'"We\'re thinking about upgrading our EHR system. Can you tell us what products you offer?" That\'s an RFI.'},
+  {term:'RFQ (Request for Quotation)',cat:'proc',plain:'A formal ask for price quotes on something specific you already know you want.',example:'"We need 10,000 surgical gloves per month. What\'s your price?" That\'s an RFQ.'},
+  {term:'RFP (Request for Proposal)',cat:'proc',plain:'A formal competition where vendors submit full proposals for complex needs — evaluated on more than just price.',example:'"We need a complete patient billing system — tell us how you\'d build it, what it costs, who your team is, and what your track record is." That\'s an RFP.'},
+  {term:'Statement of Work (SOW)',cat:'proc',plain:'The document that says exactly what the vendor must deliver, by when, and to what standard.',example:'The SOW for a housekeeping contract lists every room type, cleaning frequency, chemicals to be used, response times, and inspection criteria.'},
+  {term:'Work Breakdown Structure (WBS)',cat:'proc',plain:'A map that breaks a big project into smaller, trackable tasks.',example:'Building a new patient wing: Phase 1 = design, Phase 2 = permits, Phase 3 = foundation, Phase 4 = framing… each broken into sub-tasks.'},
+  {term:'Fixed-price contract',cat:'proc',plain:'The vendor names a price upfront and sticks to it, no matter what it costs them.',example:'Painting the lobby for $8,000 total. If it takes them twice as long as expected, that\'s their problem — the price doesn\'t change.'},
+  {term:'Time and materials (T&M)',cat:'proc',plain:'You pay for actual hours worked and actual materials used. The final cost is uncertain — riskier for the hospital.',example:'Emergency plumbing repair: $85/hour labor + cost of parts. You won\'t know the final bill until the job is done.'},
+  {term:'Sole source',cat:'proc',plain:'When only one vendor can do the job — so you don\'t have to competitively bid. But you must document why.',example:'Only one company makes the replacement part for a specific MRI machine. Sole source is justified — but you have to document that.'},
+  {term:'Purchase Order (PO)',cat:'proc',plain:'A document that authorizes buying something specific. When the vendor accepts it, it\'s a binding contract.',example:'The supply room needs 500 boxes of gloves. A PO is issued to the glove supplier, who ships and invoices against it.'},
+  {term:'GPO (Group Purchasing Organization)',cat:'proc',plain:'An organization (like Vizient or Premier) that negotiates big deals on behalf of many hospitals — so each hospital gets better pricing without doing all the negotiation itself.',example:'MWHC uses a GPO contract for IV supplies. The GPO negotiated 15% lower pricing because they represent 3,000 hospitals. MWHC just signs on.'},
+  {term:'Contract value',cat:'finance',plain:'The total amount of money the hospital commits to over the life of the contract.',example:'A 3-year software contract at $50,000/year has a total contract value of $150,000.'},
+  {term:'Total cost of ownership (TCO)',cat:'finance',plain:'Not just the purchase price — all costs including training, maintenance, upgrades, and disposal.',example:'A new MRI machine costs $1.5M to buy but $200K/year to maintain plus $50K for staff training. The real cost over 10 years is much higher than $1.5M.'},
+  {term:'Payment terms',cat:'finance',plain:'When and how the vendor gets paid.',example:'"Net 30" means the hospital pays the invoice within 30 days. "2/10 Net 30" means a 2% discount if you pay within 10 days.'},
+  {term:'Liquidated damages',cat:'finance',plain:'A pre-agreed penalty the vendor pays if they miss a specific deadline or commitment.',example:'"For each day construction is delayed past June 1, vendor pays $5,000." That $5,000/day is a liquidated damage.'},
+  {term:'Price escalation clause',cat:'finance',plain:'A provision that allows prices to go up over time based on a formula — so vendors aren\'t locked into prices that become unprofitable.',example:'A 5-year contract allows prices to increase by CPI each year. If inflation is 3%, prices go up 3%.'},
+  {term:'Rebate',cat:'finance',plain:'Money the vendor pays back to the hospital after hitting certain purchase volumes.',example:'Spend $2M with MedSupply this year, and they send the hospital a $40,000 check at year end. That\'s a rebate.'},
+  {term:'Risk allocation',cat:'risk',plain:'Who bears the cost if something goes wrong? Contracts are partly about deciding this upfront.',example:'If a vendor\'s product fails and a patient is harmed — does the hospital or the vendor pay the lawsuit? The contract decides this.'},
+  {term:'Insurance requirements',cat:'risk',plain:'Requirements that the vendor carry specific types and amounts of insurance before work can begin.',example:'Before any contractor enters the building, they must prove they carry $2M in general liability insurance and $1M in workers\' comp.'},
+  {term:'Certificate of Insurance (COI)',cat:'risk',plain:'The document a vendor\'s insurance company provides proving they have the required coverage.',example:'Before the elevator maintenance company starts work, you request their COI. No COI, no access to the building.'},
+  {term:'Audit rights',cat:'risk',plain:'The hospital\'s contractual right to inspect the vendor\'s records to verify they\'re doing what they promised.',example:'You can request to see the cleaning vendor\'s employee training records and incident reports to confirm OSHA compliance.'},
+  {term:'Warranty',cat:'risk',plain:'The vendor\'s promise that what they sell or do will work correctly for a specified period.',example:'New medical equipment comes with a 2-year warranty: if it breaks through normal use, the vendor fixes it at no charge.'},
+  {term:'Compliance audit',cat:'risk',plain:'A periodic review where you check whether both sides are living up to the contract.',example:'Every 6 months, you review 10 active contracts to verify vendors are meeting service level agreements (SLAs).'},
+  {term:'Contract routing',cat:'process',plain:'The path a contract takes through different people for review and approval before it\'s signed.',example:'Draft → Legal review → Finance review → VP approval → CEO signature (for contracts over $1M). You manage this process.'},
+  {term:'Delegation of Authority (DOA)',cat:'process',plain:'The hospital\'s policy on who can approve contracts at which dollar levels.',example:'Manager can approve up to $25K. Director up to $100K. CFO up to $500K. CEO for anything above. Know this chart cold.'},
+  {term:'Redline',cat:'process',plain:'The process of marking up a contract to show proposed changes — usually in colored tracked-changes text.',example:'The vendor sends their contract. You open it in Word, turn on Track Changes, and mark every clause you want changed. That\'s a redline.'},
+  {term:'Effective date',cat:'process',plain:'When the contract\'s obligations actually start — may not be the same as the day it\'s signed.',example:'Signed on March 1, but services start April 1. The effective date is April 1.'},
+  {term:'Expiration date',cat:'process',plain:'When the contract ends. One of the most critical dates you track — letting one lapse without a plan can leave the hospital exposed.',example:'Your medical waste disposal contract expires August 31. If no one renews it, there\'s no compliant way to remove medical waste starting September 1.'},
+  {term:'Cradle-to-grave',cat:'process',plain:'The full life of a contract from the moment a need is identified all the way through final closeout.',example:'Identifying the need → drafting → negotiating → approving → signing → monitoring → auditing → renewing or closing.'},
+  {term:'Kickoff meeting',cat:'process',plain:'A meeting at the start of a contract between the hospital and the vendor to align on expectations.',example:'After signing a new food service contract, you host a kickoff with the vendor: here are the key contacts, here are the service standards, here is how we communicate problems.'},
+];
+
+let glActiveCat = 'all', glSearch = '';
+
+function renderGlossary() {
+  const cats = {
+    contract:'Contract Fundamentals', legal:'Legal & Regulatory',
+    proc:'Procurement', finance:'Finance & Commercial',
+    risk:'Risk Management', process:'Process & Administration'
+  };
+  const tagClass = {contract:'tag-contract',legal:'tag-legal',proc:'tag-proc',finance:'tag-finance',risk:'tag-risk',process:'tag-process'};
+  const catList = glActiveCat === 'all' ? Object.keys(cats) : [glActiveCat];
+  let html = '';
+  catList.forEach(cat => {
+    const items = TERMS.filter(t => t.cat === cat &&
+      (glSearch === '' || t.term.toLowerCase().includes(glSearch) || t.plain.toLowerCase().includes(glSearch) || t.example.toLowerCase().includes(glSearch)));
+    if (!items.length) return;
+    html += `<div class="section-label">${cats[cat]}</div>`;
+    items.forEach((t, i) => {
+      const id = `gl-${cat}-${i}`;
+      html += `<div class="accordion-item">
+        <div class="accordion-head" onclick="toggleAcc('${id}')">
+          <div class="accordion-head-left">
+            <span class="accordion-term">${t.term}</span>
+            <span class="accordion-tag ${tagClass[t.cat]}">${cats[t.cat].split(' ')[0]}</span>
+          </div>
+          <span class="accordion-chevron" id="chev-${id}">›</span>
+        </div>
+        <div class="accordion-body" id="body-${id}">
+          <p class="accordion-plain">${t.plain}</p>
+          <div class="accordion-example">📌 <strong>Example:</strong> ${t.example}</div>
+        </div>
+      </div>`;
+    });
+  });
+  if (!html) html = '<p style="color:var(--gray-400);padding:20px 0;font-size:14px">No matching terms found.</p>';
+  document.getElementById('glossaryItems').innerHTML = html;
+}
+
+function toggleAcc(id) {
+  const body = document.getElementById('body-' + id);
+  const chev = document.getElementById('chev-' + id);
+  const open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  chev.classList.toggle('open', !open);
+  chev.textContent = open ? '›' : '⌄';
+}
+
+function filterGlossary(v) { glSearch = v.toLowerCase(); renderGlossary(); }
+function setGlCat(cat, el) {
+  glActiveCat = cat;
+  document.querySelectorAll('#glFilters .filter-pill').forEach(p => p.classList.toggle('active', p.dataset.cat === cat));
+  renderGlossary();
+}
+
+/* ── STAKEHOLDERS ── */
+const STAKEHOLDERS = [
+  {id:'sh-internal-high', name:'Department Manager', role:'Your #1 internal customer', heat:'high', initials:'DM', color:'#4338CA', bg:'#EDE9FE',
+   desc:'This person identifies what the hospital needs. They come to you saying "we need a new vendor for X." Your job is to turn that into a contract that protects everyone.'},
+  {id:'sh-internal-high', name:'Supply Chain Director', role:'Your direct leader', heat:'high', initials:'SC', color:'#0F766E', bg:'#CCFBF1',
+   desc:'Sets priorities, approves your work, and is your first escalation point. Build a strong relationship here — they\'re your most important internal ally.'},
+  {id:'sh-internal-high', name:'General Counsel / Legal', role:'Legal review and approval', heat:'high', initials:'GC', color:'#B45309', bg:'#FEF3C7',
+   desc:'Reviews all contract language for legal risk. Partners with you on every redline and negotiation. You bring them questions; they bring legal expertise. Never bypass them.'},
+  {id:'sh-internal-high', name:'CFO / Finance', role:'Financial approval authority', heat:'high', initials:'CF', color:'#DC2626', bg:'#FEE2E2',
+   desc:'Must sign off on high-value contracts and reviews all financial terms. Understand what they care about: total cost, payment terms, financial risk exposure.'},
+  {id:'sh-internal-high', name:'Vendor / Supplier', role:'Your external counterparty', heat:'high', initials:'VS', color:'#1D4ED8', bg:'#DBEAFE',
+   desc:'The company you\'re contracting with. You negotiate with them, manage the relationship, and hold them accountable. Be firm on terms but build relationships — you\'ll work with many vendors repeatedly.'},
+  {id:'sh-internal-med', name:'Risk Management', role:'Insurance & liability review', heat:'med', initials:'RM', color:'#6D28D9', bg:'#EDE9FE',
+   desc:'Verifies that vendors carry required insurance and that risk is properly allocated. Consult them before finalizing any contract with significant liability exposure.'},
+  {id:'sh-internal-med', name:'Compliance Officer', role:'Regulatory compliance', heat:'med', initials:'CO', color:'#0F766E', bg:'#CCFBF1',
+   desc:'Makes sure every contract aligns with HIPAA, CMS requirements, and other regulations. Review all BAAs and data agreements with them.'},
+  {id:'sh-internal-med', name:'IT / Informatics', role:'Technology contracts', heat:'med', initials:'IT', color:'#1D4ED8', bg:'#DBEAFE',
+   desc:'Involved whenever a contract covers software, data systems, or cybersecurity. They review data handling clauses and security requirements.'},
+  {id:'sh-internal-med', name:'Accounts Payable', role:'Payment execution', heat:'med', initials:'AP', color:'#15803D', bg:'#DCFCE7',
+   desc:'They pay the invoices. If payment terms in your contract are unclear or wrong, AP will have problems. Make sure what you write matches how AP operates.'},
+  {id:'sh-internal-med', name:'Clinical Leadership', role:'Clinical service contracts', heat:'med', initials:'CL', color:'#B45309', bg:'#FEF3C7',
+   desc:'Engaged when contracts affect patient care — staffing agencies, clinical equipment, lab services. They define quality standards; you put them in the contract.'},
+  {id:'sh-internal-med', name:'Paralegal / Legal Ops', role:'Day-to-day legal partner', heat:'med', initials:'PL', color:'#DC2626', bg:'#FEE2E2',
+   desc:'Your close working partner within the legal department. They help with drafting, routing, and document management. Build a strong relationship here early.'},
+  {id:'sh-external', name:'Supplier Account Manager', role:'Vendor day-to-day contact', heat:'high', initials:'AM', color:'#1D4ED8', bg:'#DBEAFE',
+   desc:'The person at the vendor company you\'ll actually talk to most often. They handle invoicing questions, delivery issues, and performance concerns.'},
+  {id:'sh-external', name:'Vendor Legal Counsel', role:'Opposing negotiator', heat:'med', initials:'VL', color:'#6D28D9', bg:'#EDE9FE',
+   desc:'The vendor\'s lawyer. You\'ll go back and forth with them on redlines. Be professional, firm, and always loop in your own Legal team before agreeing to anything significant.'},
+  {id:'sh-external', name:'GPO Representatives', role:'Pre-negotiated contract source', heat:'med', initials:'GP', color:'#0F766E', bg:'#CCFBF1',
+   desc:'Account managers from Vizient, Premier, or similar. They help you access pre-competed contracts with better pricing. Know which GPO contracts are available before going to a full RFP.'},
+  {id:'sh-regulatory', name:'CMS', role:'Federal Medicare/Medicaid rules', heat:'med', initials:'CM', color:'#B45309', bg:'#FEF3C7',
+   desc:'Centers for Medicare & Medicaid Services. Their Conditions of Participation affect how certain vendor contracts must be structured. MWHC cannot lose Medicare/Medicaid participation — that would be catastrophic.'},
+  {id:'sh-regulatory', name:'Office for Civil Rights (OCR)', role:'HIPAA enforcement', heat:'med', initials:'OR', color:'#DC2626', bg:'#FEE2E2',
+   desc:'They enforce HIPAA. A missing BAA or a data breach from a vendor without proper protections in their contract can trigger an OCR investigation and massive fines.'},
+  {id:'sh-regulatory', name:'The Joint Commission', role:'Accreditation standards', heat:'low', initials:'TJ', color:'#15803D', bg:'#DCFCE7',
+   desc:'Sets accreditation standards that require documented vendor contracts for life safety, food, housekeeping, and clinical services. Their surveyors will ask to see these contracts.'},
+  {id:'sh-regulatory', name:'Virginia State Regulators', role:'State-level licensing rules', heat:'low', initials:'VA', color:'#1D4ED8', bg:'#DBEAFE',
+   desc:'Virginia\'s state health department and licensing bodies add requirements on top of federal rules. Some vendor contracts need to reference state-specific requirements.'},
+];
+
+function renderStakeholders() {
+  const groups = {'sh-internal-high':[], 'sh-internal-med':[], 'sh-external':[], 'sh-regulatory':[]};
+  STAKEHOLDERS.forEach(s => { if (groups[s.id]) groups[s.id].push(s); });
+  Object.entries(groups).forEach(([id, items]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = items.map(s => `
+      <div class="sh-card">
+        <div class="sh-card-top">
+          <div class="sh-avatar" style="background:${s.bg};color:${s.color}">${s.initials}</div>
+          <div><div class="sh-name">${s.name}</div><div class="sh-role">${s.role}</div></div>
+        </div>
+        <div class="sh-desc">${s.desc}</div>
+        <span class="sh-heat heat-${s.heat}">${s.heat === 'high' ? '● Daily contact' : s.heat === 'med' ? '● Regular contact' : '● Periodic contact'}</span>
+      </div>`).join('');
+  });
+}
+
+/* ── REGULATIONS ── */
+const REGS = [
+  { color:'#0D1F3C', label:'Layer 1 — Federal Laws (Congress)', sub:'These are the bedrock. They apply nationwide and override everything below.',
+    items:[
+      {name:'HIPAA (1996)', plain:'Protects patient privacy. Every single vendor who might touch patient information must have a Business Associate Agreement (BAA) with the hospital. No BAA = potential for millions in fines.', impact:'Your action: Before any vendor goes live with a system that touches patient data, confirm the BAA is signed and in the CMS.'},
+      {name:'HITECH Act (2009)', plain:'Strengthened HIPAA, increased fines dramatically, and required breach notification. Makes technology vendor contracts even more consequential.', impact:'Your action: All tech contracts must include specific breach notification timelines aligned with HITECH requirements.'},
+      {name:'Anti-Kickback Statute (AKS)', plain:'It is a federal crime to pay or receive anything of value to influence patient referrals when Medicare/Medicaid is involved. This affects contracts involving physicians and referral relationships.', impact:'Your action: Any contract involving payments tied to patient volume must go through Legal review before you proceed — no exceptions.'},
+      {name:'The Stark Law', plain:'Physicians cannot refer patients to businesses where they have a financial interest — unless very specific exceptions apply. Even innocent-looking contracts can create Stark violations.', impact:'Your action: Any contract involving physician compensation arrangements must be reviewed by Legal and must document fair market value.'},
+      {name:'False Claims Act (FCA)', plain:'Making false claims for Medicare/Medicaid payments is illegal and carries enormous penalties — triple damages plus fines. A poorly structured contract can inadvertently create FCA exposure.', impact:'Your action: Understand that contract errors aren\'t just administrative mistakes — they can become federal fraud issues. Escalate any uncertainty.'},
+      {name:'Uniform Commercial Code (UCC)', plain:'The foundational law governing the buying and selling of goods (supplies, equipment, materials). Most of your supply contracts operate under UCC principles.', impact:'Your action: For goods contracts, understand that the UCC provides default rules that apply when the contract is silent on a topic.'},
+    ]
+  },
+  { color:'#1A3660', label:'Layer 2 — Federal Agency Regulations', sub:'Government agencies write the detailed rules that implement federal laws.',
+    items:[
+      {name:'CMS (Centers for Medicare & Medicaid Services)', plain:'Writes the Conditions of Participation hospitals must follow to accept Medicare/Medicaid. These conditions directly affect what must appear in vendor contracts for clinical, dietary, and environmental services.', impact:'Your action: When contracting for any service that touches patient care, review applicable CMS conditions with your compliance team.'},
+      {name:'Office for Civil Rights (OCR) — HIPAA Enforcement', plain:'OCR audits hospitals and their vendors for HIPAA compliance. A vendor data breach that your contract didn\'t adequately protect against can result in an OCR investigation of the hospital.', impact:'Your action: BAA language must meet OCR\'s standards. Use approved templates from Legal — do not create your own BAA language.'},
+      {name:'OSHA', plain:'Requires safe working conditions. Affects contracts for maintenance, construction, lab services, and any vendor whose employees work on-site at MWHC.', impact:'Your action: On-site vendor contracts must require OSHA compliance and may need to include specific safety protocols and incident reporting requirements.'},
+      {name:'OIG (Office of Inspector General)', plain:'Publishes safe harbors — specific arrangements that are protected from AKS prosecution if structured correctly. Also identifies healthcare fraud priorities the government is actively investigating.', impact:'Your action: When structuring any physician or referral-related arrangement, check OIG safe harbor regulations with Legal.'},
+      {name:'FDA (Food and Drug Administration)', plain:'Regulates medical devices, pharmaceuticals, and clinical supplies. Any contract for FDA-regulated products must address FDA clearance, recall procedures, and adverse event reporting.', impact:'Your action: Medical device and pharma contracts need specific FDA compliance clauses. Work with Legal and Clinical Leadership on these.'},
+    ]
+  },
+  { color:'#2563EB', label:'Layer 3 — Accreditation Standards', sub:'These aren\'t laws, but violating them costs the hospital its accreditation — which means losing Medicare participation.',
+    items:[
+      {name:'The Joint Commission (TJC)', plain:'The most widely used hospital accreditation body. Their standards require documented contracts for life safety services, food service, housekeeping, security, and clinical support services. Surveyors specifically look for these during inspections.', impact:'Your action: Maintain a TJC contract compliance checklist. Know which vendor categories require documented contracts and ensure they\'re all current in the CMS.'},
+      {name:'DNV GL / HFAP', plain:'Alternative accreditation bodies used by some healthcare systems. Similar contract documentation requirements to TJC.', impact:'Your action: Know which accreditation body MWHC uses and align your contracting practices to their specific standards.'},
+    ]
+  },
+  { color:'#15803D', label:'Layer 4 — Virginia State Law', sub:'Virginia adds requirements on top of federal law that apply specifically to MWHC.',
+    items:[
+      {name:'Virginia Contract Law (Common Law)', plain:'Governs how contracts are formed, interpreted, and enforced in Virginia courts. If a dispute ever goes to litigation, Virginia contract law is likely what applies.', impact:'Your action: Always specify Virginia as the governing law in contracts. Understand basic Virginia contract principles — offer, acceptance, consideration, and enforceability.'},
+      {name:'Virginia UCC', plain:'Virginia\'s version of the Uniform Commercial Code governs goods purchases. Distinguishes between contracts for "goods" (UCC applies) and "services" (common law applies).', impact:'Your action: Know whether your contract is primarily for goods or services — it affects which legal framework applies and your default rights.'},
+      {name:'Virginia Health Department Regulations', plain:'State licensing requirements for healthcare facilities add specific obligations for certain service categories — clinical labs, dietary, environmental services.', impact:'Your action: When contracting with licensed service providers, verify their Virginia licenses are current and require notification if their license status changes.'},
+      {name:'Virginia Human Rights Act', plain:'State-level anti-discrimination law that adds protections on top of federal laws. Relevant for staffing and employment-related service contracts.', impact:'Your action: Staffing agency contracts must include non-discrimination requirements consistent with Virginia law.'},
+    ]
+  },
+  { color:'#6D28D9', label:'Layer 5 — MWHC Internal Policy', sub:'The hospital\'s own rules — the ones you\'ll live by every single day.',
+    items:[
+      {name:'Delegation of Authority (DOA) Policy', plain:'Who can approve and sign contracts at what dollar amounts. This is the most operationally critical policy you need to memorize.', impact:'Your action: Memorize the approval thresholds. Never route a contract to the wrong level — it invalidates the approval and causes delays.'},
+      {name:'Corporate Contract Policy', plain:'Which templates are required, what clauses are mandatory, what requires legal review, and how routing works.', impact:'Your action: This is your daily operating manual. Read it in Week 1 and refer back to it constantly in your first 90 days.'},
+      {name:'Supply Chain Management Policy', plain:'Competitive bidding thresholds, sole source justification requirements, vendor onboarding standards, and reporting requirements.', impact:'Your action: Know when a competitive bid is required vs. when you can sole source. Never skip a required bid process — it creates legal exposure.'},
+      {name:'Information Security Policy', plain:'Hospital-specific data protection requirements that go beyond HIPAA — specific clauses that must appear in all technology contracts.', impact:'Your action: Get the current IT security contract requirements from the IT team and use them as a checklist for every technology vendor contract.'},
+      {name:'Vendor Credentialing Policy', plain:'Requirements that vendors must meet (insurance, background checks, licenses) before their contract can be executed and they can begin work.', impact:'Your action: Never allow a vendor to start work before credentialing is complete. The contract signature means nothing if the vendor isn\'t credentialed.'},
+    ]
+  },
+];
+
+function renderRegs() {
+  document.getElementById('regLayers').innerHTML = REGS.map((r, ri) => `
+    <div class="reg-layer" style="border-left-color:${r.color}">
+      <div class="reg-layer-head" onclick="toggleReg(${ri})">
+        <div>
+          <div class="reg-layer-title" style="color:${r.color}">${r.label}</div>
+          <div class="reg-layer-sub">${r.sub}</div>
+        </div>
+        <span class="accordion-chevron" id="regchev-${ri}">›</span>
+      </div>
+      <div class="reg-layer-body" id="regbody-${ri}">
+        ${r.items.map(it => `
+          <div class="reg-item">
+            <div class="reg-item-name">${it.name}</div>
+            <div class="reg-item-plain">${it.plain}</div>
+            <div class="reg-item-impact"><strong>What this means for your contracts:</strong> ${it.impact}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function toggleReg(i) {
+  const body = document.getElementById('regbody-' + i);
+  const chev = document.getElementById('regchev-' + i);
+  const open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  chev.classList.toggle('open', !open);
+  chev.textContent = open ? '›' : '⌄';
+}
+
+/* ── QUIZ ── */
+const QUESTIONS = [
+  {q:'A department manager comes to you saying they\'ve been verbally working with a cleaning vendor for 3 months with no contract. What do you do?',
+   opts:['Ask the manager to keep doing what they\'re doing since it seems to be working.','Immediately work to get a formal contract in place — and investigate why work started without one.','Send the vendor an email confirming the arrangement, which is good enough.','Do nothing — it\'s the manager\'s responsibility, not yours.'],
+   correct:1, feedback:'Verbal arrangements and emails are not contracts. Work starting without a signed agreement exposes the hospital to serious legal and financial risk. Getting a contract in place is urgent — and understanding how this happened prevents it from happening again.'},
+  {q:'A software vendor wants to implement a new patient scheduling system. They send their standard contract but it has no Business Associate Agreement (BAA) section. What do you do?',
+   opts:['Sign the contract — the scheduling system probably doesn\'t touch patient data.','Tell the vendor you\'ll add a BAA as an amendment later after go-live.','Refuse to execute the contract until a compliant BAA is included, and notify Compliance.','Accept the vendor\'s assurance that they\'re "HIPAA compliant" verbally.'],
+   correct:2, feedback:'Any system touching patient scheduling data absolutely handles Protected Health Information (PHI). HIPAA requires a signed BAA BEFORE the vendor has access to any PHI. Going live without one exposes the hospital to massive OCR fines — regardless of whether a breach actually occurs.'},
+  {q:'You\'re reviewing a vendor\'s proposed contract and notice the limitation of liability clause caps their responsibility at $10,000 — but the contract is for $2 million in critical lab equipment. What do you do?',
+   opts:['Accept it — limitation of liability clauses are standard and unimportant.','Flag it to Legal immediately and negotiate to raise the cap to a reasonable level relative to contract value.','Sign it and just hope nothing goes wrong.','Remove the clause entirely yourself without flagging it.'],
+   correct:1, feedback:'A $10,000 liability cap on a $2M contract means if the equipment fails catastrophically, the hospital can only recover $10,000 — regardless of the actual damage. This is a major red flag that requires Legal involvement and negotiation before execution.'},
+  {q:'A physician approaches you about a contract where they\'d receive a monthly fee from a medical device vendor whose products they recommend to patients. What\'s your first move?',
+   opts:['Help them draft the contract — physicians are allowed to have outside income.','Immediately flag this to Legal and your Compliance Officer before going any further.','Tell the physician to handle it independently and keep you out of it.','Draft the contract but add a confidentiality clause so no one finds out.'],
+   correct:1, feedback:'This describes a potential Anti-Kickback Statute and Stark Law violation — among the most serious legal risks in healthcare contracting. This must go to Legal and Compliance immediately. Never draft a contract like this without thorough legal review.'},
+  {q:'A contract expires in 45 days and the department manager hasn\'t responded to your renewal inquiries. What do you do?',
+   opts:['Wait for the manager to come to you — it\'s their vendor relationship.','Escalate to the manager\'s supervisor, document your outreach attempts, and begin exploring options so the hospital doesn\'t have a service gap.','Let the contract expire — you can always restart it after.','Automatically renew the contract without approval to avoid a lapse.'],
+   correct:1, feedback:'A lapsed contract means the hospital is receiving services with no legal protection — or worse, losing a critical service. Document all outreach attempts, escalate appropriately, and never let a contract expire without a conscious decision. Auto-renewing without authorization violates your delegation of authority policy.'},
+  {q:'You\'re about to negotiate with a vendor on price. Their opening number is $500,000. What\'s the most important thing to have done before that meeting?',
+   opts:['Looked up what mood the vendor\'s account manager is usually in.','Prepared a negotiation strategy: know your target price, your walk-away point, market benchmarks, and which terms you must protect.','Told the vendor what your budget is upfront to show good faith.','Waited to see what they say before thinking about what you want.'],
+   correct:1, feedback:'Going into a negotiation without a strategy is like going to court without a case. You need to know: What\'s the market rate? What can we actually pay? What clauses are non-negotiable? What can we concede? What\'s our alternative if this vendor says no? Preparation is everything.'},
+];
+
+function renderQuiz() {
+  document.getElementById('quizContainer').innerHTML = QUESTIONS.map((q, qi) => `
+    <div class="quiz-q" id="qq-${qi}">
+      <div class="quiz-q-text">Scenario ${qi+1}: ${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, oi) => `
+          <button class="quiz-opt" onclick="answerQuiz(${qi},${oi})">${opt}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb-${qi}"></div>
+    </div>`).join('');
+}
+
+function answerQuiz(qi, oi) {
+  const q = QUESTIONS[qi];
+  document.querySelectorAll(`#qq-${qi} .quiz-opt`).forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (i === q.correct) btn.classList.add('correct');
+    else if (i === oi && oi !== q.correct) btn.classList.add('wrong');
+  });
+  const fb = document.getElementById('qfb-' + qi);
+  fb.textContent = (oi === q.correct ? '✓ Correct. ' : '✗ Not quite. ') + q.feedback;
+  fb.className = 'quiz-feedback show ' + (oi === q.correct ? 'correct' : 'wrong');
+}
+
+/* ── INIT ── */
+renderGlossary();
+renderStakeholders();
+renderRegs();
+renderQuiz();
+</script>
+</body>
+</html>
