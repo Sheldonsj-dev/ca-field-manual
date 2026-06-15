@@ -1997,7 +1997,7 @@ function setCertName() {
 /* ══ ASK THE MANUAL ══ */
 var CHAT_HISTORY = [];
 var CHAT_KEY = (function(){ return 'sk-ant-api03-kKcJsnf' + 'NZwX_mscIC-iPqMwiH4FASYsznIDrv7QZ8X-rTel' + 'FfonPJmE7hNNqeM6LDPAb98HfxOKpGWHA1H-edQ-y3oJXQAA'; }());
-var MANUAL_SYS = 'You are the Field Manual Assistant for a new Contract Administrator at Mary Washington Healthcare. Answer questions based on this Field Manual content. Be warm, clear, and use plain English. Use bullet points for lists. Keep answers practical and focused on their role.\n\nKEY FACTS:\n- Role: Contract Administrator managing $300M+ portfolio\n- Core duties: analyze, draft, negotiate contracts; route for approval; manage CMS; compliance audits; vendor relationships\n- 90-day plan: Phase 1 orientation, Phase 2 core skills, Phase 3 supervised practice, Phase 4 independence\n- Approval thresholds: Under $25K=Manager, $25K-$100K=Director, $100K-$500K=VP+Legal, $500K-$1M=CFO+Legal, Over $1M=CEO+CFO+Legal\n- BAA required for any vendor touching patient data (PHI) - federal law, no exceptions\n- Key laws: HIPAA, Anti-Kickback Statute, Stark Law, False Claims Act, CMS Conditions of Participation\n- Breach response: document, notify vendor in writing, check cure period, monitor, escalate to Legal if not fixed\n- Never terminate a contract verbally - always in writing with Legal approval\n- Solicitation types: RFI=market research, RFQ=price quotes for known needs, RFP=complex needs with multiple evaluation factors\n- Contract types: Fixed-price=low hospital risk, T&M=higher risk add NTE cap, IDIQ=recurring variable purchases, Cost-reimbursable=highest risk\n- Key stakeholders: Supply Chain Director=direct manager, General Counsel=legal review never bypass, Compliance Officer=HIPAA/regulatory, Dept Managers=primary customers\n- Risk levels: Low(0-2 factors)=standard, Medium(3-5)=PHI/onsite/clinical, High(6+)=clinical services/physician/major IT';
+var MANUAL_SYS = 'You are the Field Manual Assistant for a Contract Administrator at Mary Washington Healthcare. Answer based on this guide. Be warm and clear. Use plain English and bullet points for lists. Keep answers practical. Key facts: Role manages $300M+ contract portfolio. Approval thresholds: Under $25K=Manager, $25K-$100K=Director, $100K-$500K=VP plus Legal, $500K-$1M=CFO plus Legal, Over $1M=CEO plus CFO plus Legal. BAA required for any vendor touching patient data - federal HIPAA law no exceptions. Key laws: HIPAA, Anti-Kickback Statute, Stark Law, False Claims Act. Breach response: document same day, notify vendor in writing, check cure period 10-30 days, monitor, escalate to Legal if not fixed. Never terminate verbally. Solicitation types: RFI=market research no commitment, RFQ=price quotes for known needs, RFP=complex needs multiple factors. Contract types: Fixed-price=low hospital risk, T and M=higher risk add not-to-exceed cap, IDIQ=recurring variable purchases, Cost-reimbursable=highest risk. Key stakeholders: Supply Chain Director=direct manager, General Counsel=legal review never bypass, Compliance Officer=HIPAA regulatory, Department Managers=primary customers.';
 
 function sendChat() {
   var input = document.getElementById('chatInput');
@@ -2024,19 +2024,20 @@ function sendChat() {
       system: MANUAL_SYS,
       messages: CHAT_HISTORY
     })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data) {
+  }).then(function(r) {
+    return r.json();
+  }).then(function(data) {
     removeTyping(tid);
-    var reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : 'Sorry, I could not generate a response. Please try again.';
+    var reply = (data.content && data.content[0] && data.content[0].text)
+      ? data.content[0].text
+      : 'Sorry, I could not generate a response. Please try again.';
     addChatMsg('assistant', reply);
     CHAT_HISTORY.push({ role: 'assistant', content: reply });
-  })
-  .catch(function(err) {
+    btn.disabled = false;
+    input.focus();
+  }).catch(function() {
     removeTyping(tid);
-    addChatMsg('assistant', 'I am having trouble connecting right now. Please check your internet connection and try again.');
-  })
-  .finally(function() {
+    addChatMsg('assistant', 'I am having trouble connecting. Please check your internet and try again.');
     btn.disabled = false;
     input.focus();
   });
@@ -2052,20 +2053,16 @@ function addChatMsg(role, text) {
   var div = document.createElement('div');
   div.className = 'chat-msg ' + role;
   var label = role === 'assistant' ? 'CA' : 'You';
-  var formatted = text
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
-  var blocks = formatted.split(/
-{2,}/);
-  var bodyHtml = blocks.map(function(p) {
-    var lines = p.split('
-').filter(function(l){ return l.trim(); });
-    if (lines.length > 0 && /^[-*]/.test(lines[0].trim())) {
-      return '<ul>' + lines.map(function(l){ return '<li>' + l.replace(/^[-*]\s*/,'') + '</li>'; }).join('') + '</ul>';
-    }
-    return '<p>' + lines.join('<br>') + '</p>';
-  }).join('');
-  div.innerHTML = '<div class="chat-avatar">' + label + '</div><div class="chat-bubble">' + bodyHtml + '</div>';
+  var bubble = document.createElement('div');
+  bubble.className = 'chat-bubble';
+  var avatar = document.createElement('div');
+  avatar.className = 'chat-avatar';
+  avatar.textContent = label;
+  var para = document.createElement('p');
+  para.textContent = text;
+  bubble.appendChild(para);
+  div.appendChild(avatar);
+  div.appendChild(bubble);
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
@@ -2086,7 +2083,6 @@ function removeTyping(id) {
   var el = document.getElementById(id);
   if (el) el.remove();
 }
-
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
