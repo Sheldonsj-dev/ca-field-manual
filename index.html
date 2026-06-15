@@ -564,6 +564,94 @@
   }
   body.dark .dark-toggle { background: #374151; border-color: #4B5563; }
 
+
+  /* ── MOBILE HAMBURGER NAV ── */
+  .hamburger {
+    display: none;
+    padding: 14px 16px;
+    font-size: 22px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--gray-600);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  body.dark .hamburger { color: #9CA3AF; }
+
+  .nav-drawer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .nav-drawer.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .nav-drawer-inner {
+    position: absolute;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100%;
+    background: white;
+    padding: 0;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  }
+  body.dark .nav-drawer-inner { background: #1F2937; }
+  .nav-drawer.open .nav-drawer-inner { transform: translateX(0); }
+
+  .nav-drawer-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  body.dark .nav-drawer-header { border-color: #374151; }
+  .nav-drawer-header-title { font-size: 14px; font-weight: 600; color: var(--navy); }
+  body.dark .nav-drawer-header-title { color: #F9FAFB; }
+  .nav-drawer-header-sub { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+  .nav-drawer-close {
+    position: absolute;
+    top: 14px; right: 16px;
+    font-size: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    line-height: 1;
+  }
+
+  .nav-drawer-item {
+    padding: 13px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--gray-600);
+    border-bottom: 0.5px solid var(--gray-100);
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border-left: 3px solid transparent;
+    transition: all 0.1s;
+  }
+  body.dark .nav-drawer-item { color: #D1D5DB; border-color: #374151; }
+  .nav-drawer-item:hover { background: var(--blue-light); color: var(--blue); border-left-color: var(--blue); }
+  body.dark .nav-drawer-item:hover { background: #1E3A8A; color: #93C5FD; }
+
+  @media (max-width: 680px) {
+    .hamburger { display: flex; align-items: center; }
+    .nav-bar .nav-tab { display: none; }
+    .nav-drawer { display: block; }
+  }
+
 </style>
 </head>
 <body>
@@ -578,7 +666,8 @@
 
 <!-- ══ NAV ══ -->
 <nav class="nav-bar" role="navigation">
-  <div class="nav-tab active" onclick="showSection('welcome',this)">👋 Start Here</div>
+  <button class="hamburger" onclick="openDrawer()" aria-label="Open menu">&#9776;</button>
+    <div class="nav-tab active" onclick="showSection('welcome',this)">👋 Start Here</div>
   <div class="nav-tab" onclick="showSection('role',this)">Your Role</div>
   <div class="nav-tab" onclick="showSection('training',this)">90-Day Plan</div>
   <div class="nav-tab" onclick="showSection('glossary',this)">Glossary</div>
@@ -586,6 +675,23 @@
   <div class="nav-tab" onclick="showSection('regulations',this)">Rules & Laws</div>
   <div class="nav-tab" onclick="showSection('quiz',this)">Knowledge Check</div>
 </nav>
+
+<div class="nav-drawer" id="navDrawer" onclick="handleDrawerClick(event)">
+  <div class="nav-drawer-inner">
+    <button class="nav-drawer-close" onclick="closeDrawer()" aria-label="Close menu">&#10005;</button>
+    <div class="nav-drawer-header">
+      <div class="nav-drawer-header-title">CA Field Manual</div>
+      <div class="nav-drawer-header-sub">Mary Washington Healthcare</div>
+    </div>
+    <button class="nav-drawer-item" onclick="drawerNav('welcome')">👋 Start Here</button>
+    <button class="nav-drawer-item" onclick="drawerNav('role')">📋 Your Role</button>
+    <button class="nav-drawer-item" onclick="drawerNav('training')">📅 90-Day Plan</button>
+    <button class="nav-drawer-item" onclick="drawerNav('glossary')">📖 Glossary</button>
+    <button class="nav-drawer-item" onclick="drawerNav('stakeholders')">👥 Who You'll Work With</button>
+    <button class="nav-drawer-item" onclick="drawerNav('regulations')">⚖️ Rules & Laws</button>
+    <button class="nav-drawer-item" onclick="drawerNav('quiz')">✅ Knowledge Check</button>
+  </div>
+</div>
 <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
 
 <!-- ══════════════════════════════════════════ -->
@@ -1245,6 +1351,30 @@ document.addEventListener('DOMContentLoaded', function() {
   var btn = document.querySelector('.dark-toggle');
   if (btn && document.body.classList.contains('dark')) btn.textContent = '☀️';
 });
+
+
+/* ── MOBILE NAV ── */
+function openDrawer() {
+  document.getElementById('navDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('navDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function handleDrawerClick(e) {
+  if (e.target === document.getElementById('navDrawer')) closeDrawer();
+}
+function drawerNav(id) {
+  closeDrawer();
+  var sec = document.getElementById('sec-' + id);
+  if (sec) {
+    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+    sec.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
 
 </script>
 </body>
