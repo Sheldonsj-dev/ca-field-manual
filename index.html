@@ -506,6 +506,90 @@
     .section { display: block !important; }
     .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
+  /* ── DECISION TOOLS STYLES ── */
+  .dt-panel { display:none; }
+  .dt-panel.active { display:block; }
+  .dt-title { font-size:20px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+  .dt-sub { font-size:14px; color:var(--gray-600); margin-bottom:24px; line-height:1.6; }
+  .dt-flow { margin-bottom:20px; }
+  .dt-node { display:none; }
+  .dt-node.active { display:block; }
+  .dt-question {
+    background:white; border:1px solid var(--gray-200);
+    border-radius:12px; padding:24px 28px; margin-bottom:16px;
+  }
+  .dt-q-text { font-size:16px; font-weight:600; color:var(--navy); margin-bottom:20px; line-height:1.5; }
+  .dt-btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+  .dt-btn {
+    padding:10px 22px; border-radius:8px; border:1px solid;
+    font-size:14px; font-weight:500; cursor:pointer; transition:all 0.15s;
+  }
+  .dt-yes { background:var(--blue); color:white; border-color:var(--blue); }
+  .dt-yes:hover { background:#1D4ED8; }
+  .dt-no { background:white; color:var(--gray-600); border-color:var(--gray-200); }
+  .dt-no:hover { background:var(--gray-50); border-color:var(--gray-400); }
+  .dt-result {
+    border-radius:12px; padding:24px 28px; margin-bottom:16px;
+    border:1px solid;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .dt-result-green { background:var(--green-light); border-color:#86EFAC; }
+  .dt-result-amber { background:var(--amber-light); border-color:var(--amber-mid); }
+  .dt-result-red { background:var(--coral-light); border-color:#FECACA; }
+  .dt-r-icon { font-size:28px; margin-bottom:10px; }
+  .dt-r-title { font-size:17px; font-weight:700; color:var(--navy); margin-bottom:10px; }
+  .dt-r-body { font-size:14px; color:var(--gray-600); line-height:1.7; }
+  .dt-restart {
+    margin-top:16px; padding:8px 18px; border-radius:8px;
+    border:1px solid var(--gray-200); background:white;
+    font-size:13px; color:var(--gray-600); cursor:pointer;
+  }
+  .dt-restart:hover { background:var(--gray-50); }
+  .dt-progress { display:flex; align-items:center; margin-top:8px; }
+  .dt-prog-step {
+    width:28px; height:28px; border-radius:50%;
+    background:var(--gray-200); color:var(--gray-400);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700; transition:all 0.2s;
+    flex-shrink:0;
+  }
+  .dt-prog-step.active { background:var(--blue); color:white; }
+  .dt-prog-step.done { background:var(--green); color:white; }
+  .dt-prog-line { flex:1; height:2px; background:var(--gray-200); }
+  .br-step { position:relative; padding-left:28px; margin-bottom:24px; }
+  .br-num {
+    position:absolute; left:-22px; top:2px;
+    width:28px; height:28px; border-radius:50%;
+    color:white; font-size:11px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .br-content {
+    background:white; border:1px solid var(--gray-200);
+    border-radius:10px; padding:16px 20px;
+  }
+  .br-heading { font-size:15px; font-weight:600; color:var(--navy); margin-bottom:8px; }
+  .br-body { font-size:13px; color:var(--gray-600); line-height:1.6; margin-bottom:8px; }
+  .br-check { font-size:12px; padding:8px 12px; background:var(--blue-light); border-radius:6px; color:#1E40AF; }
+  .risk-check {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:10px 0; border-bottom:1px solid var(--gray-100);
+    font-size:14px; color:var(--gray-600); cursor:pointer; line-height:1.5;
+  }
+  .risk-check:last-child { border-bottom:none; }
+  .risk-check input { margin-top:2px; flex-shrink:0; width:16px; height:16px; cursor:pointer; }
+  .ar-step-row {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 14px; border-radius:8px; margin-bottom:6px;
+    font-size:14px; font-weight:500;
+  }
+  .ar-step-num {
+    width:26px; height:26px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; color:white; flex-shrink:0;
+  }
+
 </style>
 </head>
 <body>
@@ -527,6 +611,7 @@
   <div class="nav-tab" onclick="showSection('stakeholders',this)">Who You'll Work With</div>
   <div class="nav-tab" onclick="showSection('regulations',this)">Rules & Laws</div>
   <div class="nav-tab" onclick="showSection('quiz',this)">Knowledge Check</div>
+  <div class="nav-tab" onclick="showSection('decisions',this)">🔀 Decision Tools</div>
 </nav>
 
 <!-- ══════════════════════════════════════════ -->
@@ -1171,6 +1256,595 @@ renderGlossary();
 renderStakeholders();
 renderRegs();
 renderQuiz();
+
+/* ── DECISION TOOLS ── */
+function showDT(id, el) {
+  document.querySelectorAll('.dt-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#dtFilters .filter-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+const dtState = {};
+
+function dtNext(tree, qId, answer) {
+  if (!dtState[tree]) dtState[tree] = {};
+  dtState[tree][qId] = answer;
+
+  // Tree-specific logic
+  if (tree === 'dt1') {
+    if (qId === 'q1' && answer === 'no') return dtShow(tree, 'r-agreement');
+    if (qId === 'q2' && answer === 'no') return dtShow(tree, 'r-agreement');
+    if (qId === 'q3' && answer === 'no') return dtShow(tree, 'r-agreement');
+    if (qId === 'q4' && answer === 'no') return dtShow(tree, 'r-illegal');
+    const nextMap = { q1:'q2', q2:'q3', q3:'q4', q4:'r-contract' };
+    const next = nextMap[qId];
+    if (next.startsWith('r-')) dtShow(tree, next);
+    else dtShowQ(tree, next, parseInt(next.replace('q','')) );
+  }
+  if (tree === 'dt2') {
+    if (qId === 'q1' && answer === 'no') return dtShow(tree, 'r-rfi');
+    if (qId === 'q2' && answer === 'no') return dtShow(tree, 'r-rfi');
+    if (qId === 'q3') return dtShow(tree, answer === 'yes' ? 'r-rfp' : 'r-rfq');
+    dtShowQ(tree, 'q' + (parseInt(qId.replace('q',''))+1), parseInt(qId.replace('q',''))+1);
+  }
+  if (tree === 'dt3') {
+    if (qId === 'q1' && answer === 'no') return dtShowQ(tree, 'q3', 3);
+    if (qId === 'q2' && answer === 'no') return dtShowQ(tree, 'q4', 3);
+    if (qId === 'q3') return dtShow(tree, answer === 'yes' ? 'r-fixed' : 'r-tm');
+    if (qId === 'q4') return dtShow(tree, answer === 'yes' ? 'r-idiq' : 'r-cost');
+    dtShowQ(tree, 'q2', 2);
+  }
+  if (tree === 'dt5') {
+    if (qId === 'q1' && answer === 'no') return dtShow(tree, 'r-not-required');
+    if (qId === 'q2' && answer === 'no') return dtShow(tree, 'r-covered');
+    if (qId === 'q3') return dtShow(tree, answer === 'yes' ? 'r-existing' : 'r-required');
+    dtShowQ(tree, 'q' + (parseInt(qId.replace('q',''))+1), parseInt(qId.replace('q',''))+1);
+  }
+}
+
+function dtShowQ(tree, qId, step) {
+  document.querySelectorAll(`#${tree}-flow .dt-node`).forEach(n => n.classList.remove('active'));
+  const node = document.getElementById(`${tree}-${qId}`);
+  if (node) node.classList.add('active');
+  // Update progress dots if they exist
+  for (let i = 1; i <= 6; i++) {
+    const dot = document.getElementById(`${tree}-ps${i}`);
+    if (!dot) continue;
+    dot.classList.remove('active','done');
+    if (i < step) dot.classList.add('done');
+    else if (i === step) dot.classList.add('active');
+  }
+}
+
+function dtShow(tree, resultId) {
+  document.querySelectorAll(`#${tree}-flow .dt-node`).forEach(n => n.classList.remove('active'));
+  const node = document.getElementById(`${tree}-${resultId}`);
+  if (node) node.classList.add('active');
+  // Mark all progress dots done
+  for (let i = 1; i <= 6; i++) {
+    const dot = document.getElementById(`${tree}-ps${i}`);
+    if (dot) { dot.classList.remove('active'); dot.classList.add('done'); }
+  }
+}
+
+function dtRestart(tree) {
+  dtState[tree] = {};
+  document.querySelectorAll(`#${tree}-flow .dt-node`).forEach(n => n.classList.remove('active'));
+  const first = document.querySelector(`#${tree}-flow .dt-question`);
+  if (first) first.classList.add('active');
+  for (let i = 1; i <= 6; i++) {
+    const dot = document.getElementById(`${tree}-ps${i}`);
+    if (dot) { dot.classList.remove('done','active'); if(i===1) dot.classList.add('active'); }
+  }
+}
+
+/* ── APPROVAL ROUTING CALCULATOR ── */
+function calcApproval() {
+  const val = document.getElementById('ar-value').value;
+  const risk = document.getElementById('ar-risk').value;
+  if (!val || !risk) return;
+
+  const approvals = {
+    '1': { low: [['Dept. Manager','var(--blue)'],['CA routes to CMS','var(--gray-400)']],
+            med: [['Dept. Manager','var(--blue)'],['Compliance Review','var(--purple)'],['CA executes & files BAA','var(--gray-400)']],
+            high: [['Dept. Manager','var(--blue)'],['Legal Review','var(--coral)'],['Compliance','var(--purple)'],['CA executes','var(--gray-400)']] },
+    '2': { low: [['Dept. Manager','var(--blue)'],['Director Approval','var(--teal)']],
+            med: [['Director','var(--teal)'],['Legal Review','var(--coral)'],['Compliance Notify','var(--purple)']],
+            high: [['Director','var(--teal)'],['Legal Review','var(--coral)'],['Compliance','var(--purple)'],['Risk Mgmt Review','var(--amber)']] },
+    '3': { low: [['Director','var(--teal)'],['VP Approval','var(--navy)'],['Legal Review','var(--coral)']],
+            med: [['Director','var(--teal)'],['VP','var(--navy)'],['Legal','var(--coral)'],['Finance Review','var(--green)'],['Compliance','var(--purple)']],
+            high: [['VP','var(--navy)'],['Legal','var(--coral)'],['Finance','var(--green)'],['Compliance','var(--purple)'],['Risk Mgmt','var(--amber)']] },
+    '4': { low: [['VP','var(--navy)'],['CFO Approval','var(--green)'],['Legal','var(--coral)']],
+            med: [['VP','var(--navy)'],['CFO','var(--green)'],['Legal','var(--coral)'],['Compliance','var(--purple)']],
+            high: [['CFO','var(--green)'],['Legal','var(--coral)'],['Compliance','var(--purple)'],['Risk Mgmt','var(--amber)'],['VP','var(--navy)']] },
+    '5': { low: [['CFO','var(--green)'],['CEO Approval','var(--navy)'],['Legal','var(--coral)']],
+            med: [['CFO','var(--green)'],['CEO','var(--navy)'],['Legal','var(--coral)'],['Compliance','var(--purple)']],
+            high: [['CFO','var(--green)'],['CEO','var(--navy)'],['Legal','var(--coral)'],['Compliance','var(--purple)'],['Risk Mgmt','var(--amber)'],['Board Notification','#6D28D9']] },
+  };
+
+  const notes = {
+    '1': { low:'Standard routing. CA manages independently.', med:'BAA likely required. Notify Compliance before vendor has data access.', high:'Legal must review before any negotiation begins. Loop in Compliance on day one.' },
+    '2': { low:'Competitive bid required unless GPO contract available.', med:'Legal review of T&Cs and BAA required. Plan for 5–10 business days routing time.', high:'Allow 10–15 business days for full routing. Legal and Compliance should be engaged at contract initiation, not after drafting.' },
+    '3': { low:'Board notification not required. CFO sign-off on financial terms recommended.', med:'Full legal and financial review. Engage all reviewers at initiation to avoid re-drafting.', high:'This is a high-priority contract. Engage Legal, Finance, Compliance, and Risk at the kick-off — do not draft first and route later.' },
+    '4': { low:'Requires CFO involvement. Ensure multi-year cost projections are documented.', med:'Compliance should conduct a full regulatory review at initiation.', high:'Risk Management must assess insurance adequacy. Consider requiring performance bond.' },
+    '5': { low:'CEO required. Prepare an executive summary of key business terms for CEO review.', med:'Board notification likely required per MWHC policy. Confirm with your Supply Chain Director.', high:'Board notification required. Prepare a full contract briefing package. This will take 3–4 weeks minimum routing time. Plan accordingly.' },
+  };
+
+  const steps = approvals[val][risk];
+  const note = notes[val][risk];
+
+  document.getElementById('ar-steps').innerHTML = steps.map((s,i) => `
+    <div class="ar-step-row" style="background:${i===steps.length-1?'var(--gray-50)':'white'};border:1px solid var(--gray-200)">
+      <div class="ar-step-num" style="background:${s[1]}">${i+1}</div>
+      <div>${s[0]}</div>
+      ${i < steps.length-1 ? '<div style="margin-left:auto;color:var(--gray-400);font-size:18px">→</div>' : '<div style="margin-left:auto;font-size:11px;color:var(--green);font-weight:600">EXECUTE</div>'}
+    </div>`).join('');
+
+  document.getElementById('ar-notes').innerHTML = `<strong>Note:</strong> ${note}`;
+  document.getElementById('ar-result').style.display = 'block';
+}
+
+/* ── RISK CALCULATOR ── */
+function calcRisk() {
+  const boxes = document.querySelectorAll('#risk-factors input[type=checkbox]');
+  const count = Array.from(boxes).filter(b => b.checked).length;
+  const el = document.getElementById('risk-result');
+  let level, color, bg, actions;
+  if (count === 0) { el.style.display='none'; return; }
+  if (count <= 2) {
+    level = '🟢 Low Risk'; color = 'var(--green)'; bg = 'var(--green-light)';
+    actions = 'Standard routing applies. Department Manager approval may suffice at lower values. Confirm with your supervisor. Legal review required if any contract terms are non-standard.';
+  } else if (count <= 5) {
+    level = '🟡 Medium Risk'; color = 'var(--amber)'; bg = 'var(--amber-light)';
+    actions = 'Director-level approval minimum. Legal review required. Notify Compliance. If PHI is involved, BAA must be executed before contract. Plan for extended routing time.';
+  } else {
+    level = '🔴 High Risk'; color = 'var(--coral)'; bg = 'var(--coral-light)';
+    actions = 'Engage Legal, Compliance, Finance, and Risk Management at contract initiation — before drafting begins. VP or above approval required. This contract warrants extra scrutiny at every stage.';
+  }
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="background:${bg};border-radius:10px;padding:18px 20px;border:1px solid ${color}30">
+      <div style="font-size:18px;font-weight:700;color:${color};margin-bottom:8px">${level} — ${count} factor${count!==1?'s':''} identified</div>
+      <div style="font-size:14px;color:var(--gray-600);line-height:1.65">${actions}</div>
+    </div>`;
+}
+
 </script>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECTION 8: DECISION TOOLS -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-decisions">
+  <div class="section-hero">
+    <div class="section-eyebrow">Decision Tools</div>
+    <h2 class="section-title">If-then flows, decision trees & charts.</h2>
+    <p class="section-intro">Use these interactive tools when you're not sure what to do next. Answer each question and the chart walks you to the right answer.</p>
+  </div>
+
+  <div class="pill-row" id="dtFilters">
+    <span class="filter-pill active" data-dt="dt1" onclick="showDT('dt1',this)">Is it a Contract?</span>
+    <span class="filter-pill" data-dt="dt2" onclick="showDT('dt2',this)">RFI vs RFQ vs RFP</span>
+    <span class="filter-pill" data-dt="dt3" onclick="showDT('dt3',this)">Contract Type</span>
+    <span class="filter-pill" data-dt="dt4" onclick="showDT('dt4',this)">Approval Routing</span>
+    <span class="filter-pill" data-dt="dt5" onclick="showDT('dt5',this)">BAA Required?</span>
+    <span class="filter-pill" data-dt="dt6" onclick="showDT('dt6',this)">Breach Response</span>
+    <span class="filter-pill" data-dt="dt7" onclick="showDT('dt7',this)">Risk Level</span>
+  </div>
+
+  <!-- ── DT1: Contract vs Agreement ── -->
+  <div class="dt-panel active" id="dt1">
+    <div class="dt-title">Is this document a binding contract?</div>
+    <div class="dt-sub">Answer each question to find out how to classify what you're looking at.</div>
+    <div class="dt-flow" id="dt1-flow">
+      <div class="dt-node dt-question active" id="dt1-q1">
+        <div class="dt-q-text">Does the document involve an exchange — one party gives something (money, service, goods) and the other gives something back?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt1','q1','yes')">Yes</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt1','q1','no')">No</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt1-q2">
+        <div class="dt-q-text">Have all parties clearly agreed to the specific terms — not just "agreed in principle"?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt1','q2','yes')">Yes</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt1','q2','no')">No</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt1-q3">
+        <div class="dt-q-text">Are all parties legally able to enter a contract? (i.e. they are authorized representatives of their organizations, not just employees without signing authority)</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt1','q3','yes')">Yes</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt1','q3','no')">No</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt1-q4">
+        <div class="dt-q-text">Is the purpose of this document legal — i.e., nothing in it violates federal or state law?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt1','q4','yes')">Yes</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt1','q4','no')">No</button>
+        </div>
+      </div>
+      <div class="dt-node dt-result dt-result-green" id="dt1-r-contract">
+        <div class="dt-r-icon">✓</div>
+        <div class="dt-r-title">This is a binding Contract</div>
+        <div class="dt-r-body">All four elements are present: offer, acceptance, consideration (exchange of value), and legal capacity. This document creates enforceable legal obligations. Make sure it goes through proper routing and approval before execution.</div>
+        <button class="dt-restart" onclick="dtRestart('dt1')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-amber" id="dt1-r-agreement">
+        <div class="dt-r-icon">⚠</div>
+        <div class="dt-r-title">This is an Agreement — not yet a binding Contract</div>
+        <div class="dt-r-body">One or more required elements is missing. This document expresses intent but may not be legally enforceable. Common examples: Letters of Intent, MOUs, informal email agreements, or documents signed by someone without authority. Work with Legal to either formalize it into a proper contract or clarify what it is.</div>
+        <button class="dt-restart" onclick="dtRestart('dt1')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-red" id="dt1-r-illegal">
+        <div class="dt-r-icon">✗</div>
+        <div class="dt-r-title">Stop — Do Not Proceed</div>
+        <div class="dt-r-body">If any element of this document violates federal or state law (e.g., Anti-Kickback, Stark Law, HIPAA), the contract is unenforceable and could expose MWHC to serious legal liability. Escalate to Legal and Compliance immediately before taking any further action.</div>
+        <button class="dt-restart" onclick="dtRestart('dt1')">Start over</button>
+      </div>
+    </div>
+    <div class="dt-progress" id="dt1-progress">
+      <div class="dt-prog-step active" id="dt1-ps1">1</div>
+      <div class="dt-prog-line"></div>
+      <div class="dt-prog-step" id="dt1-ps2">2</div>
+      <div class="dt-prog-line"></div>
+      <div class="dt-prog-step" id="dt1-ps3">3</div>
+      <div class="dt-prog-line"></div>
+      <div class="dt-prog-step" id="dt1-ps4">4</div>
+    </div>
+  </div>
+
+  <!-- ── DT2: RFI vs RFQ vs RFP ── -->
+  <div class="dt-panel" id="dt2">
+    <div class="dt-title">Which solicitation type do I use?</div>
+    <div class="dt-sub">Answer three questions to find the right procurement approach.</div>
+    <div class="dt-flow" id="dt2-flow">
+      <div class="dt-node dt-question active" id="dt2-q1">
+        <div class="dt-q-text">Do you already know exactly what you want to buy — specific product, quantity, and specifications are clear?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt2','q1','yes')">Yes — we know exactly what we need</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt2','q1','no')">No — we're still figuring it out</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt2-q2">
+        <div class="dt-q-text">Are you ready to commit to a purchase now, or are you just gathering market information first?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt2','q2','yes')">Ready to commit — we want prices and proposals</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt2','q2','no')">Just gathering info — no commitment yet</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt2-q3">
+        <div class="dt-q-text">Will you evaluate vendors on factors beyond just price — like their methodology, team, experience, or proposed solution?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt2','q3','yes')">Yes — multiple evaluation factors</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt2','q3','no')">No — price is the main factor</button>
+        </div>
+      </div>
+      <div class="dt-node dt-result dt-result-green" id="dt2-r-rfp">
+        <div class="dt-r-icon">📋</div>
+        <div class="dt-r-title">Use an RFP — Request for Proposal</div>
+        <div class="dt-r-body">Use an RFP when the need is complex, the solution isn't pre-defined, and you're evaluating vendors on multiple criteria. Vendors submit full proposals describing how they'd solve your problem, their team, timeline, and cost. You score and select based on best overall value — not just lowest price.<br><br><strong>Examples:</strong> New EHR system, outsourced food service, major construction project, staffing agency selection.</div>
+        <button class="dt-restart" onclick="dtRestart('dt2')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-green" id="dt2-r-rfq">
+        <div class="dt-r-icon">💲</div>
+        <div class="dt-r-title">Use an RFQ — Request for Quotation</div>
+        <div class="dt-r-body">Use an RFQ when you know exactly what you need and just want competitive pricing. Vendors simply submit their price — lowest qualified bid typically wins.<br><br><strong>Examples:</strong> 10,000 boxes of gloves (specific brand and size), office furniture (exact specifications), routine lab supplies with known specs.</div>
+        <button class="dt-restart" onclick="dtRestart('dt2')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-amber" id="dt2-r-rfi">
+        <div class="dt-r-icon">🔍</div>
+        <div class="dt-r-title">Use an RFI — Request for Information</div>
+        <div class="dt-r-body">Use an RFI when you're in early exploration mode — you want to understand what the market offers before committing to anything. No obligation to buy. RFIs help you define requirements, understand pricing ranges, and identify potential vendors before issuing a formal RFQ or RFP.<br><br><strong>Examples:</strong> Exploring whether to outsource a service, researching technology options, understanding vendor landscape before budgeting.</div>
+        <button class="dt-restart" onclick="dtRestart('dt2')">Start over</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DT3: Contract Type Selector ── -->
+  <div class="dt-panel" id="dt3">
+    <div class="dt-title">Which contract type should I use?</div>
+    <div class="dt-sub">The right contract type determines who bears financial risk. Answer these questions to find the best fit.</div>
+    <div class="dt-flow" id="dt3-flow">
+      <div class="dt-node dt-question active" id="dt3-q1">
+        <div class="dt-q-text">Is the scope of work clearly and completely defined — you know exactly what the vendor will deliver?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt3','q1','yes')">Yes — fully defined scope</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt3','q1','no')">No — scope is uncertain or evolving</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt3-q2">
+        <div class="dt-q-text">Is this a one-time project or an ongoing/recurring service?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt3','q2','yes')">One-time project</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt3','q2','no')">Ongoing / recurring service</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt3-q3">
+        <div class="dt-q-text">Is it more important to control cost certainty for the hospital, or to allow flexibility for the vendor?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt3','q3','yes')">Control cost — I need to know the total upfront</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt3','q3','no')">Flexibility — scope may change as we go</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt3-q4">
+        <div class="dt-q-text">Can you predict in advance how much of the service you'll actually use each month?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt3','q4','yes')">Yes — usage is predictable</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt3','q4','no')">No — usage varies significantly</button>
+        </div>
+      </div>
+      <div class="dt-node dt-result dt-result-green" id="dt3-r-fixed">
+        <div class="dt-r-icon">🔒</div>
+        <div class="dt-r-title">Fixed-Price Contract</div>
+        <div class="dt-r-body">The vendor names a price and delivers the work for that price — regardless of their actual costs. Best for well-defined, one-time deliverables where scope won't change.<br><br><strong>Hospital risk: Low</strong> — you know exactly what you'll pay.<br><strong>Vendor risk: High</strong> — they absorb cost overruns.<br><br><strong>Examples:</strong> Building renovation, software implementation, equipment purchase.</div>
+        <button class="dt-restart" onclick="dtRestart('dt3')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-green" id="dt3-r-idiq">
+        <div class="dt-r-icon">📦</div>
+        <div class="dt-r-title">IDIQ or Blanket Purchase Agreement</div>
+        <div class="dt-r-body">Indefinite Delivery/Indefinite Quantity — establishes agreed pricing and terms, with individual orders placed as needed. Perfect for ongoing services where exact volume isn't known upfront.<br><br><strong>Hospital risk: Medium</strong> — you control how much you order.<br><br><strong>Examples:</strong> Medical supplies, office products, on-call staffing, lab reagents.</div>
+        <button class="dt-restart" onclick="dtRestart('dt3')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-amber" id="dt3-r-tm">
+        <div class="dt-r-icon">⏱</div>
+        <div class="dt-r-title">Time & Materials (T&M)</div>
+        <div class="dt-r-body">You pay for actual hours worked at agreed rates, plus actual material costs. Used when scope can't be fully defined in advance — like emergency repairs or complex consulting.<br><br><strong>Hospital risk: High</strong> — final cost is uncertain. Always include a not-to-exceed (NTE) cap to protect the hospital.<br><br><strong>Examples:</strong> Emergency facility repairs, IT consulting, specialized clinical consulting.</div>
+        <button class="dt-restart" onclick="dtRestart('dt3')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-amber" id="dt3-r-cost">
+        <div class="dt-r-icon">📊</div>
+        <div class="dt-r-title">Cost-Reimbursable Contract</div>
+        <div class="dt-r-body">The hospital reimburses the vendor's actual costs plus an agreed fee. Used for research, highly complex projects, or situations where no vendor can reasonably predict costs upfront.<br><br><strong>Hospital risk: Highest</strong> — you absorb cost overruns. Requires strong audit rights and cost controls in the contract.<br><br><strong>Examples:</strong> Research partnerships, pilot programs, highly specialized clinical services.</div>
+        <button class="dt-restart" onclick="dtRestart('dt3')">Start over</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DT4: Approval Routing ── -->
+  <div class="dt-panel" id="dt4">
+    <div class="dt-title">Approval routing chart — who needs to sign?</div>
+    <div class="dt-sub">Enter the contract's total value and risk level to see exactly who must review and approve it before execution.</div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:6px">Total Contract Value</label>
+          <select id="ar-value" onchange="calcApproval()" style="width:100%;padding:8px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;background:white;color:var(--text)">
+            <option value="">Select value range…</option>
+            <option value="1">Under $25,000</option>
+            <option value="2">$25,000 – $100,000</option>
+            <option value="3">$100,001 – $500,000</option>
+            <option value="4">$500,001 – $1,000,000</option>
+            <option value="5">Over $1,000,000</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:6px">Risk Level</label>
+          <select id="ar-risk" onchange="calcApproval()" style="width:100%;padding:8px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:14px;background:white;color:var(--text)">
+            <option value="">Select risk level…</option>
+            <option value="low">Low — standard supply/service, no PHI, no patient contact</option>
+            <option value="med">Medium — involves PHI, on-site personnel, or clinical adjacency</option>
+            <option value="high">High — clinical services, physician arrangements, major IT systems</option>
+          </select>
+        </div>
+      </div>
+      <div id="ar-result" style="display:none">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray-400);margin-bottom:12px">Required Approvals — in this order</div>
+        <div id="ar-steps"></div>
+        <div id="ar-notes" style="margin-top:14px;font-size:13px;padding:12px 14px;background:var(--amber-light);border-radius:6px;color:#78350F;line-height:1.6"></div>
+      </div>
+    </div>
+
+    <div class="section-label">Quick Reference — Approval Thresholds at a Glance</div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr style="background:var(--navy);color:white">
+            <th style="padding:10px 14px;text-align:left;border-radius:8px 0 0 0">Contract Value</th>
+            <th style="padding:10px 14px;text-align:left">Low Risk</th>
+            <th style="padding:10px 14px;text-align:left">Medium Risk</th>
+            <th style="padding:10px 14px;text-align:left;border-radius:0 8px 0 0">High Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--gray-200)">
+            <td style="padding:10px 14px;font-weight:600">Under $25K</td>
+            <td style="padding:10px 14px">Dept. Manager</td>
+            <td style="padding:10px 14px">Manager + Compliance</td>
+            <td style="padding:10px 14px">Manager + Legal + Compliance</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-200);background:var(--gray-50)">
+            <td style="padding:10px 14px;font-weight:600">$25K – $100K</td>
+            <td style="padding:10px 14px">Director</td>
+            <td style="padding:10px 14px">Director + Legal</td>
+            <td style="padding:10px 14px">Director + Legal + Compliance</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-200)">
+            <td style="padding:10px 14px;font-weight:600">$100K – $500K</td>
+            <td style="padding:10px 14px">VP + Legal</td>
+            <td style="padding:10px 14px">VP + Legal + Finance</td>
+            <td style="padding:10px 14px">VP + Legal + Finance + Compliance</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--gray-200);background:var(--gray-50)">
+            <td style="padding:10px 14px;font-weight:600">$500K – $1M</td>
+            <td style="padding:10px 14px">CFO + Legal</td>
+            <td style="padding:10px 14px">CFO + Legal + Compliance</td>
+            <td style="padding:10px 14px">CFO + Legal + Compliance + Risk</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 14px;font-weight:600">Over $1M</td>
+            <td style="padding:10px 14px">CEO + CFO + Legal</td>
+            <td style="padding:10px 14px">CEO + CFO + Legal + Compliance</td>
+            <td style="padding:10px 14px">CEO + CFO + Legal + Compliance + Risk + Board Notify</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── DT5: BAA Required? ── -->
+  <div class="dt-panel" id="dt5">
+    <div class="dt-title">Does this vendor need a Business Associate Agreement (BAA)?</div>
+    <div class="dt-sub">A BAA is required by federal law (HIPAA) whenever a vendor may access patient information. Missing one can result in millions in fines. Use this flow to be sure.</div>
+    <div class="dt-flow" id="dt5-flow">
+      <div class="dt-node dt-question active" id="dt5-q1">
+        <div class="dt-q-text">Will the vendor access, store, transmit, or process any patient information — including names, dates of birth, diagnoses, appointment records, billing info, or any other individually identifiable health data?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt5','q1','yes')">Yes — or I'm not sure</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt5','q1','no')">No — definitely no patient data</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt5-q2">
+        <div class="dt-q-text">Is the vendor providing a service to MWHC (as opposed to providing care directly to patients, which makes them a covered entity themselves)?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt5','q2','yes')">Yes — they support our operations</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt5','q2','no')">No — they provide direct patient care</button>
+        </div>
+      </div>
+      <div class="dt-node dt-question" id="dt5-q3">
+        <div class="dt-q-text">Does the vendor already have a current, signed BAA on file with MWHC?</div>
+        <div class="dt-btn-row">
+          <button class="dt-btn dt-yes" onclick="dtNext('dt5','q3','yes')">Yes — it's in the CMS</button>
+          <button class="dt-btn dt-no" onclick="dtNext('dt5','q3','no')">No — or I'm not sure</button>
+        </div>
+      </div>
+      <div class="dt-node dt-result dt-result-green" id="dt5-r-existing">
+        <div class="dt-r-icon">✓</div>
+        <div class="dt-r-title">BAA Already on File — Verify It's Current</div>
+        <div class="dt-r-body">Good news — a BAA exists. Before proceeding, verify two things: (1) the BAA hasn't expired, and (2) it covers the specific services in this new contract. If the vendor is being contracted for a new type of service that wasn't covered in the original BAA, you may need an updated or additional BAA. Check with Compliance if unsure.</div>
+        <button class="dt-restart" onclick="dtRestart('dt5')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-red" id="dt5-r-required">
+        <div class="dt-r-icon">⚠</div>
+        <div class="dt-r-title">BAA Required — Do Not Proceed Without One</div>
+        <div class="dt-r-body">This vendor must sign a BAA before they can access any patient information or go live with any system. This is a federal legal requirement under HIPAA — not optional.<br><br><strong>Next steps:</strong><br>1. Notify Compliance you are executing a new vendor agreement involving PHI<br>2. Use MWHC's approved BAA template from Legal — do not use the vendor's version without Legal review<br>3. Get the BAA signed and filed in the CMS before contract execution<br>4. The vendor cannot begin work until the BAA is executed</div>
+        <button class="dt-restart" onclick="dtRestart('dt5')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-green" id="dt5-r-not-required">
+        <div class="dt-r-icon">✓</div>
+        <div class="dt-r-title">BAA Not Required for This Vendor</div>
+        <div class="dt-r-body">If the vendor truly has zero access to patient information, a BAA is not required. However, be careful — many vendors that seem unrelated to patient care actually touch PHI indirectly (e.g., a janitorial company that accesses patient areas, or an IT vendor that maintains systems storing PHI). When in doubt, ask Compliance before concluding no BAA is needed.</div>
+        <button class="dt-restart" onclick="dtRestart('dt5')">Start over</button>
+      </div>
+      <div class="dt-node dt-result dt-result-amber" id="dt5-r-covered">
+        <div class="dt-r-icon">ℹ</div>
+        <div class="dt-r-title">Different Rules Apply — Consult Legal</div>
+        <div class="dt-r-body">Vendors who are themselves covered entities (like another hospital, a physician group, or a health plan) have different HIPAA obligations. They don't need a traditional BAA but the contract still needs specific privacy and security language. Have Legal review the data handling provisions of this contract before execution.</div>
+        <button class="dt-restart" onclick="dtRestart('dt5')">Start over</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DT6: Breach Response ── -->
+  <div class="dt-panel" id="dt6">
+    <div class="dt-title">Vendor isn't doing what they promised — what do I do?</div>
+    <div class="dt-sub">Follow this flow step by step when a vendor fails to perform. Never skip steps — the sequence matters legally.</div>
+
+    <div style="position:relative;padding-left:36px;margin-top:8px">
+      <div style="position:absolute;left:14px;top:0;bottom:0;width:2px;background:var(--gray-200)"></div>
+
+      <div class="br-step">
+        <div class="br-num" style="background:var(--blue)">1</div>
+        <div class="br-content">
+          <div class="br-heading">Document the failure — in writing, immediately</div>
+          <div class="br-body">Write down exactly what the vendor was supposed to do, what they actually did (or didn't do), and the date. Pull the contract and confirm what their obligation was. You need this paper trail for everything that follows. Send an internal email to your supervisor summarizing the issue the same day you discover it.</div>
+          <div class="br-check">📋 Contract section to reference: Service Level Agreement (SLA) or Statement of Work (SOW)</div>
+        </div>
+      </div>
+
+      <div class="br-step">
+        <div class="br-num" style="background:var(--blue)">2</div>
+        <div class="br-content">
+          <div class="br-heading">Notify the vendor in writing</div>
+          <div class="br-body">Send a formal written notice to the vendor's account manager AND their leadership contact. Be factual — state the specific obligation, the specific failure, and the date. Do not make threats yet. Keep the tone professional. This notice starts the clock on the cure period.</div>
+          <div class="br-check">📋 Use email with read receipt. CC your Supply Chain Director and keep a copy in the CMS.</div>
+        </div>
+      </div>
+
+      <div class="br-step">
+        <div class="br-num" style="background:var(--teal)">3</div>
+        <div class="br-content">
+          <div class="br-heading">Check the cure period in the contract</div>
+          <div class="br-body">Most contracts give the vendor a defined window (typically 10–30 days) to fix the problem before further action can be taken. Look for the "cure period" or "remedy" clause. Mark the deadline on your calendar. If the contract has no cure period, consult Legal before taking further action.</div>
+          <div class="br-check">📋 Contract section to reference: "Default," "Remedy," or "Cure" clause</div>
+        </div>
+      </div>
+
+      <div class="br-step">
+        <div class="br-num" style="background:var(--teal)">4</div>
+        <div class="br-content">
+          <div class="br-heading">Monitor — did they fix it?</div>
+          <div class="br-body">During the cure period, track whether the vendor takes corrective action. Document every communication and any improvement (or lack thereof). If they fix the problem within the cure period, document that too and confirm in writing that the matter is resolved.</div>
+        </div>
+      </div>
+
+      <div class="br-step">
+        <div class="br-num" style="background:var(--amber)">5A</div>
+        <div class="br-content" style="background:var(--green-light);border-color:#BBF7D0">
+          <div class="br-heading" style="color:var(--green)">If fixed → Close the issue</div>
+          <div class="br-body">Document that the breach was cured. File the correspondence in the CMS. Consider whether this pattern warrants a contract amendment to add stronger performance guarantees going forward. Discuss with your supervisor.</div>
+        </div>
+      </div>
+
+      <div class="br-step">
+        <div class="br-num" style="background:var(--coral)">5B</div>
+        <div class="br-content" style="background:var(--coral-light);border-color:#FECACA">
+          <div class="br-heading" style="color:var(--coral)">If NOT fixed → Escalate immediately</div>
+          <div class="br-body">Notify Legal and your Supply Chain Director that the cure period has expired without resolution. At this point your options — which Legal will guide — include: invoking liquidated damages, issuing a termination for cause notice, or pursuing dispute resolution per the contract. Do not attempt to terminate a contract without Legal sign-off.</div>
+          <div class="br-check" style="background:#FEE2E2;color:#7F1D1D">⚠ Never verbally tell a vendor "you're terminated." All termination must be in writing, follow the contract's notice requirements exactly, and be approved by Legal first.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DT7: Risk Level ── -->
+  <div class="dt-panel" id="dt7">
+    <div class="dt-title">What's the risk level of this contract?</div>
+    <div class="dt-sub">Check every factor that applies to determine the overall risk classification — which drives your approval routing and legal review requirements.</div>
+
+    <div class="card">
+      <div style="font-size:13px;color:var(--gray-600);margin-bottom:16px">Check all that apply to this contract:</div>
+      <div id="risk-factors">
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Involves Protected Health Information (PHI) or patient data</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Vendor personnel will work on-site at MWHC facilities</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Involves a physician, physician group, or referral relationship</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Contract value exceeds $500,000</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Involves clinical care, patient safety, or clinical equipment</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Vendor is a sole source (no competitive bidding)</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Multi-year term (3 years or more)</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Involves construction, renovation, or life safety systems</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Contract is non-standard — no existing MWHC template applies</label>
+        <label class="risk-check"><input type="checkbox" onchange="calcRisk()"> Involves a new vendor with no prior MWHC relationship</label>
+      </div>
+      <div id="risk-result" style="display:none;margin-top:20px"></div>
+    </div>
+
+    <div class="section-label">Risk Factor Reference Guide</div>
+    <div class="two-col">
+      <div class="card" style="border-left:4px solid var(--green)">
+        <div style="font-size:14px;font-weight:600;color:var(--green);margin-bottom:8px">🟢 Low Risk (0–2 factors)</div>
+        <div style="font-size:13px;color:var(--gray-600)">Standard supply or routine service contracts. No PHI, no patient contact, well-defined scope. Department Manager can typically approve. Legal review may not be required below $25K.</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--amber)">
+        <div style="font-size:14px;font-weight:600;color:var(--amber);margin-bottom:8px">🟡 Medium Risk (3–5 factors)</div>
+        <div style="font-size:13px;color:var(--gray-600)">Contracts with PHI, on-site personnel, or clinical adjacency. Requires Director-level approval minimum and Legal review. BAA likely required. Compliance should be notified.</div>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top:0">
+      <div class="card" style="border-left:4px solid var(--coral)">
+        <div style="font-size:14px;font-weight:600;color:var(--coral);margin-bottom:8px">🔴 High Risk (6+ factors)</div>
+        <div style="font-size:13px;color:var(--gray-600)">Clinical services, major IT systems, physician arrangements, or high-value sole source contracts. Requires VP or above approval, full Legal and Compliance review, Risk Management input, and thorough documentation.</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--purple)">
+        <div style="font-size:14px;font-weight:600;color:var(--purple);margin-bottom:8px">🚨 Always Escalate</div>
+        <div style="font-size:13px;color:var(--gray-600)">Physician compensation, Anti-Kickback or Stark Law implications, or anything you're uncertain about. When in doubt, the right answer is always: call Legal before proceeding.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
 </body>
 </html>
