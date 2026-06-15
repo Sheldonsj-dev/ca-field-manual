@@ -758,6 +758,41 @@
   .lc-col-body { font-size: 13px; color: var(--gray-600); line-height: 1.65; }
   body.dark .lc-col-body { color: #D1D5DB; }
 
+
+  /* ── ORG CHART ── */
+  .org-wrap { overflow-x: auto; padding: 10px 0 20px; }
+  .org-box {
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .org-box:hover rect { opacity: 0.85; }
+  .org-popup {
+    display: none; position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    background: white; border: 1px solid var(--gray-200);
+    border-radius: 14px; padding: 24px 28px;
+    max-width: 360px; width: 90%; z-index: 400;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    animation: fadeIn 0.2s ease;
+  }
+  body.dark .org-popup { background: #1F2937; border-color: #374151; }
+  .org-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 399;
+  }
+  .org-popup.show, .org-overlay.show { display: block; }
+  .org-popup-title { font-size: 16px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+  body.dark .org-popup-title { color: #F9FAFB; }
+  .org-popup-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: 12px; margin-bottom: 12px; }
+  .org-popup-body { font-size: 13px; color: var(--gray-600); line-height: 1.65; margin-bottom: 16px; }
+  body.dark .org-popup-body { color: #D1D5DB; }
+  .org-popup-close {
+    width: 100%; padding: 9px; border-radius: 8px;
+    border: 1px solid var(--gray-200); background: var(--gray-50);
+    font-size: 13px; color: var(--gray-600); cursor: pointer;
+  }
+  body.dark .org-popup-close { background: #374151; border-color: #4B5563; color: #D1D5DB; }
+  .org-popup-close:hover { background: var(--gray-100); }
+
 </style>
 </head>
 <body>
@@ -782,6 +817,7 @@
   <div class="nav-tab" onclick="showSection('quiz',this)">Knowledge Check</div>
   <div class="nav-tab" onclick="showSection('decisions',this)">🔀 Decision Tools</div>
   <div class="nav-tab" onclick="showSection('lifecycle',this)">🔄 Lifecycle</div>
+  <div class="nav-tab" onclick="showSection('orgchart',this)">🏢 Org Chart</div>
 </nav>
 
 <div class="nav-drawer" id="navDrawer" onclick="handleDrawerClick(event)">
@@ -800,6 +836,7 @@
     <button class="nav-drawer-item" onclick="drawerNav('quiz')">✅ Knowledge Check</button>
     <button class="nav-drawer-item" onclick="drawerNav('decisions')">🔀 Decision Tools</button>
     <button class="nav-drawer-item" onclick="drawerNav('lifecycle')">🔄 Contract Lifecycle</button>
+    <button class="nav-drawer-item" onclick="drawerNav('orgchart')">🏢 Org Chart</button>
   </div>
 </div>
 <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
@@ -1652,6 +1689,41 @@ function lcShow(n) {
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+
+/* ── ORG CHART ── */
+var ORG_DATA = {
+  ceo:        { title: 'CEO / President',        badge: 'Ultimate signing authority',  color: '#0D1F3C', tc: 'white',  body: 'Signs all contracts over $1M and receives strategic reporting on portfolio health. You will interact at this level rarely, but when you do, be prepared with a concise executive summary of key contract terms and business justification.' },
+  cfo:        { title: 'CFO / Finance',           badge: 'Financial approver',          color: '#1A3660', tc: 'white',  body: 'Reviews financial terms, payment conditions, and budget alignment for high-value contracts. Engage Finance early on any contract with complex pricing, multi-year commitments, or significant financial risk to the organization.' },
+  legal:      { title: 'General Counsel / Legal', badge: 'Legal review — never bypass', color: '#DC2626', tc: 'white',  body: 'Reviews and approves all contract language, T&Cs, indemnification clauses, and regulatory provisions. This is one of your most critical relationships. Never execute a contract without Legal clearance. When in doubt, call them first.' },
+  scvp:       { title: 'Supply Chain VP',         badge: 'Department head',             color: '#1A3660', tc: 'white',  body: 'Leads your department and sets strategic direction for contracting. Approves contracts at the VP level and is an escalation point for complex or politically sensitive situations.' },
+  compliance: { title: 'Compliance Officer',       badge: 'Regulatory oversight',        color: '#6D28D9', tc: 'white',  body: 'Ensures every contract aligns with HIPAA, CMS conditions, and all applicable regulations. Review all BAAs and any contract involving patient data with Compliance before execution.' },
+  clinical:   { title: 'Clinical Leadership',      badge: 'Clinical contract input',     color: '#0F766E', tc: 'white',  body: 'Engaged when contracts affect patient care — clinical equipment, staffing agencies, lab services. They define clinical quality standards; you put those standards into the contract.' },
+  scdir:      { title: 'Supply Chain Director',    badge: 'Your direct manager',         color: '#2563EB', tc: 'white',  body: 'Your day-to-day leader. Sets priorities, reviews your work, and is your first escalation point for any contract issue you are unsure about. Build a strong, communicative relationship here from week one.' },
+  you:        { title: 'You — Contract Administrator', badge: '$300M+ portfolio',        color: '#2563EB', tc: 'white',  body: 'You are the single point of contact for contract review, drafting, negotiation, routing, and portfolio management. You protect the hospital legally and operationally through every contract action. Every other person on this chart depends on you doing your job well.' },
+  sradmin:    { title: 'Sr. Contract Administrator', badge: 'Mentor and peer',           color: '#374151', tc: 'white',  body: 'Your go-to resource for learning the ropes. Shadow them in weeks 1 and 2. They know the institutional history, the vendor relationships, and where the bodies are buried. Ask them questions freely.' },
+  deptmgr:    { title: 'Department Managers',      badge: 'Primary internal customers',  color: '#4B5563', tc: 'white',  body: 'These are the people who come to you with procurement needs. They define what is needed; you translate that into a compliant contract. Treat them as your most important customers. Respond promptly and communicate clearly about timelines and requirements.' },
+  vendor:     { title: 'Vendors / Suppliers',       badge: 'Your counterparties',         color: '#374151', tc: 'white',  body: 'The companies you contract with. You negotiate directly, manage the relationship throughout the contract term, and hold them accountable to their obligations. Be firm on terms but professional in all interactions.' },
+  ap:         { title: 'Accounts Payable',          badge: 'Payment execution',           color: '#374151', tc: 'white',  body: 'AP executes vendor payments according to contract payment terms. Make sure the payment terms in your contracts are clear and match what AP can actually process. Misalignment here causes invoice disputes and vendor relationship damage.' }
+};
+
+function orgShow(key) {
+  var d = ORG_DATA[key];
+  if (!d) return;
+  document.getElementById('orgPopupTitle').textContent = d.title;
+  var badge = document.getElementById('orgPopupBadge');
+  badge.textContent = d.badge;
+  badge.style.background = d.color + '22';
+  badge.style.color = d.color;
+  document.getElementById('orgPopupBody').textContent = d.body;
+  document.getElementById('orgPopup').classList.add('show');
+  document.getElementById('orgOverlay').classList.add('show');
+}
+
+function orgClose() {
+  document.getElementById('orgPopup').classList.remove('show');
+  document.getElementById('orgOverlay').classList.remove('show');
+}
+
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
@@ -2113,6 +2185,141 @@ function lcShow(n) {
   </div>
 
   <div class="lc-detail" id="lcDetail"></div>
+
+</section>
+
+
+<!-- ══ ORG CHART ══ -->
+<section class="section" id="sec-orgchart">
+  <div class="section-hero">
+    <div class="section-eyebrow">Org Chart</div>
+    <h2 class="section-title">How everyone connects — and where you fit.</h2>
+    <p class="section-intro">Click any box to see how that person or team relates to your daily work as a Contract Administrator.</p>
+  </div>
+
+  <div class="org-wrap">
+    <svg viewBox="0 0 720 440" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:560px;font-family:system-ui,sans-serif">
+
+      <!-- Connecting lines -->
+      <!-- CEO down -->
+      <line x1="360" y1="68" x2="360" y2="100" stroke="#E5E7EB" stroke-width="1.5"/>
+      <!-- L2 horizontal -->
+      <line x1="80" y1="100" x2="640" y2="100" stroke="#E5E7EB" stroke-width="1.5"/>
+      <!-- L2 verticals -->
+      <line x1="80" y1="100" x2="80" y2="120" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="210" y1="100" x2="210" y2="120" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="360" y1="100" x2="360" y2="120" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="510" y1="100" x2="510" y2="120" stroke="#E5E7EB" stroke-width="1.5"/>
+      <line x1="640" y1="100" x2="640" y2="120" stroke="#E5E7EB" stroke-width="1.5"/>
+      <!-- Supply Chain Dir down -->
+      <line x1="360" y1="178" x2="360" y2="210" stroke="#2563EB" stroke-width="2" stroke-dasharray="5,3"/>
+      <!-- L3 horizontal -->
+      <line x1="180" y1="210" x2="540" y2="210" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <line x1="180" y1="210" x2="180" y2="230" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <line x1="360" y1="210" x2="360" y2="230" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <line x1="540" y1="210" x2="540" y2="230" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <!-- YOU down -->
+      <line x1="180" y1="295" x2="180" y2="330" stroke="#9CA3AF" stroke-width="1.5"/>
+      <line x1="80" y1="330" x2="280" y2="330" stroke="#9CA3AF" stroke-width="1.5"/>
+      <line x1="80" y1="330" x2="80" y2="348" stroke="#9CA3AF" stroke-width="1.5"/>
+      <line x1="180" y1="330" x2="180" y2="348" stroke="#9CA3AF" stroke-width="1.5"/>
+      <line x1="280" y1="330" x2="280" y2="348" stroke="#9CA3AF" stroke-width="1.5"/>
+
+      <!-- CEO -->
+      <g class="org-box" onclick="orgShow('ceo')">
+        <rect x="290" y="20" width="140" height="48" rx="8" fill="#0D1F3C"/>
+        <text x="360" y="40" text-anchor="middle" font-size="11" font-weight="600" fill="white">CEO / President</text>
+        <text x="360" y="56" text-anchor="middle" font-size="9" fill="#93C5FD">Signs contracts over $1M</text>
+      </g>
+
+      <!-- L2 boxes -->
+      <g class="org-box" onclick="orgShow('cfo')">
+        <rect x="30" y="120" width="100" height="48" rx="8" fill="#1A3660"/>
+        <text x="80" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="white">CFO / Finance</text>
+        <text x="80" y="155" text-anchor="middle" font-size="9" fill="#93C5FD">$500K+ approvals</text>
+      </g>
+      <g class="org-box" onclick="orgShow('legal')">
+        <rect x="160" y="120" width="100" height="48" rx="8" fill="#1A3660"/>
+        <text x="210" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="white">General Counsel</text>
+        <text x="210" y="155" text-anchor="middle" font-size="9" fill="#93C5FD">All legal review</text>
+      </g>
+      <g class="org-box" onclick="orgShow('scvp')">
+        <rect x="310" y="120" width="100" height="48" rx="8" fill="#1A3660"/>
+        <text x="360" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="white">Supply Chain VP</text>
+        <text x="360" y="155" text-anchor="middle" font-size="9" fill="#93C5FD">Dept. head</text>
+      </g>
+      <g class="org-box" onclick="orgShow('compliance')">
+        <rect x="460" y="120" width="100" height="48" rx="8" fill="#1A3660"/>
+        <text x="510" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="white">Compliance</text>
+        <text x="510" y="155" text-anchor="middle" font-size="9" fill="#93C5FD">HIPAA / regulatory</text>
+      </g>
+      <g class="org-box" onclick="orgShow('clinical')">
+        <rect x="590" y="120" width="100" height="48" rx="8" fill="#1A3660"/>
+        <text x="640" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="white">Clinical Leadership</text>
+        <text x="640" y="155" text-anchor="middle" font-size="9" fill="#93C5FD">Clinical contracts</text>
+      </g>
+
+      <!-- Supply Chain Director -->
+      <g class="org-box" onclick="orgShow('scdir')">
+        <rect x="300" y="230" width="120" height="48" rx="8" fill="#2563EB"/>
+        <text x="360" y="250" text-anchor="middle" font-size="11" font-weight="600" fill="white">Supply Chain Dir.</text>
+        <text x="360" y="265" text-anchor="middle" font-size="9" fill="#BFDBFE">Your direct manager</text>
+      </g>
+
+      <!-- YOU -->
+      <g class="org-box" onclick="orgShow('you')">
+        <rect x="120" y="230" width="120" height="65" rx="8" fill="#2563EB" stroke="#93C5FD" stroke-width="2.5"/>
+        <text x="180" y="254" text-anchor="middle" font-size="13" font-weight="700" fill="white">YOU</text>
+        <text x="180" y="270" text-anchor="middle" font-size="10" fill="#BFDBFE">Contract Administrator</text>
+        <text x="180" y="284" text-anchor="middle" font-size="9" fill="#93C5FD">$300M+ portfolio</text>
+      </g>
+
+      <!-- Sr Admin peer -->
+      <g class="org-box" onclick="orgShow('sradmin')">
+        <rect x="460" y="230" width="120" height="48" rx="8" fill="#374151"/>
+        <text x="520" y="250" text-anchor="middle" font-size="10" font-weight="600" fill="white">Sr. Contract Admin</text>
+        <text x="520" y="265" text-anchor="middle" font-size="9" fill="#D1D5DB">Your mentor / peer</text>
+      </g>
+
+      <!-- L4 externals -->
+      <g class="org-box" onclick="orgShow('deptmgr')">
+        <rect x="30" y="348" width="100" height="44" rx="8" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1"/>
+        <text x="80" y="366" text-anchor="middle" font-size="10" font-weight="600" fill="#1F2937">Dept. Managers</text>
+        <text x="80" y="381" text-anchor="middle" font-size="9" fill="#6B7280">Your customers</text>
+      </g>
+      <g class="org-box" onclick="orgShow('vendor')">
+        <rect x="140" y="348" width="100" height="44" rx="8" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1"/>
+        <text x="190" y="366" text-anchor="middle" font-size="10" font-weight="600" fill="#1F2937">Vendors</text>
+        <text x="190" y="381" text-anchor="middle" font-size="9" fill="#6B7280">Counterparties</text>
+      </g>
+      <g class="org-box" onclick="orgShow('ap')">
+        <rect x="250" y="348" width="100" height="44" rx="8" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1"/>
+        <text x="300" y="366" text-anchor="middle" font-size="10" font-weight="600" fill="#1F2937">Accounts Payable</text>
+        <text x="300" y="381" text-anchor="middle" font-size="9" fill="#6B7280">Executes payments</text>
+      </g>
+
+      <!-- Legend -->
+      <rect x="420" y="340" width="12" height="12" rx="2" fill="#0D1F3C"/>
+      <text x="436" y="351" font-size="9" fill="#6B7280">Senior leadership</text>
+      <rect x="420" y="358" width="12" height="12" rx="2" fill="#2563EB"/>
+      <text x="436" y="369" font-size="9" fill="#6B7280">Your direct chain</text>
+      <rect x="420" y="376" width="12" height="12" rx="2" fill="#374151"/>
+      <text x="436" y="387" font-size="9" fill="#6B7280">Peers</text>
+      <rect x="420" y="394" width="12" height="12" rx="2" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="1"/>
+      <text x="436" y="405" font-size="9" fill="#6B7280">External partners</text>
+
+      <text x="360" y="16" text-anchor="middle" font-size="10" fill="#9CA3AF">Click any box to learn more</text>
+    </svg>
+  </div>
+
+  <!-- Popup overlay -->
+  <div class="org-overlay" id="orgOverlay" onclick="orgClose()"></div>
+  <div class="org-popup" id="orgPopup">
+    <div class="org-popup-title" id="orgPopupTitle"></div>
+    <div class="org-popup-badge" id="orgPopupBadge"></div>
+    <div class="org-popup-body" id="orgPopupBody"></div>
+    <button class="org-popup-close" onclick="orgClose()">Close</button>
+  </div>
 
 </section>
 
