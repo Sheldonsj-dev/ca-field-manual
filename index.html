@@ -793,6 +793,65 @@
   body.dark .org-popup-close { background: #374151; border-color: #4B5563; color: #D1D5DB; }
   .org-popup-close:hover { background: var(--gray-100); }
 
+
+  /* ── QUICK REFERENCE ── */
+  .qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media(max-width:600px){ .qr-grid { grid-template-columns: 1fr; } }
+  .qr-card {
+    background: white; border: 1px solid var(--gray-200);
+    border-radius: 12px; padding: 18px 20px;
+  }
+  body.dark .qr-card { background: #1F2937; border-color: #374151; }
+  .qr-card-title {
+    font-size: 13px; font-weight: 700; color: var(--navy);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 7px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--gray-100);
+  }
+  body.dark .qr-card-title { color: #F9FAFB; border-color: #374151; }
+  .qr-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .qr-table th { background: var(--navy); color: white; padding: 6px 9px; text-align: left; }
+  .qr-table th:first-child { border-radius: 4px 0 0 0; }
+  .qr-table th:last-child { border-radius: 0 4px 0 0; }
+  .qr-table td { padding: 7px 9px; border-bottom: 1px solid var(--gray-100); color: var(--gray-600); }
+  body.dark .qr-table td { border-color: #374151; color: #D1D5DB; }
+  .qr-table tr:last-child td { border-bottom: none; }
+  .qr-table tr:nth-child(even) td { background: var(--gray-50); }
+  body.dark .qr-table tr:nth-child(even) td { background: #111827; }
+  .qr-step { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--gray-100); font-size: 12px; color: var(--gray-600); align-items: flex-start; }
+  body.dark .qr-step { border-color: #374151; color: #D1D5DB; }
+  .qr-step:last-child { border-bottom: none; }
+  .qr-step-num { width: 20px; height: 20px; border-radius: 50%; color: white; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .qr-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--gray-100); font-size: 12px; }
+  body.dark .qr-row { border-color: #374151; }
+  .qr-row:last-child { border-bottom: none; }
+  .qr-row-label { font-weight: 600; color: var(--navy); }
+  body.dark .qr-row-label { color: #F9FAFB; }
+  .qr-row-val { color: var(--gray-600); text-align: right; }
+  body.dark .qr-row-val { color: #D1D5DB; }
+  .qr-checklist { list-style: none; padding: 0; }
+  .qr-checklist li { font-size: 12px; color: var(--gray-600); padding: 5px 0; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 8px; }
+  body.dark .qr-checklist li { color: #D1D5DB; border-color: #374151; }
+  .qr-checklist li:last-child { border-bottom: none; }
+  .qr-checklist li::before { content: "☐"; font-size: 14px; color: var(--gray-400); flex-shrink: 0; }
+  .qr-terms { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+  .qr-term { font-size: 12px; color: var(--gray-600); padding: 3px 0; }
+  body.dark .qr-term { color: #D1D5DB; }
+  .qr-warn { font-size: 12px; color: var(--gray-600); padding: 5px 0; border-bottom: 1px solid var(--gray-100); display: flex; gap: 7px; align-items: flex-start; }
+  body.dark .qr-warn { color: #D1D5DB; border-color: #374151; }
+  .qr-warn:last-child { border-bottom: none; }
+  .qr-warn::before { content: "!"; background: var(--coral); color: white; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .qr-notes-input { width: 100%; padding: 10px 12px; font-size: 12px; font-family: var(--sans); border: 1px solid var(--gray-200); border-radius: 8px; background: var(--gray-50); color: var(--text); resize: vertical; min-height: 110px; outline: none; line-height: 1.6; }
+  body.dark .qr-notes-input { background: #374151; border-color: #4B5563; color: #F9FAFB; }
+  .qr-notes-input:focus { border-color: var(--blue); background: white; }
+  body.dark .qr-notes-input:focus { background: #1F2937; }
+  .qr-saved { font-size: 11px; color: var(--green); margin-top: 4px; opacity: 0; transition: opacity 0.3s; }
+  .qr-saved.show { opacity: 1; }
+  @media print {
+    .nav-bar, .dark-toggle, .nav-drawer { display: none !important; }
+    .section { display: block !important; }
+    .qr-grid { grid-template-columns: 1fr 1fr; }
+  }
+
 </style>
 </head>
 <body>
@@ -818,6 +877,7 @@
   <div class="nav-tab" onclick="showSection('decisions',this)">🔀 Decision Tools</div>
   <div class="nav-tab" onclick="showSection('lifecycle',this)">🔄 Lifecycle</div>
   <div class="nav-tab" onclick="showSection('orgchart',this)">🏢 Org Chart</div>
+  <div class="nav-tab" onclick="showSection('quickref',this)">⚡ Quick Ref</div>
 </nav>
 
 <div class="nav-drawer" id="navDrawer" onclick="handleDrawerClick(event)">
@@ -837,6 +897,7 @@
     <button class="nav-drawer-item" onclick="drawerNav('decisions')">🔀 Decision Tools</button>
     <button class="nav-drawer-item" onclick="drawerNav('lifecycle')">🔄 Contract Lifecycle</button>
     <button class="nav-drawer-item" onclick="drawerNav('orgchart')">🏢 Org Chart</button>
+    <button class="nav-drawer-item" onclick="drawerNav('quickref')">⚡ Quick Reference</button>
   </div>
 </div>
 <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
@@ -1724,6 +1785,19 @@ function orgClose() {
   document.getElementById('orgOverlay').classList.remove('show');
 }
 
+
+/* ── QUICK REFERENCE NOTES ── */
+function qrSave(key, val) {
+  localStorage.setItem('ca_qr_' + key, val);
+  var el = document.getElementById('qr-saved-' + key);
+  if (el) { el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 1500); }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var c = localStorage.getItem('ca_qr_contacts');
+  var el = document.getElementById('qr-contacts');
+  if (c && el) el.value = c;
+});
+
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
@@ -2319,6 +2393,117 @@ function orgClose() {
     <div class="org-popup-badge" id="orgPopupBadge"></div>
     <div class="org-popup-body" id="orgPopupBody"></div>
     <button class="org-popup-close" onclick="orgClose()">Close</button>
+  </div>
+
+</section>
+
+
+<!-- ══ QUICK REFERENCE ══ -->
+<section class="section" id="sec-quickref">
+  <div class="section-hero">
+    <div class="section-eyebrow">Quick Reference</div>
+    <h2 class="section-title">Everything you need, one page.</h2>
+    <p class="section-intro">Print this and keep it at your desk. These are the things you will look up most in your first 90 days.
+      <a href="#" onclick="window.print();return false;" style="margin-left:10px;font-size:13px;color:var(--blue)">🖨 Print this page</a>
+    </p>
+  </div>
+
+  <div class="qr-grid">
+
+    <!-- Approval thresholds -->
+    <div class="qr-card" style="border-top:3px solid var(--navy)">
+      <div class="qr-card-title">⚡ Approval Thresholds</div>
+      <table class="qr-table">
+        <thead><tr><th>Contract Value</th><th>Who Must Sign</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Under $25K</strong></td><td>Department Manager</td></tr>
+          <tr><td><strong>$25K – $100K</strong></td><td>Director</td></tr>
+          <tr><td><strong>$100K – $500K</strong></td><td>VP + Legal</td></tr>
+          <tr><td><strong>$500K – $1M</strong></td><td>CFO + Legal</td></tr>
+          <tr><td><strong>Over $1M</strong></td><td>CEO + CFO + Legal</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11px;color:var(--gray-400)">Add Compliance + Risk at all levels for high-risk contracts</div>
+    </div>
+
+    <!-- Breach response -->
+    <div class="qr-card" style="border-top:3px solid var(--coral)">
+      <div class="qr-card-title">🚨 Breach Response — In Order</div>
+      <div class="qr-step"><div class="qr-step-num" style="background:var(--blue)">1</div>Document the failure in writing — same day</div>
+      <div class="qr-step"><div class="qr-step-num" style="background:var(--blue)">2</div>Notify vendor in writing, CC Supply Chain Director</div>
+      <div class="qr-step"><div class="qr-step-num" style="background:var(--teal)">3</div>Check cure period in contract (10–30 days typical)</div>
+      <div class="qr-step"><div class="qr-step-num" style="background:var(--teal)">4</div>Monitor — did they fix it within the cure period?</div>
+      <div class="qr-step"><div class="qr-step-num" style="background:var(--green)">5A</div>Fixed → Document resolution, file in CMS</div>
+      <div class="qr-step"><div class="qr-step-num" style="background:var(--coral)">5B</div>Not fixed → Escalate to Legal. Never terminate verbally.</div>
+    </div>
+
+    <!-- Solicitation types -->
+    <div class="qr-card" style="border-top:3px solid var(--teal)">
+      <div class="qr-card-title">📋 RFI vs RFQ vs RFP</div>
+      <div class="qr-row"><span class="qr-row-label">RFI</span><span class="qr-row-val">Exploring market — no commitment</span></div>
+      <div class="qr-row"><span class="qr-row-label">RFQ</span><span class="qr-row-val">Know what you need — want prices</span></div>
+      <div class="qr-row"><span class="qr-row-label">RFP</span><span class="qr-row-val">Complex need — evaluate on multiple factors</span></div>
+      <div style="margin-top:12px" class="qr-card-title">📦 Contract Types</div>
+      <div class="qr-row"><span class="qr-row-label">Fixed-Price</span><span class="qr-row-val">Set price — low hospital risk</span></div>
+      <div class="qr-row"><span class="qr-row-label">T&amp;M</span><span class="qr-row-val">Hours + materials — add NTE cap</span></div>
+      <div class="qr-row"><span class="qr-row-label">IDIQ / BPA</span><span class="qr-row-val">Set terms, order as needed</span></div>
+      <div class="qr-row"><span class="qr-row-label">Cost-Reimb.</span><span class="qr-row-val">Highest risk — strong audit rights</span></div>
+    </div>
+
+    <!-- Top terms -->
+    <div class="qr-card" style="border-top:3px solid var(--purple)">
+      <div class="qr-card-title">🔑 Top 10 Terms to Know Cold</div>
+      <div class="qr-terms">
+        <div class="qr-term">BAA</div>
+        <div class="qr-term">SOW</div>
+        <div class="qr-term">Indemnification</div>
+        <div class="qr-term">Cure Period</div>
+        <div class="qr-term">DOA Policy</div>
+        <div class="qr-term">Evergreen Clause</div>
+        <div class="qr-term">Redline</div>
+        <div class="qr-term">Stark Law</div>
+        <div class="qr-term">Force Majeure</div>
+        <div class="qr-term">IDIQ</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="qr-grid">
+
+    <!-- Daily checklist -->
+    <div class="qr-card" style="border-top:3px solid var(--amber)">
+      <div class="qr-card-title">☑️ Daily 5-Minute Checklist</div>
+      <ul class="qr-checklist">
+        <li>Contracts expiring in 90 days — any action needed?</li>
+        <li>All activity entered in CMS today?</li>
+        <li>Any outstanding approvals to follow up on?</li>
+        <li>All requests responded to within 24 hours?</li>
+        <li>Any risk or legal concerns to flag to supervisor?</li>
+        <li>Any vendor performance issues to document?</li>
+      </ul>
+    </div>
+
+    <!-- Call legal when -->
+    <div class="qr-card" style="border-top:3px solid var(--coral)">
+      <div class="qr-card-title">📞 Call Legal Immediately When...</div>
+      <div class="qr-warn">Anything involves physician payments or referrals</div>
+      <div class="qr-warn">Vendor touching PHI has no signed BAA</div>
+      <div class="qr-warn">Contract has unusual or missing clauses</div>
+      <div class="qr-warn">A vendor threatens legal action</div>
+      <div class="qr-warn">You are unsure about regulatory compliance</div>
+      <div class="qr-warn">Termination is being considered</div>
+    </div>
+
+  </div>
+
+  <!-- My key contacts -->
+  <div class="qr-card" style="border-top:3px solid var(--blue);margin-bottom:0">
+    <div class="qr-card-title">📇 My Key Contacts — Fill These In</div>
+    <textarea class="qr-notes-input" id="qr-contacts"
+      placeholder="Supply Chain Director: &#10;General Counsel: &#10;Compliance Officer: &#10;IT Security Contact: &#10;Risk Management: &#10;Accounts Payable: &#10;My GPO Rep:"
+      oninput="qrSave('contacts', this.value)"></textarea>
+    <div class="qr-saved" id="qr-saved-contacts">Saved ✓</div>
   </div>
 
 </section>
