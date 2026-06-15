@@ -1173,8 +1173,11 @@
 function showSection(id, tab) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('sec-' + id).classList.add('active');
-  tab.classList.add('active');
+  var sec = document.getElementById('sec-' + id);
+  if (sec) sec.classList.add('active');
+  if (tab && tab.classList && tab.classList.contains('nav-tab')) tab.classList.add('active');
+  document.querySelectorAll('.nav-drawer-item').forEach(function(d){ d.classList.remove('active'); });
+  if (tab && tab.classList && tab.classList.contains('nav-drawer-item')) tab.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1824,7 +1827,7 @@ function toggleDark(){
   btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
   localStorage.setItem('ca_dark', document.body.classList.contains('dark') ? '1' : '0');
 }
-if(localStorage.getItem('ca_dark')==='1'){document.body.classList.add('dark');document.querySelector('.dark-toggle') && (document.querySelector('.dark-toggle').textContent='☀️');}
+/* dark mode init handled in DOMContentLoaded */
 
 /* ══ MOBILE NAV ══ */
 function openDrawer(){document.getElementById('navDrawer').classList.add('open');}
@@ -1843,7 +1846,15 @@ function loadSavedNotes(){
     if(v&&el)el.value=v;
   });
 }
-document.addEventListener('DOMContentLoaded', loadSavedNotes);
+document.addEventListener('DOMContentLoaded', function() {
+  loadSavedNotes();
+  renderProgress();
+  if (localStorage.getItem('ca_dark') === '1') {
+    document.body.classList.add('dark');
+    var btn = document.querySelector('.dark-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+});
 
 /* ══ CONTRACT LIFECYCLE DETAIL ══ */
 const LC_DATA = {
@@ -1995,7 +2006,6 @@ function setCertName(){
   }
 }
 
-document.addEventListener('DOMContentLoaded', renderProgress);
 
 </script>
 
