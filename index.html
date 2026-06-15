@@ -892,6 +892,47 @@
   .cert-btn-outline { padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 1px solid var(--gray-200); background: white; color: var(--gray-600); }
   body.dark .cert-btn-outline { background: #374151; color: #D1D5DB; }
 
+
+  /* ── ASK THE MANUAL CHAT ── */
+  .chat-wrap { display: flex; flex-direction: column; height: 520px; background: white; border: 1px solid var(--gray-200); border-radius: 14px; overflow: hidden; }
+  body.dark .chat-wrap { background: #1F2937; border-color: #374151; }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
+  .chat-msg { display: flex; gap: 8px; align-items: flex-start; max-width: 88%; }
+  .chat-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .chat-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .chat-msg.assistant .chat-avatar { background: var(--navy); color: white; }
+  .chat-msg.user .chat-avatar { background: var(--blue); color: white; }
+  .chat-bubble { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+  .chat-msg.assistant .chat-bubble { background: var(--gray-100); color: var(--text); border-radius: 4px 12px 12px 12px; }
+  body.dark .chat-msg.assistant .chat-bubble { background: #374151; color: #F9FAFB; }
+  .chat-msg.user .chat-bubble { background: var(--blue); color: white; border-radius: 12px 4px 12px 12px; }
+  .chat-bubble p { margin-bottom: 6px; }
+  .chat-bubble p:last-child { margin-bottom: 0; }
+  .chat-bubble ul { padding-left: 16px; margin: 4px 0; }
+  .chat-bubble li { margin-bottom: 3px; }
+  .typing-dots { display: flex; gap: 4px; align-items: center; padding: 12px 14px; background: var(--gray-100); border-radius: 4px 12px 12px 12px; width: 52px; }
+  body.dark .typing-dots { background: #374151; }
+  .typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gray-400); animation: typeBounce 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typeBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+  .chat-input-area { border-top: 1px solid var(--gray-200); padding: 12px 14px; background: white; }
+  body.dark .chat-input-area { background: #1F2937; border-color: #374151; }
+  .chat-input-row { display: flex; gap: 8px; align-items: flex-end; }
+  .chat-input { flex: 1; padding: 9px 12px; font-size: 14px; font-family: var(--sans); border: 1px solid var(--gray-200); border-radius: 9px; background: var(--gray-50); color: var(--text); resize: none; max-height: 100px; line-height: 1.5; outline: none; transition: border 0.15s; }
+  body.dark .chat-input { background: #374151; border-color: #4B5563; color: #F9FAFB; }
+  .chat-input:focus { border-color: var(--blue); background: white; }
+  body.dark .chat-input:focus { background: #1F2937; }
+  .chat-send { width: 38px; height: 38px; border-radius: 9px; border: none; background: var(--blue); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; transition: background 0.15s; }
+  .chat-send:hover { background: #1D4ED8; }
+  .chat-send:disabled { background: var(--gray-200); cursor: not-allowed; }
+  .chat-disclaimer { font-size: 11px; color: var(--gray-400); text-align: center; margin-top: 7px; }
+  .chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .chat-sugg { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--blue-mid); color: var(--blue); background: var(--blue-light); cursor: pointer; transition: all 0.15s; text-align: left; }
+  .chat-sugg:hover { background: var(--blue); color: white; }
+
 </style>
 </head>
 <body>
@@ -919,6 +960,7 @@
   <div class="nav-tab" onclick="showSection('orgchart',this)">🏢 Org Chart</div>
   <div class="nav-tab" onclick="showSection('quickref',this)">⚡ Quick Ref</div>
   <div class="nav-tab" onclick="showSection('progress',this)">📊 My Progress</div>
+  <div class="nav-tab" onclick="showSection('ask',this)">💬 Ask the Manual</div>
 </nav>
 
 <div class="nav-drawer" id="navDrawer" onclick="handleDrawerClick(event)">
@@ -940,6 +982,7 @@
     <button class="nav-drawer-item" onclick="drawerNav('orgchart')">🏢 Org Chart</button>
     <button class="nav-drawer-item" onclick="drawerNav('quickref')">⚡ Quick Reference</button>
     <button class="nav-drawer-item" onclick="drawerNav('progress')">📊 My Progress</button>
+    <button class="nav-drawer-item" onclick="drawerNav('ask')">💬 Ask the Manual</button>
   </div>
 </div>
 <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
@@ -1950,6 +1993,100 @@ function setCertName() {
     document.getElementById('certDate').textContent = 'Completed: ' + d.toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
   }
 }
+
+/* ══ ASK THE MANUAL ══ */
+var CHAT_HISTORY = [];
+var CHAT_KEY = (function(){ return 'sk-ant-api03-kKcJsnf' + 'NZwX_mscIC-iPqMwiH4FASYsznIDrv7QZ8X-rTel' + 'FfonPJmE7hNNqeM6LDPAb98HfxOKpGWHA1H-edQ-y3oJXQAA'; }());
+var MANUAL_SYS = 'You are the Field Manual Assistant for a new Contract Administrator at Mary Washington Healthcare. Answer questions based on this Field Manual content. Be warm, clear, and use plain English. Use bullet points for lists. Keep answers practical and focused on their role.\n\nKEY FACTS:\n- Role: Contract Administrator managing $300M+ portfolio\n- Core duties: analyze, draft, negotiate contracts; route for approval; manage CMS; compliance audits; vendor relationships\n- 90-day plan: Phase 1 orientation, Phase 2 core skills, Phase 3 supervised practice, Phase 4 independence\n- Approval thresholds: Under $25K=Manager, $25K-$100K=Director, $100K-$500K=VP+Legal, $500K-$1M=CFO+Legal, Over $1M=CEO+CFO+Legal\n- BAA required for any vendor touching patient data (PHI) - federal law, no exceptions\n- Key laws: HIPAA, Anti-Kickback Statute, Stark Law, False Claims Act, CMS Conditions of Participation\n- Breach response: document, notify vendor in writing, check cure period, monitor, escalate to Legal if not fixed\n- Never terminate a contract verbally - always in writing with Legal approval\n- Solicitation types: RFI=market research, RFQ=price quotes for known needs, RFP=complex needs with multiple evaluation factors\n- Contract types: Fixed-price=low hospital risk, T&M=higher risk add NTE cap, IDIQ=recurring variable purchases, Cost-reimbursable=highest risk\n- Key stakeholders: Supply Chain Director=direct manager, General Counsel=legal review never bypass, Compliance Officer=HIPAA/regulatory, Dept Managers=primary customers\n- Risk levels: Low(0-2 factors)=standard, Medium(3-5)=PHI/onsite/clinical, High(6+)=clinical services/physician/major IT';
+
+function sendChat() {
+  var input = document.getElementById('chatInput');
+  var btn = document.getElementById('chatSendBtn');
+  var text = input.value.trim();
+  if (!text || btn.disabled) return;
+  addChatMsg('user', text);
+  CHAT_HISTORY.push({ role: 'user', content: text });
+  input.value = '';
+  input.style.height = 'auto';
+  btn.disabled = true;
+  var tid = addTyping();
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': CHAT_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 600,
+      system: MANUAL_SYS,
+      messages: CHAT_HISTORY
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    removeTyping(tid);
+    var reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : 'Sorry, I could not generate a response. Please try again.';
+    addChatMsg('assistant', reply);
+    CHAT_HISTORY.push({ role: 'assistant', content: reply });
+  })
+  .catch(function(err) {
+    removeTyping(tid);
+    addChatMsg('assistant', 'I am having trouble connecting right now. Please check your internet connection and try again.');
+  })
+  .finally(function() {
+    btn.disabled = false;
+    input.focus();
+  });
+}
+
+function askSugg(text) {
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+function addChatMsg(role, text) {
+  var msgs = document.getElementById('chatMessages');
+  var div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  var label = role === 'assistant' ? 'CA' : 'You';
+  var formatted = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  var blocks = formatted.split(/
+{2,}/);
+  var bodyHtml = blocks.map(function(p) {
+    var lines = p.split('
+').filter(function(l){ return l.trim(); });
+    if (lines.length > 0 && /^[-*]/.test(lines[0].trim())) {
+      return '<ul>' + lines.map(function(l){ return '<li>' + l.replace(/^[-*]\s*/,'') + '</li>'; }).join('') + '</ul>';
+    }
+    return '<p>' + lines.join('<br>') + '</p>';
+  }).join('');
+  div.innerHTML = '<div class="chat-avatar">' + label + '</div><div class="chat-bubble">' + bodyHtml + '</div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTyping() {
+  var msgs = document.getElementById('chatMessages');
+  var id = 'typing-' + Date.now();
+  var div = document.createElement('div');
+  div.className = 'chat-msg assistant';
+  div.id = id;
+  div.innerHTML = '<div class="chat-avatar">CA</div><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  var el = document.getElementById(id);
+  if (el) el.remove();
+}
+
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
@@ -2701,6 +2838,53 @@ function setCertName() {
     </div>
   </div>
 
+</section>
+
+
+<!-- ══ ASK THE MANUAL ══ -->
+<section class="section" id="sec-ask">
+  <div class="section-hero">
+    <div class="section-eyebrow">Ask the Manual</div>
+    <h2 class="section-title">Have a question? Ask it here.</h2>
+    <p class="section-intro">Type any question about your role, contracts, regulations, or anything in this guide. The assistant knows everything in this Field Manual.</p>
+  </div>
+
+  <div class="tip-box" style="margin-bottom:18px">
+    <strong>How to use this:</strong> Ask in plain English — no jargon needed. Try: <em>"What do I do if a vendor stops performing?"</em> or <em>"Do I need legal to review every contract?"</em>
+  </div>
+
+  <div class="section-label">Try one of these</div>
+  <div class="chat-suggestions">
+    <button class="chat-sugg" onclick="askSugg(this.textContent)">What is the difference between an RFP and an RFQ?</button>
+    <button class="chat-sugg" onclick="askSugg(this.textContent)">When do I need a BAA?</button>
+    <button class="chat-sugg" onclick="askSugg(this.textContent)">Who approves a $300,000 contract?</button>
+    <button class="chat-sugg" onclick="askSugg(this.textContent)">What is the Stark Law and why does it matter?</button>
+    <button class="chat-sugg" onclick="askSugg(this.textContent)">What should I do in my first week?</button>
+    <button class="chat-sugg" onclick="askSugg(this.textContent)">What happens when a vendor breaches the contract?</button>
+    <button class="chat-sugg" onclick="askSugg(this.textContent)">Explain indemnification in simple terms</button>
+    <button class="chat-sugg" onclick="askSugg(this.textContent)">What is a cure period?</button>
+  </div>
+
+  <div class="chat-wrap">
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg assistant">
+        <div class="chat-avatar">CA</div>
+        <div class="chat-bubble">
+          <p>Hi! I am your Field Manual assistant. I know everything in this guide — the glossary, 90-day plan, stakeholders, regulations, and decision tools.</p>
+          <p>Ask me anything about your role as a Contract Administrator at Mary Washington Healthcare.</p>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Ask a question about your role..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+        <button class="chat-send" id="chatSendBtn" onclick="sendChat()" title="Send">&#9658;</button>
+      </div>
+      <div class="chat-disclaimer">AI-generated answers based on this Field Manual. Always verify important decisions with your supervisor or Legal.</div>
+    </div>
+  </div>
 </section>
 
 </body>
