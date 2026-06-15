@@ -744,6 +744,20 @@
   body.dark .br-body { color: #D1D5DB; }
   .br-note { font-size: 12px; padding: 7px 10px; border-radius: 5px; margin-top: 8px; background: var(--blue-light); color: #1E40AF; }
 
+
+  /* ── LIFECYCLE ── */
+  .lc-stage { cursor: pointer; }
+  .lc-stage rect { transition: opacity 0.15s; }
+  .lc-stage:hover rect { opacity: 0.8; }
+  .lc-detail { margin-top: 8px; display: none; }
+  .lc-detail.show { display: block; animation: fadeIn 0.25s ease; }
+  .lc-detail-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width:600px){ .lc-detail-grid { grid-template-columns: 1fr; } }
+  .lc-col-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-400); margin-bottom: 6px; }
+  .lc-col-label.danger { color: var(--coral); }
+  .lc-col-body { font-size: 13px; color: var(--gray-600); line-height: 1.65; }
+  body.dark .lc-col-body { color: #D1D5DB; }
+
 </style>
 </head>
 <body>
@@ -767,6 +781,7 @@
   <div class="nav-tab" onclick="showSection('regulations',this)">Rules & Laws</div>
   <div class="nav-tab" onclick="showSection('quiz',this)">Knowledge Check</div>
   <div class="nav-tab" onclick="showSection('decisions',this)">🔀 Decision Tools</div>
+  <div class="nav-tab" onclick="showSection('lifecycle',this)">🔄 Lifecycle</div>
 </nav>
 
 <div class="nav-drawer" id="navDrawer" onclick="handleDrawerClick(event)">
@@ -784,6 +799,7 @@
     <button class="nav-drawer-item" onclick="drawerNav('regulations')">⚖️ Rules & Laws</button>
     <button class="nav-drawer-item" onclick="drawerNav('quiz')">✅ Knowledge Check</button>
     <button class="nav-drawer-item" onclick="drawerNav('decisions')">🔀 Decision Tools</button>
+    <button class="nav-drawer-item" onclick="drawerNav('lifecycle')">🔄 Contract Lifecycle</button>
   </div>
 </div>
 <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
@@ -1574,6 +1590,67 @@ function calcRisk() {
   el.innerHTML = '<div style="background:'+bg+';border-radius:10px;padding:16px 18px;border:1px solid '+color+'40"><div style="font-size:17px;font-weight:700;color:'+color+';margin-bottom:6px">'+level+' — '+count+' factor'+(count!==1?'s':'')+' identified</div><div style="font-size:14px;color:var(--gray-600);line-height:1.65">'+msg+'</div></div>';
 }
 
+
+/* ── CONTRACT LIFECYCLE ── */
+var LC_DATA = {
+  1: {
+    color: '#7F77DD', bg: '#EDE9FE', title: 'Stage 1 — Identify the Need',
+    what: 'A department manager comes to you with a business need. Your job is to understand exactly what they need, why they need it, and define the scope before any procurement begins.',
+    you: 'Meet with the manager. Ask: What is needed? By when? What budget? Who are potential vendors? Document the requirement clearly in writing.',
+    risk: 'Vague or incomplete scope at this stage causes problems throughout the entire lifecycle — wrong vendor, disputes over deliverables, cost overruns.'
+  },
+  2: {
+    color: '#1D9E75', bg: '#E1F5EE', title: 'Stage 2 — Procure',
+    what: 'Determine how to find and select the right vendor. Depending on what you need, this could be an RFI (research), RFQ (get prices), or RFP (get full proposals). Above certain dollar thresholds, competitive bidding is required.',
+    you: 'Issue the appropriate solicitation. Evaluate responses. Select the vendor. Document your selection rationale in writing.',
+    risk: 'Skipping competitive bidding when required is a policy violation. Sole source justification must be documented before bypassing this stage.'
+  },
+  3: {
+    color: '#B45309', bg: '#FEF3C7', title: 'Stage 3 — Draft',
+    what: 'Write or negotiate the contract. This includes the SOW (what the vendor will do), T&Cs (the rules), pricing, timelines, and any special provisions required by law — like a BAA for HIPAA.',
+    you: 'Use approved MWHC templates. Redline the vendor's contract if they send their version. Make sure all required clauses are present before routing.',
+    risk: 'Missing a BAA, weak indemnification, or accepting a liability cap that is too low are common drafting errors that create major legal exposure.'
+  },
+  4: {
+    color: '#DC2626', bg: '#FEE2E2', title: 'Stage 4 — Review',
+    what: 'The contract goes to Legal for language review, Compliance for regulatory check (HIPAA, Stark, AKS), Finance for financial terms, and Risk Management for insurance verification.',
+    you: 'Route the contract following the DOA policy. Follow up to keep reviews moving. Never pressure reviewers to skip steps to save time.',
+    risk: 'Bypassing any required review — especially Legal or Compliance — can result in an unenforceable contract or regulatory liability for the hospital.'
+  },
+  5: {
+    color: '#2563EB', bg: '#DBEAFE', title: 'Stage 5 — Approve & Sign',
+    what: 'Based on contract value and risk level, the appropriate authority approves and signs. Under $25K = Manager. Over $1M = CEO. Signatures must come from authorized signatories only.',
+    you: 'Confirm the right person is signing based on the DOA policy. Ensure the final executed copy is saved in the CMS immediately.',
+    risk: 'A contract signed by someone without proper authority is invalid and creates legal exposure. Always verify signatory authority before sending for signature.'
+  },
+  6: {
+    color: '#059669', bg: '#D1FAE5', title: 'Stage 6 — Execute & Kick Off',
+    what: 'The contract is now live. You host or facilitate a kickoff meeting with the vendor to align on expectations, key contacts, deliverable timelines, and how issues will be communicated.',
+    you: 'Host kickoff. Send a kickoff summary email to the vendor. Set your expiration reminder in the CMS. Confirm vendor credentialing is complete before work begins.',
+    risk: 'Work starting without a kickoff means the vendor may not understand expectations — leading to early performance issues and disputes.'
+  },
+  7: {
+    color: '#4B5563', bg: '#F3F4F6', title: 'Stage 7 — Monitor, Audit & Renew',
+    what: 'Ongoing management of the contract. Track performance against the SOW, conduct periodic compliance audits, manage the vendor relationship, and prepare for renewal or closeout well before expiration.',
+    you: 'Set 90/60/30-day renewal alerts in the CMS. Conduct periodic performance reviews. Document any issues. Renew, renegotiate, or close out with deliberate intent — never by default.',
+    risk: 'Letting contracts expire without a decision is one of the most common and costly mistakes. It creates service gaps, unprotected vendor relationships, and potential regulatory exposure.'
+  }
+};
+
+function lcShow(n) {
+  var d = LC_DATA[n];
+  var el = document.getElementById('lcDetail');
+  el.innerHTML = '<div class="card" style="border-left:4px solid '+d.color+';margin-top:4px">' +
+    '<div style="font-size:16px;font-weight:600;color:'+d.color+';margin-bottom:14px">'+d.title+'</div>' +
+    '<div class="lc-detail-grid">' +
+    '<div><div class="lc-col-label">What happens</div><div class="lc-col-body">'+d.what+'</div></div>' +
+    '<div><div class="lc-col-label">Your role</div><div class="lc-col-body">'+d.you+'</div></div>' +
+    '<div><div class="lc-col-label danger">Risk if skipped</div><div class="lc-col-body">'+d.risk+'</div></div>' +
+    '</div></div>';
+  el.classList.add('show');
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
@@ -1943,6 +2020,98 @@ function calcRisk() {
       <div id="risk-result" style="display:none;margin-top:16px"></div>
     </div>
   </div>
+
+</section>
+
+
+<!-- ══ CONTRACT LIFECYCLE ══ -->
+<section class="section" id="sec-lifecycle">
+  <div class="section-hero">
+    <div class="section-eyebrow">Contract Lifecycle</div>
+    <h2 class="section-title">The cradle-to-grave journey of every contract.</h2>
+    <p class="section-intro">Every contract you manage follows this path. Click any stage to see what happens there, your specific role, and what goes wrong if it's skipped.</p>
+  </div>
+
+  <div style="overflow-x:auto;padding:10px 0 4px">
+    <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:560px;font-family:system-ui,sans-serif">
+      <defs>
+        <marker id="arrowLC" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="#9CA3AF"/>
+        </marker>
+      </defs>
+
+      <!-- Stage 1 -->
+      <g class="lc-stage" onclick="lcShow(1)">
+        <rect x="8" y="30" width="90" height="56" rx="9" fill="#EDE9FE" stroke="#7F77DD" stroke-width="1.5"/>
+        <text x="53" y="54" text-anchor="middle" font-size="10" font-weight="600" fill="#3C3489">IDENTIFY</text>
+        <text x="53" y="68" text-anchor="middle" font-size="9" fill="#534AB7">Need &amp; Scope</text>
+        <text x="53" y="100" text-anchor="middle" font-size="9" fill="#7F77DD">Stage 1</text>
+      </g>
+      <line x1="98" y1="58" x2="112" y2="58" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arrowLC)"/>
+
+      <!-- Stage 2 -->
+      <g class="lc-stage" onclick="lcShow(2)">
+        <rect x="114" y="30" width="90" height="56" rx="9" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1.5"/>
+        <text x="159" y="54" text-anchor="middle" font-size="10" font-weight="600" fill="#085041">PROCURE</text>
+        <text x="159" y="68" text-anchor="middle" font-size="9" fill="#0F6E56">RFI/RFQ/RFP</text>
+        <text x="159" y="100" text-anchor="middle" font-size="9" fill="#1D9E75">Stage 2</text>
+      </g>
+      <line x1="204" y1="58" x2="218" y2="58" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arrowLC)"/>
+
+      <!-- Stage 3 -->
+      <g class="lc-stage" onclick="lcShow(3)">
+        <rect x="220" y="30" width="90" height="56" rx="9" fill="#FEF3C7" stroke="#B45309" stroke-width="1.5"/>
+        <text x="265" y="54" text-anchor="middle" font-size="10" font-weight="600" fill="#78350F">DRAFT</text>
+        <text x="265" y="68" text-anchor="middle" font-size="9" fill="#B45309">Write &amp; Redline</text>
+        <text x="265" y="100" text-anchor="middle" font-size="9" fill="#B45309">Stage 3</text>
+      </g>
+      <line x1="310" y1="58" x2="324" y2="58" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arrowLC)"/>
+
+      <!-- Stage 4 -->
+      <g class="lc-stage" onclick="lcShow(4)">
+        <rect x="326" y="30" width="90" height="56" rx="9" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+        <text x="371" y="54" text-anchor="middle" font-size="10" font-weight="600" fill="#7F1D1D">REVIEW</text>
+        <text x="371" y="68" text-anchor="middle" font-size="9" fill="#DC2626">Legal &amp; Compliance</text>
+        <text x="371" y="100" text-anchor="middle" font-size="9" fill="#DC2626">Stage 4</text>
+      </g>
+      <line x1="416" y1="58" x2="430" y2="58" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arrowLC)"/>
+
+      <!-- Stage 5 -->
+      <g class="lc-stage" onclick="lcShow(5)">
+        <rect x="432" y="30" width="90" height="56" rx="9" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/>
+        <text x="477" y="54" text-anchor="middle" font-size="10" font-weight="600" fill="#1E3A8A">APPROVE</text>
+        <text x="477" y="68" text-anchor="middle" font-size="9" fill="#1D4ED8">Route &amp; Sign</text>
+        <text x="477" y="100" text-anchor="middle" font-size="9" fill="#2563EB">Stage 5</text>
+      </g>
+      <line x1="522" y1="58" x2="536" y2="58" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arrowLC)"/>
+
+      <!-- Stage 6 -->
+      <g class="lc-stage" onclick="lcShow(6)">
+        <rect x="538" y="30" width="90" height="56" rx="9" fill="#D1FAE5" stroke="#059669" stroke-width="1.5"/>
+        <text x="583" y="54" text-anchor="middle" font-size="10" font-weight="600" fill="#064E3B">EXECUTE</text>
+        <text x="583" y="68" text-anchor="middle" font-size="9" fill="#065F46">Signed &amp; Live</text>
+        <text x="583" y="100" text-anchor="middle" font-size="9" fill="#059669">Stage 6</text>
+      </g>
+      <line x1="628" y1="58" x2="642" y2="58" stroke="#9CA3AF" stroke-width="1.5" marker-end="url(#arrowLC)"/>
+
+      <!-- Stage 7 -->
+      <g class="lc-stage" onclick="lcShow(7)">
+        <rect x="644" y="30" width="108" height="56" rx="9" fill="#F3F4F6" stroke="#6B7280" stroke-width="1.5"/>
+        <text x="698" y="54" text-anchor="middle" font-size="10" font-weight="600" fill="#1F2937">MONITOR</text>
+        <text x="698" y="68" text-anchor="middle" font-size="9" fill="#6B7280">Audit &amp; Renew</text>
+        <text x="698" y="100" text-anchor="middle" font-size="9" fill="#6B7280">Stage 7</text>
+      </g>
+
+      <!-- Renewal loop -->
+      <path d="M752,86 Q760,160 380,175 Q10,160 8,86" stroke="#9CA3AF" stroke-width="1.2" fill="none" stroke-dasharray="4,3" marker-end="url(#arrowLC)"/>
+      <text x="380" y="193" text-anchor="middle" font-size="9" fill="#9CA3AF">Renew or close out at expiration</text>
+
+      <!-- Hint -->
+      <text x="380" y="18" text-anchor="middle" font-size="10" fill="#9CA3AF">↓ Click any stage to learn more</text>
+    </svg>
+  </div>
+
+  <div class="lc-detail" id="lcDetail"></div>
 
 </section>
 
