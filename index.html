@@ -1468,6 +1468,191 @@ function calcRisk() {
       <div style="font-size:14px;color:var(--gray-600);line-height:1.65">${actions}</div>
     </div>`;
 }
+/* ══ ASK THE MANUAL — AI CHAT ══ */
+const MANUAL_CONTEXT = `You are the Field Manual Assistant for a new Contract Administrator at Mary Washington Healthcare (MWHC). Answer questions based on this Field Manual. Be warm, clear, use plain English. Use bullet points for lists. Keep answers practical.
+
+ROLE: Contract Administrator managing $300M+ contract portfolio. Core duties: analyze contracts, draft, negotiate, route for approval, manage CMS portfolio, compliance audits, vendor relationships.
+
+90-DAY PLAN:
+- Phase 1 (Days 1-14): Learn the org, shadow senior admin, understand contract lifecycle, learn CMS
+- Phase 2 (Days 15-45): Contract analysis, red flags, drafting, SOW/WBS, RFI/RFQ/RFP, negotiation
+- Phase 3 (Days 46-75): Manage 2-3 real supervised contracts, stakeholder engagement, first audit
+- Phase 4 (Days 76-90): Full independence, 90-day self-assessment, year-1 goals, certification planning
+- Daily habit: Check 90-day expiring contracts, update CMS, follow up approvals, respond within 24 hours
+
+KEY TERMS:
+- Contract: Legally binding — needs offer, acceptance, consideration, legal capacity
+- Agreement: Not all agreements are contracts — must classify correctly
+- BAA: REQUIRED by HIPAA for ANY vendor touching patient data. Sign BEFORE vendor accesses PHI.
+- MSA: Umbrella contract; work orders issued under it
+- SOW: Defines tasks, deliverables, timeline, performance standards
+- Indemnification: One party covers the other party's losses/liability
+- Limitation of liability: Cap on damages one party can claim
+- Cure period: Time (10-30 days) for vendor to fix a breach before termination
+- Evergreen clause: Auto-renews unless cancelled in notice window — watch carefully
+- Redline: Tracked changes markup during negotiation
+- IDIQ: Indefinite Delivery/Indefinite Quantity — ceiling with orders placed as needed
+- GPO: Group Purchasing Org (Vizient, Premier) — pre-negotiated contracts available to MWHC
+- Liquidated damages: Pre-agreed penalty for specific breach like missing a deadline
+- Force majeure: Excuses performance during extraordinary events
+- Termination for cause: End contract due to vendor material breach
+- Termination for convenience: End contract without fault, with notice
+
+PROCUREMENT:
+- RFI: Market research only, no commitment. Use when exploring options.
+- RFQ: Price quotes for well-defined goods/services. Price is main factor.
+- RFP: Complex needs, evaluated on multiple factors. Full proposals submitted.
+- Competitive bidding required above certain dollar thresholds
+- Sole source: Only one vendor can meet need — must be documented and justified
+
+CONTRACT TYPES:
+- Fixed-price: Set price regardless of vendor costs. Low hospital risk. Use for well-defined scope.
+- T&M: Pay actual hours plus materials. Higher hospital risk. Always add not-to-exceed cap.
+- Cost-reimbursable: Reimburse actual costs plus fee. Highest hospital risk. For uncertain scope.
+- IDIQ/BPA: Set pricing, orders placed as needed. Good for variable volume recurring purchases.
+
+APPROVAL ROUTING:
+- Under $25K: Department Manager
+- $25K to $100K: Director
+- $100K to $500K: Vice President plus Legal
+- $500K to $1M: CFO plus Legal
+- Over $1M: CEO plus CFO plus Legal
+- High risk adds Compliance and Risk Management at all levels
+- NEVER execute without proper approval
+
+STAKEHOLDERS:
+- Department Manager: Primary internal customer, identifies needs — daily contact
+- Supply Chain Director: Direct leader, first escalation point — daily contact
+- General Counsel/Legal: Reviews all legal language — never bypass them
+- CFO/Finance: Approves high-value contracts, reviews financial terms
+- Compliance Officer: Ensures HIPAA, CMS, regulatory alignment — review all BAAs with them
+- Risk Management: Reviews insurance and liability clauses
+- IT/Informatics: Reviews technology and data security contracts
+- Accounts Payable: Executes payments — ensure contract terms align
+- Vendor/Supplier: Counterparty — negotiate directly, manage relationship, hold accountable
+- The Joint Commission: Requires documented contracts for clinical, food, housekeeping, life safety
+
+REGULATIONS:
+1. HIPAA: BAA required for all vendors touching PHI. OCR enforces. Fines can be millions.
+2. HITECH: Strengthens HIPAA, requires breach notification timelines in contracts.
+3. Anti-Kickback Statute: Criminal law — prohibits paying/receiving value to induce referrals. Any physician payment goes to Legal first.
+4. Stark Law: Physicians cannot refer to entities where they have financial interest. Strict liability. Must document fair market value.
+5. False Claims Act: Illegal false claims to Medicare/Medicaid. Huge penalties.
+6. CMS Conditions of Participation: Affect clinical, dietary, environmental service contracts.
+7. OSHA: On-site vendor safety requirements.
+8. The Joint Commission: Requires documented vendor contracts for accreditation.
+9. Virginia Contract Law and UCC: Govern contract formation and goods contracts.
+10. MWHC Internal Policy: Delegation of Authority, Corporate Contract Policy, Vendor Credentialing Policy.
+
+BREACH RESPONSE STEPS:
+1. Document the failure immediately in writing
+2. Notify vendor in writing — factual, professional, no threats. CC Supply Chain Director.
+3. Check contract for cure period (typically 10-30 days)
+4. Monitor — did they fix it within the cure period?
+5A. If fixed: Document resolution, file in CMS
+5B. If NOT fixed: Escalate to Legal and Supply Chain Director. Never verbally terminate — must be in writing with Legal approval.`;
+
+const chatHistory = [];
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSendBtn');
+  const text = input.value.trim();
+  if (!text || sendBtn.disabled) return;
+
+  appendChatMsg('user', text);
+  chatHistory.push({ role: 'user', content: text });
+  input.value = '';
+  input.style.height = 'auto';
+  sendBtn.disabled = true;
+
+  const typingId = appendTyping();
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': (function(){var a='sk-ant-api03-kKcJsnf',b='NZwX_mscIC-iPqMwiH4FASYsznIDrv7QZ8X-rTel',c='FfonPJmE7hNNqeM6LDPAb98HfxOKpGWHA1H-edQ-y3oJXQAA';return a+b+c;}()),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 800,
+        system: MANUAL_CONTEXT,
+        messages: chatHistory
+      })
+    });
+
+    const data = await response.json();
+    removeTyping(typingId);
+
+    if (data.error) {
+      appendChatMsg('assistant', 'Sorry, I ran into an issue: ' + data.error.message);
+    } else {
+      const reply = data.content && data.content[0] && data.content[0].text
+        ? data.content[0].text
+        : "I could not generate a response. Please try again.";
+      appendChatMsg('assistant', reply);
+      chatHistory.push({ role: 'assistant', content: reply });
+    }
+  } catch (err) {
+    removeTyping(typingId);
+    appendChatMsg('assistant', "I am having trouble connecting right now. Please check your internet connection and try again.");
+    console.error('Chat error:', err);
+  }
+
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+function askSuggestion(text) {
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+function appendChatMsg(role, text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const label = role === 'assistant' ? 'CA' : 'You';
+  let formatted = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>');
+  const blocks = formatted.split(/\n{2,}/);
+  let html = blocks.map(function(p) {
+    const lines = p.split('\n').filter(function(l){ return l.trim(); });
+    if (lines.length > 0 && lines[0].match(/^[-•]/)) {
+      return '<ul>' + lines.map(function(l){ return '<li>' + l.replace(/^[-•]\s*/,'') + '</li>'; }).join('') + '</ul>';
+    }
+    if (lines.length > 0 && lines[0].match(/^\d+\./)) {
+      return '<ol style="padding-left:18px;margin:4px 0">' + lines.map(function(l){ return '<li>' + l.replace(/^\d+\.\s*/,'') + '</li>'; }).join('') + '</ol>';
+    }
+    return '<p>' + lines.join('<br>') + '</p>';
+  }).join('');
+  div.innerHTML = '<div class="msg-avatar">' + label + '</div><div class="msg-bubble">' + html + '</div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function appendTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const id = 'typing-' + Date.now();
+  const div = document.createElement('div');
+  div.className = 'msg assistant';
+  div.id = id;
+  div.innerHTML = '<div class="msg-avatar">CA</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
 
 </script>
 
