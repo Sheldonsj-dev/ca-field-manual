@@ -1834,144 +1834,122 @@ function qrSave(key, val) {
   var el = document.getElementById('qr-saved-' + key);
   if (el) { el.classList.add('show'); setTimeout(function(){ el.classList.remove('show'); }, 1500); }
 }
+
+
+/* ── PROGRESS TRACKER ── */
+
+/* ── QUICK REF NOTES RESTORE ── */
 document.addEventListener('DOMContentLoaded', function() {
   var c = localStorage.getItem('ca_qr_contacts');
   var el = document.getElementById('qr-contacts');
   if (c && el) el.value = c;
+  renderProgress();
 });
-
 
 /* ── PROGRESS TRACKER ── */
 var PROG_PHASES = [
-  {
-    label: "Phase 1 — Days 1-14: Orientation",
-    key: "p1",
-    items: [
-      "Meet your Supply Chain Director and core team",
-      "Tour key departments you will contract for",
-      "Review the organizational chart",
-      "Walk through the contract management system (CMS)",
-      "Read and understand the Delegation of Authority (DOA) policy",
-      "Shadow a senior admin on 3 live contracts",
-      "Review 5 executed contracts from different categories"
-    ]
-  },
-  {
-    label: "Phase 2 — Days 15-45: Core Skills",
-    key: "p2",
-    items: [
-      "Complete contract analysis training with red flag identification",
-      "Practice markup on 3 anonymized real contracts",
-      "Meet with General Counsel for compliance overview",
-      "Draft a Statement of Work (SOW)",
-      "Learn the full contract template library",
-      "Understand when to use RFI vs RFQ vs RFP",
-      "Run a mock RFP exercise from start to finish",
-      "Complete negotiation role-play with trainer"
-    ]
-  },
-  {
-    label: "Phase 3 — Days 46-75: Applied Practice",
-    key: "p3",
-    items: [
-      "Manage first real contract end-to-end (supervised)",
-      "Manage second real contract end-to-end (supervised)",
-      "Meet with department managers and directors",
-      "Complete first vendor relationship meeting",
-      "Conduct first compliance audit (5 active contracts)",
-      "Present audit findings to supervisor"
-    ]
-  },
-  {
-    label: "Phase 4 — Days 76-90: Independence",
-    key: "p4",
-    items: [
-      "Manage full portfolio independently",
-      "Complete 90-day self-assessment",
-      "Set year-1 development goals with supervisor",
-      "Build personal contract playbook binder",
-      "Review certification pathway options",
-      "Receive formal supervisor sign-off"
-    ]
-  }
+  { label: 'Phase 1 - Days 1-14: Orientation', key: 'p1', items: [
+    'Meet your Supply Chain Director and core team',
+    'Tour key departments you will contract for',
+    'Review the organizational chart',
+    'Walk through the contract management system (CMS)',
+    'Read and understand the Delegation of Authority (DOA) policy',
+    'Shadow a senior admin on 3 live contracts',
+    'Review 5 executed contracts from different categories'
+  ]},
+  { label: 'Phase 2 - Days 15-45: Core Skills', key: 'p2', items: [
+    'Complete contract analysis training with red flag identification',
+    'Practice markup on 3 anonymized real contracts',
+    'Meet with General Counsel for compliance overview',
+    'Draft a Statement of Work (SOW)',
+    'Learn the full contract template library',
+    'Understand when to use RFI vs RFQ vs RFP',
+    'Run a mock RFP exercise from start to finish',
+    'Complete negotiation role-play with trainer'
+  ]},
+  { label: 'Phase 3 - Days 46-75: Applied Practice', key: 'p3', items: [
+    'Manage first real contract end-to-end (supervised)',
+    'Manage second real contract end-to-end (supervised)',
+    'Meet with department managers and directors',
+    'Complete first vendor relationship meeting',
+    'Conduct first compliance audit on 5 active contracts',
+    'Present audit findings to supervisor'
+  ]},
+  { label: 'Phase 4 - Days 76-90: Independence', key: 'p4', items: [
+    'Manage full portfolio independently',
+    'Complete 90-day self-assessment',
+    'Set year-1 development goals with supervisor',
+    'Build personal contract playbook binder',
+    'Review certification pathway options',
+    'Receive formal supervisor sign-off'
+  ]}
 ];
 
 function renderProgress() {
-  var container = document.getElementById("progressSections");
+  var container = document.getElementById('progressSections');
   if (!container) return;
-  var totalItems = 0;
-  var doneItems = 0;
-  var html = "";
+  var total = 0, done = 0, html = '';
   PROG_PHASES.forEach(function(phase) {
-    html += "<div class="prog-phase">";
-    html += "<div class="prog-phase-title">" + phase.label + "</div>";
+    html += '<div class="prog-phase">';
+    html += '<div class="prog-phase-title">' + phase.label + '</div>';
     phase.items.forEach(function(item, i) {
-      var key = "prog_" + phase.key + "_" + i;
-      var checked = localStorage.getItem(key) === "1";
-      if (checked) doneItems++;
-      totalItems++;
-      html += "<div class="prog-item" onclick="toggleProg('" + key + "', this)">";
-      html += "<div class="prog-check" + (checked ? " done" : "") + "">" + (checked ? "✓" : "") + "</div>";
-      html += "<div class="prog-item-label" + (checked ? " done" : "") + "">" + item + "</div>";
-      html += "</div>";
+      var key = 'prog_' + phase.key + '_' + i;
+      var checked = localStorage.getItem(key) === '1';
+      if (checked) done++;
+      total++;
+      html += '<div class="prog-item" onclick="toggleProg(\'' + key + '\', this)">';
+      html += '<div class="prog-check' + (checked ? ' done' : '') + '">' + (checked ? '&#10003;' : '') + '</div>';
+      html += '<div class="prog-item-label' + (checked ? ' done' : '') + '">' + item + '</div>';
+      html += '</div>';
     });
-    html += "</div>";
+    html += '</div>';
   });
   container.innerHTML = html;
-  updateProgBar(doneItems, totalItems);
+  updateProgBar(done, total);
 }
 
 function toggleProg(key, row) {
-  var current = localStorage.getItem(key) === "1";
-  var newVal = current ? "0" : "1";
-  localStorage.setItem(key, newVal);
-  var check = row.querySelector(".prog-check");
-  var label = row.querySelector(".prog-item-label");
-  if (newVal === "1") {
-    check.classList.add("done");
-    check.textContent = "✓";
-    if (label) label.classList.add("done");
+  var current = localStorage.getItem(key) === '1';
+  localStorage.setItem(key, current ? '0' : '1');
+  var check = row.querySelector('.prog-check');
+  var label = row.querySelector('.prog-item-label');
+  if (!current) {
+    check.classList.add('done'); check.innerHTML = '&#10003;';
+    if (label) label.classList.add('done');
   } else {
-    check.classList.remove("done");
-    check.textContent = "";
-    if (label) label.classList.remove("done");
+    check.classList.remove('done'); check.innerHTML = '';
+    if (label) label.classList.remove('done');
   }
-  var total = 0;
-  var done = 0;
+  var t = 0, d = 0;
   PROG_PHASES.forEach(function(phase) {
     phase.items.forEach(function(item, i) {
-      total++;
-      if (localStorage.getItem("prog_" + phase.key + "_" + i) === "1") done++;
+      t++;
+      if (localStorage.getItem('prog_' + phase.key + '_' + i) === '1') d++;
     });
   });
-  updateProgBar(done, total);
+  updateProgBar(d, t);
 }
 
 function updateProgBar(done, total) {
   var pct = total > 0 ? Math.round(done / total * 100) : 0;
-  var bar = document.getElementById("mainProgBar");
-  var pctEl = document.getElementById("progPct");
-  var cnt = document.getElementById("progCount");
-  if (bar) bar.style.width = pct + "%";
-  if (pctEl) pctEl.textContent = pct + "%";
-  if (cnt) cnt.textContent = done + " of " + total + " tasks completed";
-  var cert = document.getElementById("certSection");
-  if (cert) cert.style.display = pct >= 100 ? "block" : "none";
+  var bar = document.getElementById('mainProgBar');
+  var pctEl = document.getElementById('progPct');
+  var cnt = document.getElementById('progCount');
+  if (bar) bar.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (cnt) cnt.textContent = done + ' of ' + total + ' tasks completed';
+  var cert = document.getElementById('certSection');
+  if (cert) cert.style.display = pct >= 100 ? 'block' : 'none';
 }
 
 function setCertName() {
-  var n = document.getElementById("certNameInput").value.trim();
+  var n = document.getElementById('certNameInput').value.trim();
   if (n) {
-    document.getElementById("certName").textContent = n;
+    document.getElementById('certName').textContent = n;
     var d = new Date();
-    document.getElementById("certDate").textContent = "Completed: " + d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById('certDate').textContent = 'Completed: ' + d.toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
   }
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-  renderProgress();
-});
-
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
