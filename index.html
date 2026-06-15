@@ -649,17 +649,7 @@
   .chat-disclaimer { font-size:11px; color:var(--gray-400); text-align:center; margin-top:8px; }
 
 
-  /* ── PASSWORD GATE ── */
-  #pwGate{position:fixed;inset:0;background:#0D1F3C;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:0}
-  .pw-box{background:white;border-radius:16px;padding:40px 44px;text-align:center;max-width:380px;width:90%}
-  .pw-logo{font-family:Georgia,serif;font-size:22px;color:#0D1F3C;margin-bottom:6px}
-  .pw-sub{font-size:13px;color:#6B7280;margin-bottom:28px}
-  .pw-input{width:100%;padding:11px 14px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;text-align:center;letter-spacing:0.1em;outline:none;margin-bottom:10px;transition:border 0.15s}
-  .pw-input:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
-  .pw-btn{width:100%;padding:11px;background:#0D1F3C;color:white;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.15s}
-  .pw-btn:hover{background:#1A3660}
-  .pw-error{font-size:12px;color:#DC2626;margin-top:6px;min-height:18px}
-  .pw-hint{font-size:11px;color:#9CA3AF;margin-top:16px}
+  
 
   /* ── DARK MODE ── */
   body.dark{background:#111827;color:#F9FAFB}
@@ -1825,21 +1815,7 @@ function removeTyping(id) {
 
 
 
-/* ══ PASSWORD GATE ══ */
-(function(){
-  const PW = 'MWHC2025';
-  const KEY = 'ca_auth';
-  if(sessionStorage.getItem(KEY)==='1') return;
-  const gate = document.createElement('div');
-  gate.id = 'pwGate';
-  gate.innerHTML = '<div class="pw-box"><div class="pw-logo">CA Field Manual</div><div class="pw-sub">Mary Washington Healthcare · Supply Chain</div><input class="pw-input" type="password" id="pwIn" placeholder="Enter access password" onkeydown="if(event.key===\'Enter\')checkPw()"><div class="pw-error" id="pwErr"></div><button class="pw-btn" onclick="checkPw()">Access Field Manual</button><div class="pw-hint">Contact your Supply Chain Director if you need the password.</div></div>';
-  document.body.prepend(gate);
-  window.checkPw = function(){
-    const v = document.getElementById('pwIn').value;
-    if(v===PW){sessionStorage.setItem(KEY,'1');document.getElementById('pwGate').remove();loadSavedNotes();}
-    else{const e=document.getElementById('pwErr');e.textContent='Incorrect password. Please try again.';document.getElementById('pwIn').value='';document.getElementById('pwIn').focus();}
-  };
-})();
+
 
 /* ══ DARK MODE ══ */
 function toggleDark(){
