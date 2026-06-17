@@ -1148,6 +1148,7 @@
   <div class="nav-tab" onclick="showSection('ask',this)">💬 Ask the Manual</div>
   <div class="nav-tab" onclick="showSection('simulation',this)">🎓 Sim Lab</div>
   <div class="nav-tab" onclick="showSection('docviewer',this)">📃 Contract Viewer</div>
+  <div class="nav-tab" onclick="showSection('supplyviewer',this)">📦 Supply Contract</div>
 </nav>
 
 <div class="nav-drawer" id="navDrawer" onclick="handleDrawerClick(event)">
@@ -1172,6 +1173,7 @@
     <button class="nav-drawer-item" onclick="drawerNav('ask')">💬 Ask the Manual</button>
     <button class="nav-drawer-item" onclick="drawerNav('simulation')">🎓 Sim Lab</button>
     <button class="nav-drawer-item" onclick="drawerNav('docviewer')">📃 Contract Viewer</button>
+    <button class="nav-drawer-item" onclick="drawerNav('supplyviewer')">📦 Supply Contract</button>
   </div>
 </div>
 <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
@@ -2732,6 +2734,84 @@ function toggleDoc(mode, btn) {
   }
 }
 
+
+/* ══ SUPPLY CONTRACT + MOD VIEWER ══ */
+var SUPPLY_ANNOT = {
+  's-parties':   { title:'Parties and Effective Date', tag:'Standard', tagColor:'#DBEAFE', tagText:'#1E3A8A', what:'Identifies both entities with their full legal names, entity types (nonprofit vs LLC), and addresses. The effective date anchors when all obligations begin.', check:'Confirm the vendor is the entity that will actually ship the goods — not a parent company or broker. Virginia LLC vs out-of-state corporation matters for enforcement. Verify the vendor is authorized to do business in Virginia.' },
+  's-products':  { title:'Products and Specifications', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'The most important clause in a supply contract. Locks in exact product specifications, FDA compliance, lot number requirements, and the critical 18-month minimum shelf life. This prevents receiving expired or substandard product.', check:'Is every product in Exhibit A fully specified? Is the shelf life minimum explicitly stated? Is FDA cGMP compliance required? Is a Certificate of Conformance required per lot? Vague specs let vendors substitute cheaper alternatives.' },
+  's-pricing':   { title:'Pricing and Orders', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Locks in pricing for 12 months, then limits increases to a published index. The PPI-PME cap prevents arbitrary price hikes. No minimum purchase commitment gives MWHC flexibility.', check:'Are prices firm for a defined period? Is the price escalation index objective and verifiable? Is the Purchase Order process clear — what constitutes a binding order? Is the 2-day acknowledgment window enforceable?' },
+  's-delivery':  { title:'Delivery and Risk of Loss', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'FOB Destination means the vendor bears all risk and freight costs until goods arrive at MWHC. Risk passes only after MWHC inspection and written acceptance — critical for damaged shipments. The 24-hour emergency fulfillment protects patient care.', check:'Is FOB Destination specified? Risk passes at delivery (FOB Destination) vs. shipment (FOB Origin) is a major difference — FOB Origin means MWHC owns damaged goods in transit. Are lead times by product category? Is emergency fulfillment defined?' },
+  's-inspection':{ title:'Inspection and Rejection Rights', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Gives MWHC 10 business days to inspect before acceptance. Rejected goods go back at vendor expense with replacement in 5 days. The right to audit vendor facilities is a powerful quality control tool.', check:'Is 10 business days sufficient for your inspection process? Is the rejection notice process clear? Who pays return freight? Is the replacement timeline acceptable? Can MWHC audit the vendor without restriction?' },
+  's-recalls':   { title:'Recalls and Safety Notifications', tag:'Important', tagColor:'#D1FAE5', tagText:'#065F46', what:'Requires vendor to notify MWHC within 24 hours of any FDA recall — not days or weeks. Vendor bears all recall costs. Lot traceability requirement means MWHC can quickly identify and pull affected products from use.', check:'Is 24-hour notification specified? Who bears recall costs (vendor)? Does the vendor have to provide all affected lot numbers? Does MWHC maintain lot traceability records in the CMS? This is a patient safety clause.' },
+  's-warranty':  { title:'Warranties', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Vendor makes specific binding promises about product quality, compliance, and freedom from liens for 18 months. The debarment warranty protects MWHC from inadvertently purchasing from excluded parties (a Medicare compliance issue).', check:'Is the warranty period tied to the shelf life minimum? Is the debarment/exclusion warranty present? Does the vendor warrant they hold all required licenses? What is the remedy if a warranty is breached?' },
+  's-payment':   { title:'Payment Terms', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Net 45 is standard for supply contracts and gives MWHC time to verify delivery and quality. The 90-day invoice cutoff prevents old invoices from appearing unexpectedly. The 2%/10 early pay discount can generate significant savings at scale.', check:'Does Net 45 align with MWHC AP processes? Is the dispute process clear — can MWHC hold disputed amounts without penalty? Is the invoice reference requirement (PO number) enforceable? Track the 90-day invoice cutoff strictly.' },
+  's-shortage':  { title:'Supply Continuity and Allocation', tag:'Important', tagColor:'#D1FAE5', tagText:'#065F46', what:'Requires vendor to alert MWHC 60 days before any supply disruption. The proportional allocation clause means MWHC gets its fair share during shortages. The dual-source right protects MWHC if the vendor is unreliable.', check:'Is 60 days enough lead time to find alternatives? Is the allocation formula fair? Does the dual-source right require notice to the vendor? This clause is especially important for critical clinical supplies.' },
+  's-insurance': { title:'Insurance and Indemnification', tag:'Important', tagColor:'#D1FAE5', tagText:'#065F46', what:'Supply contracts require Products Liability coverage in addition to general liability — this covers patient harm from defective products. The $2M/$4M limits are appropriate for a supplier of clinical supplies to a hospital.', check:'Is Products Liability specifically required (not just GL)? Are the per-occurrence and aggregate limits adequate for the products involved? Is MWHC named as additional insured? Get and track the COI.' },
+  's-liability': { title:'Limitation of Liability', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'The dual floor (12 months fees OR $500,000 minimum) ensures MWHC always has meaningful recovery. The carve-outs for patient harm and recalls are critical — these are exactly the scenarios where maximum recovery is needed.', check:'Is the minimum floor ($500,000) adequate for the risk profile? Are all patient harm scenarios carved out from the cap? Are recall costs excluded? Is the cap mutual or one-sided?' },
+  's-term':      { title:'Term and Termination', tag:'Standard', tagColor:'#DBEAFE', tagText:'#1E3A8A', what:'Two automatic renewal options give continuity while keeping MWHC in control. The 15-day cure period for supply contracts is shorter than service contracts because supply failures can immediately impact patient care.', check:'Is the renewal structure appropriate? Is 15 days enough time for the vendor to cure a supply failure? Does MWHC need 30-day convenience termination or more flexibility? What happens to open POs at termination?' },
+  's-governing': { title:'Governing Law and UCC', tag:'Standard', tagColor:'#DBEAFE', tagText:'#1E3A8A', what:'The UCC reference is specific to supply contracts — it provides default rules for goods transactions (implied warranties, acceptance, rejection) that fill gaps in the contract. Virginia UCC applies automatically but citing it eliminates ambiguity.', check:'Is Virginia law specified? Is the UCC reference appropriate? Supply contracts are governed by UCC; service contracts by common law. Does the arbitration venue work operationally for MWHC?' },
+
+  'sb-nospec':    { title:'No product specifications', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'"Commercially acceptable quality" is meaningless in a healthcare setting. There is no FDA compliance requirement, no shelf life minimum, no lot number requirement, and no Certificate of Conformance.', danger:'Risk: Vendor can ship expired, non-FDA-compliant, or substituted products and argue they met "commercially acceptable" standards. For clinical supplies, this is a patient safety risk and a Joint Commission compliance issue. Reject this contract without a full Exhibit A with specifications.' },
+  'sb-noprice':   { title:'Unilateral price changes at any time', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'Vendor can raise prices on any order without any notice. MWHC also pays all freight and surcharges on top, which can add 15-20% to listed prices. There is no price protection mechanism.', danger:'Risk: Budget projections become impossible. Vendor could increase prices after MWHC is dependent on their supply. Always require fixed pricing for at least 12 months with index-tied increases and 90 days notice.' },
+  'sb-delivery':  { title:'FOB Origin — MWHC bears all transit risk', tag:'Warning', tagColor:'#FEF3C7', tagText:'#78350F', what:'FOB Origin means risk of loss passes the moment the vendor ships. If goods are damaged in transit, stolen, or lost — MWHC owns the problem. The vendor has no delivery obligation beyond handing goods to a carrier.', danger:'Risk: MWHC pays for goods it never receives or receives damaged. Always negotiate FOB Destination. "Commercially reasonable efforts" and "reasonable time" are unenforceable standards with no measurable delivery timeline.' },
+  'sb-noinspect': { title:'No inspection rights — automatic acceptance', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'Products are accepted the moment they arrive. MWHC has no right to inspect, test, or reject. Returns require vendor authorization that vendor can withhold indefinitely.', danger:'Risk: If MWHC receives expired, damaged, or wrong products, it has contractually waived the right to send them back. MWHC pays for unusable clinical supplies with no recourse. Never accept automatic acceptance upon delivery.' },
+  'sb-norecall':  { title:'No recall notification — patient safety risk', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'The vendor has no obligation to tell MWHC about FDA recalls. No lot traceability means MWHC cannot identify recalled products in use. No shelf life minimum means expired goods may be delivered.', danger:'Risk: Recalled products could be administered to patients before MWHC learns of the recall. This is a direct patient safety risk and a potential MWHC liability. A 24-hour recall notification requirement is non-negotiable for clinical supply contracts.' },
+  'sb-nowarranty':{ title:'Complete warranty disclaimer — all products sold AS IS', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'The vendor makes zero promises about product quality, fitness, or regulatory compliance. "As Is" means whatever arrives is what MWHC bought. MWHC waives its UCC implied warranty rights.', danger:'Risk: If products fail in use, cause patient harm, or turn out to be counterfeit, MWHC has no warranty claim. For clinical supplies used in patient care, an AS IS disclaimer is completely unacceptable. This must be struck in its entirety.' },
+  'sb-payment':   { title:'Net 15, 24% interest, suspend for disputed invoices', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'Net 15 is extremely short for a hospital AP process. 24% annual interest is usurious. The right to suspend all deliveries including for disputed invoices gives the vendor a nuclear option over MWHC operations.', danger:'Risk: Vendor can halt delivery of critical clinical supplies over a billing dispute — endangering patient care as leverage. This clause combination gives the vendor nearly total control. Negotiate to Net 45 with a meaningful dispute process.' },
+  'sb-nosupply':  { title:'No supply continuity obligation', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'The vendor has no obligation to maintain inventory, notify MWHC of shortages, or allocate supply fairly. MWHC has no right to dual-source and no advance warning of supply disruptions.', danger:'Risk: Critical clinical supplies could disappear without warning. For items like IV solutions, sterile gloves, or respiratory supplies, an unannounced shortage can disrupt patient care immediately. A 60-day notification and proportional allocation clause is essential.' },
+  'sb-liability': { title:'$500 liability cap — including patient harm', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'$500 cap on ALL liability — including product defects that harm patients, recall costs, and regulatory fines. The vendor is explicitly not liable for patient harm caused by their defective products.', danger:'Risk: A single adverse patient event from a defective supply could cost millions. MWHC would have no contractual recovery from the vendor. For clinical supplies, product liability coverage and a meaningful liability cap are non-negotiable patient safety protections.' },
+  'sb-governing': { title:'New York law — out of state courts', tag:'Warning', tagColor:'#FEF3C7', tagText:'#78350F', what:'New York law and Manhattan courts mean any dispute requires MWHC to litigate 300 miles away under unfamiliar law. This dramatically increases MWHC legal costs and gives the vendor home advantage.', danger:'Risk: The cost and inconvenience of New York litigation may deter MWHC from pursuing legitimate claims. Always negotiate for Virginia governing law and local arbitration.' },
+
+  'm-header':   { title:'Modification reference and boilerplate', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Every modification must identify the original agreement by name and date, reference modification number (Mod 1, Mod 2, etc.), and explicitly state that all unchanged terms remain in effect. This prevents arguments that the modification replaced the entire agreement.', check:'Is the original agreement date exactly correct? Is this numbered sequentially (Mod 1 of how many)? Does the integration clause preserve unchanged terms? Is this a modification or a complete restatement?' },
+  'm-reason':   { title:'Reason for modification', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Documenting why the modification exists creates a record that helps interpret ambiguous clauses later and demonstrates that changes were deliberate, not accidental. Courts and auditors may look at modification history.', check:'Is the business rationale clear? Are all changes listed upfront so reviewers know what to expect? Is this modification within the scope of the original agreement or does it represent a fundamental change that should be a new contract?' },
+  'm-scope':    { title:'Change to scope — adding products', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'When adding products to a supply contract, the modification must specify exact product descriptions, unit prices, minimum orders, and effective date. The revised Exhibit A must be attached — never just reference it without attaching it.', check:'Are new products fully specified with same rigor as original products? Is the effective date clear? Is a revised Exhibit A attached and superseding the old one? Do new products require different insurance minimums or regulatory treatment?' },
+  'm-price':    { title:'Change to pricing — showing old and new language', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'The gold standard for contract modifications: show the exact old language being replaced, then the exact new language replacing it. This eliminates any ambiguity about what changed. Never say "prices are adjusted" without showing both.', check:'Is the prior language quoted exactly? Is the new language precise? Is the reason for each change documented? Does the revised Exhibit A supersede the original? Are all other prices confirmed as unchanged?' },
+  'm-term':     { title:'Change to term — extending the contract', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Term extensions must state the new expiration date explicitly. Saying "extended by one year" is not enough — what if the original term was already extended? Always state the final expiration date. Budget authorization confirmation is essential documentation.', check:'Is the new expiration date stated explicitly (not just "extended by X")? Has the DOA threshold been checked — does the extension change the total contract value enough to require higher approval? Are all CMS records updated with new expiration date and renewal alerts?' },
+  'm-nochange': { title:'No other changes clause', tag:'Important', tagColor:'#D1FAE5', tagText:'#065F46', what:'This clause protects both parties by explicitly limiting the modification to what is written. The conflict provision ensures this modification controls if there is any inconsistency with the original agreement.', check:'Is this clause present? Does it clearly state which document controls in case of conflict? Does it confirm all other terms are unchanged? This is your safety net against unintended changes.' },
+  'm-approval': { title:'Approvals obtained and documented', tag:'Important', tagColor:'#D1FAE5', tagText:'#065F46', what:'Documenting which approvals were obtained and why is critical for audit trails. The modification increases total contract value — this must be checked against the DOA policy to ensure the right signature authority is used.', check:'Has the new total contract value been calculated including this modification? Is the correct approval level authorized for this total value? Are all required reviewers documented? Is the DOA authorization filed with the contract record in the CMS?' },
+  'm-effective':{ title:'Effective date and signatures', tag:'Standard', tagColor:'#DBEAFE', tagText:'#1E3A8A', what:'The effective date of a modification may differ from the signature date — especially if changes apply retroactively to an already-delivered order. Counterpart execution allows each party to sign separate copies, which is standard in practice.', check:'Is the effective date correct and agreed by both parties? Does the effective date create any retroactive obligations? Is the signatory the same authorized representative as the original agreement, or has authority changed?' }
+};
+
+function supplyAnnotate(key) {
+  var d = SUPPLY_ANNOT[key];
+  if (!d) return;
+  document.querySelectorAll('#supplyContractDoc .clause-span').forEach(function(s){ s.classList.remove('active'); });
+  event.currentTarget.classList.add('active');
+  var isBad = d.danger !== undefined;
+  var html = '<div class="annotation-head">';
+  html += '<span class="annotation-head-icon">' + (isBad ? '&#9888;' : (key.charAt(0) === 'm' ? '&#128221;' : '&#128270;')) + '</span>';
+  html += '<span class="annotation-head-title">' + d.title + '</span>';
+  html += '<span class="annotation-head-tag" style="background:' + d.tagColor + ';color:' + d.tagText + '">' + d.tag + '</span>';
+  html += '</div><div class="annotation-body">';
+  html += '<div class="annotation-what">' + d.what + '</div>';
+  if (isBad) {
+    html += '<div class="annotation-danger"><strong>Why this is dangerous:</strong> ' + d.danger + '</div>';
+  } else {
+    html += '<div class="annotation-check"><strong>What to verify:</strong> ' + d.check + '</div>';
+  }
+  html += '</div>';
+  document.getElementById('supplyAnnotationContent').innerHTML = html;
+}
+
+function toggleSupply(mode, btn) {
+  document.querySelectorAll('.doc-toggle').forEach(function(row){
+    row.querySelectorAll('.doc-toggle-btn').forEach(function(b){ b.classList.remove('active'); });
+  });
+  btn.classList.add('active');
+  document.getElementById('supply-good').style.display = mode === 'good' ? 'block' : 'none';
+  document.getElementById('supply-bad').style.display  = mode === 'bad'  ? 'block' : 'none';
+  document.getElementById('supply-mod').style.display  = mode === 'mod'  ? 'block' : 'none';
+  document.getElementById('supplyAnnotationContent').innerHTML = '<div class="annotation-empty"><div style="font-size:28px;margin-bottom:8px">&#128072;</div><div>Click any highlighted section to see the explanation.</div></div>';
+  var legend = document.getElementById('supplyLegend');
+  if (mode === 'bad') {
+    legend.innerHTML = '<div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(254,226,226,0.8);border:1px solid #DC2626"></div>Critical problem</div><div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(253,230,138,0.6);border:1px solid #B45309"></div>Warning</div>';
+  } else if (mode === 'mod') {
+    legend.innerHTML = '<div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(254,243,199,0.8);border:1px solid #B45309"></div>Critical modification element</div><div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(209,250,229,0.8);border:1px solid #059669"></div>Important element</div><div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(219,234,254,0.8);border:1px solid #2563EB"></div>Standard element</div>';
+  } else {
+    legend.innerHTML = '<div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(254,243,199,0.8);border:1px solid #B45309"></div>Critical clause</div><div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(209,250,229,0.8);border:1px solid #059669"></div>Important clause</div><div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(219,234,254,0.8);border:1px solid #2563EB"></div>Standard clause</div>';
+  }
+}
+
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
@@ -3755,6 +3835,184 @@ function toggleDoc(mode, btn) {
         <div class="annotation-empty">
           <div style="font-size:28px;margin-bottom:8px">&#128072;</div>
           <div>Click any highlighted section of the contract to see the explanation here.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ SUPPLY CONTRACT + MOD VIEWER ══ -->
+<section class="section" id="sec-supplyviewer">
+  <div class="section-hero">
+    <div class="section-eyebrow">Supply Contract &amp; Modification Viewer</div>
+    <h2 class="section-title">Supply contracts and how to modify them.</h2>
+    <p class="section-intro">Supply contracts differ from service agreements — they govern physical goods, UCC rules, delivery, and quality standards. The Modification tab shows how to formally change a contract after it is signed. Click any highlighted section to see the annotation.</p>
+  </div>
+
+  <div class="doc-toggle">
+    <button class="doc-toggle-btn active" onclick="toggleSupply('good',this)">✅ Good Supply Contract</button>
+    <button class="doc-toggle-btn" onclick="toggleSupply('bad',this)">⚠ Bad Supply Contract</button>
+    <button class="doc-toggle-btn" onclick="toggleSupply('mod',this)">📝 Contract Modification</button>
+  </div>
+
+  <div class="doc-legend" id="supplyLegend">
+    <div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(254,243,199,0.8);border:1px solid #B45309"></div>Critical clause</div>
+    <div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(209,250,229,0.8);border:1px solid #059669"></div>Important clause</div>
+    <div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(219,234,254,0.8);border:1px solid #2563EB"></div>Standard clause</div>
+  </div>
+
+  <div class="doc-viewer-wrap">
+    <div id="supplyContractDoc">
+
+      <!-- GOOD SUPPLY CONTRACT -->
+      <div id="supply-good" class="contract-doc">
+        <div class="contract-doc-title">Supply Agreement</div>
+        <div class="contract-doc-subtitle">Mary Washington Healthcare, Inc. &amp; MedSupply Solutions, LLC</div>
+        <hr>
+
+        <p><span class="clause-span cl-standard" onclick="supplyAnnotate('s-parties')"><strong>1. PARTIES AND EFFECTIVE DATE.</strong> This Supply Agreement ("Agreement") is entered into as of <strong>March 1, 2025</strong> ("Effective Date") between <strong>Mary Washington Healthcare, Inc.</strong>, a Virginia nonprofit corporation ("MWHC" or "Buyer"), and <strong>MedSupply Solutions, LLC</strong>, a Virginia limited liability company ("Vendor" or "Seller"), with its principal place of business at 8800 Supply Drive, Manassas, VA 20110.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('s-products')"><strong>2. PRODUCTS AND SPECIFICATIONS.</strong> Vendor shall supply the medical supplies described in <strong>Exhibit A</strong> (Product Catalog and Specifications) attached hereto ("Products"). All Products shall: (a) conform strictly to the specifications set forth in Exhibit A; (b) be new, unused, and free from defects in materials and workmanship; (c) comply with all applicable FDA regulations, including current Good Manufacturing Practice (cGMP) requirements; (d) bear lot numbers and expiration dates on all packaging; (e) have a minimum remaining shelf life of <strong>eighteen (18) months</strong> from date of delivery; and (f) be accompanied by a Certificate of Conformance for each lot delivered.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('s-pricing')"><strong>3. PRICING AND ORDERS.</strong> MWHC shall purchase Products at the unit prices set forth in Exhibit A. Prices are firm and fixed for the initial <strong>twelve (12) months</strong> of this Agreement. Thereafter, Vendor may propose price adjustments no more than once annually, with <strong>90 days</strong> advance written notice; adjustments shall not exceed the change in the Producer Price Index for Pharmaceuticals and Medical Equipment (PPI-PME) for the preceding 12 months. Purchase Orders issued by MWHC constitute binding orders upon Vendor acknowledgment within <strong>2 business days</strong>. MWHC makes no minimum purchase commitment unless specified in a separate written agreement.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('s-delivery')"><strong>4. DELIVERY AND RISK OF LOSS.</strong> Vendor shall deliver all Products <strong>FOB Destination</strong> to MWHC facilities designated in each Purchase Order. Risk of loss passes to MWHC only upon MWHC's written acceptance following inspection. Standard delivery lead time shall not exceed <strong>5 business days</strong> from Purchase Order acknowledgment for stocked items, and <strong>15 business days</strong> for non-stocked items. Emergency orders for critical items shall be fulfilled within <strong>24 hours</strong>. Partial deliveries require prior written consent from MWHC.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('s-inspection')"><strong>5. INSPECTION, ACCEPTANCE AND REJECTION.</strong> MWHC shall have <strong>10 business days</strong> following delivery to inspect Products and notify Vendor of any nonconformance, damage, or shortage. Products not rejected within this period are deemed accepted. Rejected Products shall be returned at Vendor expense with replacement delivered within <strong>5 business days</strong> of rejection notice. Payment for rejected Products shall be withheld pending resolution. MWHC reserves the right to conduct on-site audits of Vendor facilities upon <strong>5 business days</strong> notice.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-important" onclick="supplyAnnotate('s-recalls')"><strong>6. RECALLS AND SAFETY NOTIFICATIONS.</strong> Vendor shall immediately notify MWHC — within <strong>24 hours</strong> — of any FDA recall, market withdrawal, safety alert, or regulatory action affecting any Product supplied under this Agreement. Vendor shall provide all lot numbers affected, the reason for recall, and any required remediation steps. Vendor shall bear all costs associated with retrieval, return, and replacement of recalled Products. MWHC shall maintain traceability records sufficient to identify all recalled Products in use or inventory.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('s-warranty')"><strong>7. WARRANTIES.</strong> Vendor warrants that all Products: (a) shall conform to specifications for <strong>eighteen (18) months</strong> from delivery date; (b) are free from any liens, encumbrances, or third-party claims; (c) comply with all applicable federal and state laws and regulations; (d) do not infringe any intellectual property rights; and (e) are not on any government debarment or exclusion list. Vendor further warrants that it holds all licenses, permits, and certifications required to manufacture and sell the Products.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('s-payment')"><strong>8. PAYMENT TERMS.</strong> MWHC shall pay properly submitted invoices within <strong>Net 45 days</strong> of receipt and acceptance. Vendor shall submit invoices referencing the applicable Purchase Order number. MWHC may withhold payment for disputed line items pending resolution without affecting payment of undisputed amounts. Early payment discount of <strong>2% net 10</strong> shall apply if payment is made within 10 days. Invoices submitted more than <strong>90 days</strong> after delivery are not eligible for payment without written authorization from MWHC Finance.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-important" onclick="supplyAnnotate('s-shortage')"><strong>9. SUPPLY CONTINUITY AND ALLOCATION.</strong> Vendor shall maintain adequate inventory to fulfill MWHC Purchase Orders without interruption. In the event of a supply shortage, Vendor shall allocate available supply to MWHC on a proportional basis no less favorable than any other customer. Vendor shall provide <strong>60 days</strong> advance notice of any anticipated supply interruption exceeding 5 business days. MWHC may dual-source any Product if Vendor fails to provide this notice or experiences more than one supply interruption per contract year.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-important" onclick="supplyAnnotate('s-insurance')"><strong>10. INSURANCE AND INDEMNIFICATION.</strong> Vendor shall maintain: Commercial General Liability ($2,000,000 per occurrence / $4,000,000 aggregate); Products Liability ($2,000,000 per occurrence); Workers Compensation (statutory); and Professional Liability ($1,000,000 per claim). Vendor shall indemnify, defend, and hold harmless MWHC from all claims arising from: product defects, regulatory non-compliance, intellectual property infringement, or Vendor personnel actions. MWHC shall be named as additional insured on all applicable policies.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('s-liability')"><strong>11. LIMITATION OF LIABILITY.</strong> Vendor total liability shall not exceed the greater of: (a) the total amount paid by MWHC in the <strong>twelve (12) months</strong> preceding the claim, or (b) <strong>$500,000</strong>. This cap shall not apply to: product liability claims involving patient harm; gross negligence or willful misconduct; FDA recall costs; or intellectual property indemnification obligations.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-standard" onclick="supplyAnnotate('s-term')"><strong>12. TERM AND TERMINATION.</strong> This Agreement commences on the Effective Date and continues for <strong>two (2) years</strong>, with two automatic one-year renewal options unless either party provides <strong>60 days</strong> written notice of non-renewal. MWHC may terminate for cause upon <strong>15 days</strong> written notice if Vendor fails to cure a material breach. MWHC may terminate for convenience upon <strong>30 days</strong> written notice. Open Purchase Orders at termination shall be fulfilled unless MWHC cancels in writing.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-standard" onclick="supplyAnnotate('s-governing')"><strong>13. GOVERNING LAW AND UCC.</strong> This Agreement shall be governed by the laws of the <strong>Commonwealth of Virginia</strong>. To the extent not inconsistent with this Agreement, the Virginia Uniform Commercial Code (Title 8.2 of the Virginia Code) shall apply to all transactions for the sale of goods hereunder. Any dispute not resolved within 30 days of written notice shall be submitted to binding arbitration in Fredericksburg, Virginia.</span></p>
+        <hr>
+        <p style="font-size:11px;color:#888;text-align:center">IN WITNESS WHEREOF, the parties execute this Agreement as of the Effective Date.</p>
+        <br>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px;font-size:12px">
+          <div><div style="border-top:1px solid #333;margin-bottom:6px;padding-top:6px">Authorized Signature — MWHC</div><div style="color:#888">Title: _______________________</div><div style="color:#888">Date: ________________________</div></div>
+          <div><div style="border-top:1px solid #333;margin-bottom:6px;padding-top:6px">Authorized Signature — Vendor</div><div style="color:#888">Title: _______________________</div><div style="color:#888">Date: ________________________</div></div>
+        </div>
+      </div>
+
+      <!-- BAD SUPPLY CONTRACT -->
+      <div id="supply-bad" class="contract-doc" style="display:none">
+        <div class="contract-doc-title">Supply Agreement</div>
+        <div class="contract-doc-subtitle">Mary Washington Healthcare &amp; CheapMed Distributors</div>
+        <hr>
+
+        <p><span class="clause-span cl-bad" onclick="supplyAnnotate('sb-nospec')"><strong>1. PRODUCTS.</strong> Vendor will supply <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">medical supplies as ordered by MWHC from time to time</span>. Products will be <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">"commercially acceptable" quality</span>. No product specifications, FDA compliance requirements, or shelf life minimums are stated.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="supplyAnnotate('sb-noprice')"><strong>2. PRICING.</strong> Prices shall be <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">Vendor current list price at time of order</span>. Vendor may <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">adjust prices at any time without notice</span>. MWHC shall be responsible for all freight, handling, and fuel surcharge fees.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-warning" onclick="supplyAnnotate('sb-delivery')"><strong>3. DELIVERY.</strong> Vendor will use commercially reasonable efforts to deliver within <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#B45309">a reasonable time</span>. Risk of loss passes to MWHC <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#B45309">upon Vendor shipment (FOB Origin)</span>. Vendor is not responsible for carrier delays, damage in transit, or partial deliveries.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="supplyAnnotate('sb-noinspect')"><strong>4. ACCEPTANCE.</strong> Products are deemed accepted <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">upon delivery</span>. MWHC waives all rights to reject Products after delivery. No returns will be accepted without prior written authorization, which Vendor may withhold in its sole discretion.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="supplyAnnotate('sb-norecall')"><strong>5. REGULATORY.</strong> Vendor represents that Products comply with applicable law <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">as of the date of manufacture</span>. <span style="background:rgba(254,226,226,0.6);border:1px dashed #DC2626;padding:0 3px;border-radius:2px">⚠ NO RECALL NOTIFICATION REQUIREMENT. No lot traceability. No shelf life minimum.</span></span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="supplyAnnotate('sb-nowarranty')"><strong>6. WARRANTIES.</strong> VENDOR MAKES <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">NO WARRANTIES, EXPRESS OR IMPLIED</span>, INCLUDING ANY WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. ALL PRODUCTS ARE SOLD <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">AS IS.</span></span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="supplyAnnotate('sb-payment')"><strong>7. PAYMENT.</strong> MWHC shall pay all invoices within <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">Net 15 days</span>. Late payments accrue interest at <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">24% per annum</span>. Vendor may <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">suspend all deliveries without notice</span> if any invoice is overdue by more than 5 days, including disputed invoices.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="supplyAnnotate('sb-nosupply')"><strong>8. SUPPLY AVAILABILITY.</strong> Vendor does not guarantee availability of any Product. <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">MWHC acknowledges that supply interruptions may occur without notice.</span> Vendor shall not be liable for any losses resulting from supply interruptions.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="supplyAnnotate('sb-liability')"><strong>9. LIMITATION OF LIABILITY.</strong> Vendor total liability shall not exceed <span style="background:rgba(254,226,226,0.7);font-weight:700;padding:0 3px;border-radius:2px">$500 (FIVE HUNDRED DOLLARS)</span> regardless of the nature of the claim. <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">Vendor is not liable for any product liability claims, patient harm, regulatory fines, or recall costs.</span></span></p>
+        <br>
+
+        <p><span class="clause-span cl-warning" onclick="supplyAnnotate('sb-governing')"><strong>10. GOVERNING LAW.</strong> This Agreement is governed by the laws of the <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#B45309">State of New York</span>. All disputes shall be litigated exclusively in <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#B45309">the courts of Manhattan, New York</span>.</span></p>
+        <hr>
+        <p style="font-size:11px;color:#888;text-align:center">Agreed and accepted.</p>
+      </div>
+
+      <!-- CONTRACT MODIFICATION -->
+      <div id="supply-mod" class="contract-doc" style="display:none">
+        <div class="contract-doc-title">Contract Modification No. 1</div>
+        <div class="contract-doc-subtitle">To Supply Agreement dated March 1, 2025<br>Mary Washington Healthcare, Inc. &amp; MedSupply Solutions, LLC</div>
+        <hr>
+
+        <p><span class="clause-span cl-standard" onclick="supplyAnnotate('m-header')"><strong>MODIFICATION REFERENCE.</strong> This Modification No. 1 ("Modification") amends the Supply Agreement dated <strong>March 1, 2025</strong> (the "Agreement") between <strong>Mary Washington Healthcare, Inc.</strong> ("MWHC") and <strong>MedSupply Solutions, LLC</strong> ("Vendor"). All capitalized terms not defined herein have the meanings given in the Agreement. Except as expressly modified herein, all terms and conditions of the Agreement remain in full force and effect.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('m-reason')"><strong>REASON FOR MODIFICATION.</strong> MWHC has identified a need to: (a) add three new product lines to the supply scope; (b) adjust unit pricing on two existing items per mutual agreement; and (c) extend the contract term by one year. This Modification documents all changes with specificity to avoid any future dispute about what was agreed.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('m-scope')"><strong>1. CHANGE TO SCOPE — NEW PRODUCTS.</strong> Section 2 of the Agreement (Products and Specifications) is hereby amended to add the following products to Exhibit A, effective <strong>April 1, 2025</strong>:<br><br>
+        &nbsp;&nbsp;(a) Sterile Surgical Gloves, Size M/L/XL — $4.25/pair (minimum order: 500 pairs)<br>
+        &nbsp;&nbsp;(b) Disposable Isolation Gowns, AAMI Level 2 — $1.85/unit (minimum order: 200 units)<br>
+        &nbsp;&nbsp;(c) N95 Respirators, NIOSH-approved — $2.10/unit (minimum order: 100 units)<br><br>
+        All new products shall be subject to the same specifications, warranty, and delivery requirements as existing Products under the Agreement. A revised Exhibit A reflecting these additions is attached hereto as <strong>Attachment 1</strong>.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('m-price')"><strong>2. CHANGE TO PRICING — EXISTING PRODUCTS.</strong> Section 3 of the Agreement (Pricing and Orders) is hereby amended as follows, effective <strong>April 1, 2025</strong>:<br><br>
+        <em>Previous language:</em> "IV Saline Solution 0.9% 1000mL — $1.95/unit"<br>
+        <em>Revised language:</em> "IV Saline Solution 0.9% 1000mL — <strong>$1.82/unit</strong>" (reflecting volume discount achieved through renegotiation)<br><br>
+        <em>Previous language:</em> "Sterile Gauze Pads 4x4, 12-ply — $0.48/unit"<br>
+        <em>Revised language:</em> "Sterile Gauze Pads 4x4, 12-ply — <strong>$0.52/unit</strong>" (reflecting PPI-PME adjustment per Section 3)<br><br>
+        All other pricing in Exhibit A remains unchanged. The revised Exhibit A in Attachment 1 supersedes and replaces the prior Exhibit A in its entirety.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="supplyAnnotate('m-term')"><strong>3. CHANGE TO TERM.</strong> Section 12 of the Agreement (Term and Termination) is hereby amended to extend the initial term by one additional year. The Agreement, as modified, shall expire on <strong>February 28, 2028</strong> (three years from the original Effective Date), unless earlier terminated or further extended. All other termination provisions remain unchanged. MWHC Supply Chain Director has confirmed budget authorization for the extended term.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-important" onclick="supplyAnnotate('m-nochange')"><strong>4. NO OTHER CHANGES.</strong> Except as expressly set forth in this Modification, all terms and conditions of the Agreement, including all Exhibits, remain in full force and effect without modification. In the event of any conflict between this Modification and the original Agreement, the terms of this Modification shall control. This Modification is effective as of the date last signed below.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-important" onclick="supplyAnnotate('m-approval')"><strong>5. APPROVALS OBTAINED.</strong> The parties confirm the following internal approvals were obtained by MWHC prior to execution of this Modification: Supply Chain Director approval (April 1 increase in total contract value); Legal review of revised pricing terms (confirmed no new legal risk); Finance acknowledgment of revised pricing impact on FY2025 budget. Modification approved under MWHC Delegation of Authority Policy — total modified contract value: $1,240,000 over 3 years — VP signature required and obtained.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-standard" onclick="supplyAnnotate('m-effective')"><strong>6. EFFECTIVE DATE AND SIGNATURES.</strong> This Modification is effective as of <strong>April 1, 2025</strong>. Each party represents that the person signing below has authority to bind such party to this Modification. This Modification may be executed in counterparts, each of which shall constitute an original.</span></p>
+        <hr>
+        <p style="font-size:11px;color:#888;text-align:center">IN WITNESS WHEREOF, the parties execute this Modification as of the date last signed below.</p>
+        <br>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px;font-size:12px">
+          <div><div style="border-top:1px solid #333;margin-bottom:6px;padding-top:6px">Authorized Signature — MWHC</div><div style="color:#888">Title: VP, Supply Chain</div><div style="color:#888">Date: ________________________</div></div>
+          <div><div style="border-top:1px solid #333;margin-bottom:6px;padding-top:6px">Authorized Signature — Vendor</div><div style="color:#888">Title: _______________________</div><div style="color:#888">Date: ________________________</div></div>
+        </div>
+        <br>
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:12px 16px;font-size:11px;color:var(--gray-600);margin-top:8px">
+          <strong>CMS Filing Note:</strong> Upon execution, upload this Modification to the CMS linked to the original Agreement record. Update: total contract value, expiration date, and Exhibit A. Set renewal alerts for new expiration date. File approved DOA authorization with contract record.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ANNOTATION PANEL -->
+    <div class="annotation-panel">
+      <div id="supplyAnnotationContent">
+        <div class="annotation-empty">
+          <div style="font-size:28px;margin-bottom:8px">&#128072;</div>
+          <div>Click any highlighted section to see the explanation here.</div>
         </div>
       </div>
     </div>
