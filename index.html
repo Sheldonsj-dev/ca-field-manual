@@ -1039,6 +1039,85 @@
   .sim-btn-success { background:var(--green); color:white; }
   .sim-hint { font-size:12px; color:var(--gray-400); margin-top:6px; font-style:italic; }
 
+
+  /* ══ CONTRACT DOCUMENT VIEWER ══ */
+  .doc-viewer-wrap { display:grid; grid-template-columns:1fr 340px; gap:20px; align-items:flex-start; }
+  @media(max-width:720px){ .doc-viewer-wrap { grid-template-columns:1fr; } }
+
+  /* The document itself */
+  .contract-doc {
+    background:white; border:1px solid var(--gray-200);
+    border-radius:10px; padding:40px 44px;
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:13px; line-height:1.8; color:#1a1a1a;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    position:relative;
+  }
+  body.dark .contract-doc { background:#1F2937; border-color:#374151; color:#E5E7EB; }
+  .contract-doc-title { text-align:center; font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+  .contract-doc-subtitle { text-align:center; font-size:12px; color:#555; margin-bottom:28px; }
+  body.dark .contract-doc-subtitle { color:#9CA3AF; }
+  .contract-doc hr { border:none; border-top:1px solid #ccc; margin:20px 0; }
+  body.dark .contract-doc hr { border-color:#374151; }
+
+  /* Clause spans — clickable highlighted sections */
+  .clause-span {
+    position:relative; border-radius:3px; cursor:pointer;
+    transition:all 0.15s; padding:1px 2px; margin:-1px -2px;
+    border-bottom:2px solid transparent;
+  }
+  .clause-span:hover { filter:brightness(0.95); }
+  .clause-span.active { box-shadow:0 0 0 2px var(--blue); }
+
+  /* Good clause colors */
+  .cl-critical   { background:rgba(254,243,199,0.6); border-bottom-color:#B45309; }
+  .cl-important  { background:rgba(209,250,229,0.5); border-bottom-color:#059669; }
+  .cl-standard   { background:rgba(219,234,254,0.5); border-bottom-color:#2563EB; }
+
+  /* Bad clause colors */
+  .cl-bad        { background:rgba(254,226,226,0.7); border-bottom-color:#DC2626; text-decoration:wavy underline; text-decoration-color:#DC2626; text-underline-offset:2px; }
+  .cl-warning    { background:rgba(253,230,138,0.6); border-bottom-color:#B45309; }
+
+  /* Annotation panel */
+  .annotation-panel {
+    position:sticky; top:70px;
+    background:white; border:1px solid var(--gray-200);
+    border-radius:10px; overflow:hidden;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  }
+  body.dark .annotation-panel { background:#1F2937; border-color:#374151; }
+  .annotation-empty {
+    padding:28px 20px; text-align:center;
+    font-size:13px; color:var(--gray-400);
+  }
+  .annotation-head {
+    padding:12px 16px; border-bottom:1px solid var(--gray-200);
+    display:flex; align-items:center; gap:8px;
+  }
+  body.dark .annotation-head { border-color:#374151; }
+  .annotation-head-icon { font-size:18px; }
+  .annotation-head-title { font-size:14px; font-weight:600; color:var(--navy); }
+  body.dark .annotation-head-title { color:#F9FAFB; }
+  .annotation-head-tag { margin-left:auto; font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; }
+  .annotation-body { padding:14px 16px; }
+  .annotation-what { font-size:13px; color:var(--gray-600); line-height:1.65; margin-bottom:10px; }
+  body.dark .annotation-what { color:#D1D5DB; }
+  .annotation-check { font-size:12px; padding:10px 12px; border-radius:6px; background:var(--blue-light); color:#1E40AF; line-height:1.6; }
+  .annotation-danger { font-size:12px; padding:10px 12px; border-radius:6px; background:var(--coral-light); color:#7F1D1D; line-height:1.6; }
+  body.dark .annotation-check { background:#1E3A8A; color:#BFDBFE; }
+  body.dark .annotation-danger { background:#7F1D1D; color:#FECACA; }
+
+  /* Legend */
+  .doc-legend { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .doc-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--gray-600); }
+  .doc-legend-swatch { width:14px; height:14px; border-radius:3px; flex-shrink:0; }
+
+  /* Toggle between good/bad */
+  .doc-toggle { display:flex; gap:6px; margin-bottom:16px; }
+  .doc-toggle-btn { padding:7px 16px; border-radius:20px; border:1px solid var(--gray-200); background:white; font-size:13px; font-weight:500; color:var(--gray-600); cursor:pointer; transition:all 0.15s; }
+  body.dark .doc-toggle-btn { background:#1F2937; border-color:#374151; color:#D1D5DB; }
+  .doc-toggle-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+
 </style>
 </head>
 <body>
@@ -1068,6 +1147,7 @@
   <div class="nav-tab" onclick="showSection('progress',this)">📊 My Progress</div>
   <div class="nav-tab" onclick="showSection('ask',this)">💬 Ask the Manual</div>
   <div class="nav-tab" onclick="showSection('simulation',this)">🎓 Sim Lab</div>
+  <div class="nav-tab" onclick="showSection('docviewer',this)">📃 Contract Viewer</div>
 </nav>
 
 <div class="nav-drawer" id="navDrawer" onclick="handleDrawerClick(event)">
@@ -1091,6 +1171,7 @@
     <button class="nav-drawer-item" onclick="drawerNav('progress')">📊 My Progress</button>
     <button class="nav-drawer-item" onclick="drawerNav('ask')">💬 Ask the Manual</button>
     <button class="nav-drawer-item" onclick="drawerNav('simulation')">🎓 Sim Lab</button>
+    <button class="nav-drawer-item" onclick="drawerNav('docviewer')">📃 Contract Viewer</button>
   </div>
 </div>
 <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
@@ -2588,6 +2669,69 @@ document.addEventListener('DOMContentLoaded', function() {
   renderChecklist();
 });
 
+
+/* ══ CONTRACT DOCUMENT VIEWER ══ */
+var ANNOT = {
+  parties:   { title:'Parties', tag:'Standard', tagColor:'#DBEAFE', tagText:'#1E3A8A', what:'Identifies the full legal names, entity types, and addresses of both parties. This must be precise — the legal entity that signs is the entity that is bound.', check:'Confirm: correct legal entity name (not a DBA or nickname), state of incorporation, and physical address. Verify the vendor signing entity is the same one that will perform the work.' },
+  recitals:  { title:'Recitals / Background', tag:'Standard', tagColor:'#DBEAFE', tagText:'#1E3A8A', what:'Sets context for why the parties are contracting. Generally not legally binding on its own, but courts may use it to interpret ambiguous clauses.', check:'Keep it accurate and brief. Do not make promises in the recitals that are not backed up by the operative clauses.' },
+  sow:       { title:'Statement of Work', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'The most important part of any contract. Defines exactly what the vendor will deliver — specific tasks, measurable standards, timelines, and qualifications. If it is not written here, the vendor has no obligation to do it.', check:'Is every deliverable specific and measurable? Are response times defined in hours, not days? Is uptime measured monthly? Are technician qualifications specified? Could a stranger read this and know exactly what to do?' },
+  term:      { title:'Term and Renewal', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Defines how long the contract runs and what happens at expiration. Note this good contract explicitly states it does NOT auto-renew — this protects MWHC.', check:'Is the initial term clear? Does the contract auto-renew or require affirmative action? Is the non-renewal notice period reasonable (90 days is standard)? Set CMS reminders at 90, 60, and 30 days before expiration.' },
+  payment:   { title:'Compensation and Payment', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Defines total contract value, payment schedule, invoice dispute process, and price escalation limits. The 3%/CPI cap protects MWHC from unexpected cost increases.', check:'Is the dispute process fair — can MWHC challenge incorrect invoices without penalty? Is the price escalation cap reasonable? Are all fees and costs included or are there potential add-ons?' },
+  baa:       { title:'HIPAA / BAA', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'A Business Associate Agreement is legally required under HIPAA for any vendor who accesses patient information. This clause correctly references Exhibit A (the BAA) and requires 24-hour breach notification — stronger than HIPAAs 60-day minimum.', check:'Is the BAA attached and signed? Does it meet OCR standards? Is the breach notification timeline specified (24-48 hours is best practice, not HIPAAs 60-day default)? Does it address what happens to PHI at contract end?' },
+  indemnity: { title:'Indemnification', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'This clause makes the vendor responsible for defending and paying for claims that arise from their actions or failures. Note it covers negligence AND willful misconduct, and survives contract termination.', check:'Is MWHC fully protected? Does it cover legal defense costs? Does it cover vendor employee actions? Does it survive termination (important for claims that arise after the contract ends)? Is there a mutual indemnification or only one-way?' },
+  liability: { title:'Limitation of Liability', tag:'Critical', tagColor:'#FEF3C7', tagText:'#78350F', what:'Caps total recoverable damages at 12 months of fees — a fair and industry-standard cap. Critically, this cap does NOT apply to HIPAA breaches, gross negligence, or willful misconduct, which are the highest-risk scenarios.', check:'Is the cap at least 12 months of fees? Are the carve-outs for HIPAA, gross negligence, and fraud appropriate? Does the cap apply to both parties or only one?' },
+  insurance: { title:'Insurance Requirements', tag:'Important', tagColor:'#D1FAE5', tagText:'#065F46', what:'Specifies exactly what types and amounts of insurance Vendor must carry. Naming MWHC as additional insured means MWHC can make claims directly against the vendors insurer.', check:'Is MWHC listed as additional insured? Are all relevant coverage types included (note cyber liability for any vendor touching data)? Is the COI requirement clear? Track COI expiration dates in the CMS.' },
+  termination:{ title:'Termination', tag:'Important', tagColor:'#D1FAE5', tagText:'#065F46', what:'Provides clear exit paths for both parties. Termination for cause (vendor breach) and termination for convenience (no reason needed) both protect MWHCs operational flexibility. The transition cooperation clause is important for business continuity.', check:'Is the cure period long enough to fix problems but short enough to protect MWHC? Is the convenience termination notice period reasonable? Does the vendor have to cooperate with transition to a new vendor?' },
+  governing: { title:'Governing Law', tag:'Standard', tagColor:'#DBEAFE', tagText:'#1E3A8A', what:'Virginia governing law means any dispute uses Virginia courts and law — home advantage for MWHC. Arbitration in Fredericksburg keeps disputes local and avoids expensive litigation.', check:'Is Virginia specified? Is the dispute resolution process practical for MWHC? Is arbitration required before litigation? Who pays arbitration costs?' },
+  general:   { title:'General Provisions', tag:'Standard', tagColor:'#DBEAFE', tagText:'#1E3A8A', what:'The integration clause (entire agreement) means the vendor cannot later claim there were other promises. The assignment restriction prevents the contract from being sold to a company MWHC never vetted.', check:'Is the integration clause present? Does assignment require MWHC consent? How must amendments be made (always in writing)? How must notices be delivered?' },
+
+  'bad-nodate':    { title:'Missing effective date and party details', tag:'Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'No effective date means neither party can definitively say when obligations started. The undefined party name creates enforcement risk — which "Mary Washington Healthcare" entity signed?', danger:'Risk: The vendor could argue obligations never commenced, or that the wrong legal entity is party to the agreement. Always require: full legal entity name, state of incorporation, and a specific effective date.' },
+  'bad-scope':     { title:'Fatally vague scope of work', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'"IT services as needed" defines nothing. The vendor can deliver anything and argue they fulfilled the contract. There are no deliverables, no timelines, no standards, no qualifications.', danger:'Risk: If the vendor does nothing, they can argue they were waiting for direction. If they do low-quality work, there is no standard to measure against. You cannot enforce a contract with no obligations. This SOW must be completely rewritten.' },
+  'bad-term':      { title:'Dangerous auto-renewal with 180-day notice', tag:'Warning', tagColor:'#FEF3C7', tagText:'#78350F', what:'If MWHC misses the 180-day cancellation window by one day, the contract auto-renews for another full year. This is an unusually long notice window designed to trap the hospital.', danger:'Risk: Missing this window locks MWHC in for another year of a potentially bad contract. Standard is 30-90 days. Negotiate to 60 days and set CMS reminders at 270, 210, and 180 days before renewal date.' },
+  'bad-payment':   { title:'Unfair payment terms — no dispute rights', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'Payment upon receipt means MWHC must pay immediately with no time to review. 18% annual interest is punitive. No dispute process means MWHC cannot challenge incorrect invoices.', danger:'Risk: MWHC loses all financial protection. Vendors can send inflated invoices and MWHC has no contractual right to challenge them without risking late fees. Negotiate to Net 30 with a 15-day dispute window.' },
+  'bad-nobaa':     { title:'No BAA — Critical HIPAA Violation', tag:'STOP — Do Not Sign', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'The vendor will access patient scheduling and billing records — this is PHI. A BAA is legally required under HIPAA before ANY access. The absence of a BAA here is not a negotiating point — it is a federal law violation.', danger:'Risk: MWHC faces OCR fines of up to $1.9M per violation category per year — regardless of whether a breach occurs. The contract cannot be executed without a signed BAA. This is an immediate stop and escalate to Compliance.' },
+  'bad-indemnity': { title:'One-sided indemnification — protects the vendor, not MWHC', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'This clause indemnifies the VENDOR from MWHCs claims — it is backwards. There is no indemnification of MWHC from vendor errors, negligence, or data breaches.', danger:'Risk: If the vendor causes a patient injury, a data breach, or regulatory violation, MWHC has no contractual right to recover from them. This clause must be reversed to protect MWHC.' },
+  'bad-liability': { title:'$1 liability cap — essentially zero protection', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'A $1 liability cap means that no matter how catastrophic the vendors failure — system outage, data breach, patient harm — MWHC can only recover one dollar. This renders the contract worthless as a risk management tool.', danger:'Risk: If this vendor causes a HIPAA breach costing millions to remediate, MWHC recovers $1. Minimum acceptable cap is 12 months of fees, with no cap on HIPAA, gross negligence, or fraud. Never sign this.' },
+  'bad-noinsurance':{ title:'No specific insurance requirements', tag:'Critical Problem', tagColor:'#FEE2E2', tagText:'#7F1D1D', what:'"Appropriate insurance" means nothing. The vendor could have a $10,000 policy — or no policy at all. Without specific types, amounts, and a COI requirement, MWHC has no protection.', danger:'Risk: A vendor with inadequate or no insurance who causes harm on-site leaves MWHC with no recourse. Always specify types and minimum amounts, require COI before work begins, and track renewals.' },
+  'bad-assign':    { title:'Unrestricted assignment — vendor can sell the contract', tag:'Warning', tagColor:'#FEF3C7', tagText:'#78350F', what:'The vendor can transfer this contract to any company without asking MWHC. MWHC could wake up with a completely different company performing critical services — one they never vetted.', danger:'Risk: Common in mergers and acquisitions. MWHC could find its patient data being handled by an unvetted company. Always require prior written consent of MWHC for any assignment.' },
+  'bad-governing': { title:'Delaware law — disadvantages MWHC', tag:'Warning', tagColor:'#FEF3C7', tagText:'#78350F', what:'Delaware law and Delaware courts mean any dispute would be litigated far from home under unfamiliar law. This gives the vendor a home-court advantage and increases MWHCs legal costs dramatically.', danger:'Risk: Always negotiate for Virginia governing law and local dispute resolution. This is a standard negotiating point — most vendors will accept Virginia law for a Virginia hospital.' }
+};
+
+function annotate(key) {
+  var d = ANNOT[key];
+  if (!d) return;
+  document.querySelectorAll('.clause-span').forEach(function(s){ s.classList.remove('active'); });
+  event.currentTarget.classList.add('active');
+  var isBad = d.danger !== undefined;
+  var html = '<div class="annotation-head">';
+  html += '<span class="annotation-head-icon">' + (isBad ? '&#9888;' : '&#128270;') + '</span>';
+  html += '<span class="annotation-head-title">' + d.title + '</span>';
+  html += '<span class="annotation-head-tag" style="background:' + d.tagColor + ';color:' + d.tagText + '">' + d.tag + '</span>';
+  html += '</div><div class="annotation-body">';
+  html += '<div class="annotation-what">' + d.what + '</div>';
+  if (isBad) {
+    html += '<div class="annotation-danger"><strong>Why this is dangerous:</strong> ' + d.danger + '</div>';
+  } else {
+    html += '<div class="annotation-check"><strong>What to verify:</strong> ' + d.check + '</div>';
+  }
+  html += '</div>';
+  document.getElementById('annotationContent').innerHTML = html;
+}
+
+function toggleDoc(mode, btn) {
+  document.querySelectorAll('.doc-toggle-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('doc-good').style.display = mode === 'good' ? 'block' : 'none';
+  document.getElementById('doc-bad').style.display  = mode === 'bad'  ? 'block' : 'none';
+  document.getElementById('annotationContent').innerHTML = '<div class="annotation-empty"><div style="font-size:28px;margin-bottom:8px">&#128072;</div><div>Click any highlighted section to see the explanation.</div></div>';
+  var legend = document.getElementById('docLegend');
+  if (mode === 'bad') {
+    legend.innerHTML = '<div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(254,226,226,0.8);border:1px solid #DC2626"></div>Critical problem</div><div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(253,230,138,0.6);border:1px solid #B45309"></div>Warning</div>';
+  } else {
+    legend.innerHTML = '<div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(254,243,199,0.8);border:1px solid #B45309"></div>Critical clause</div><div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(209,250,229,0.8);border:1px solid #059669"></div>Important clause</div><div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(219,234,254,0.8);border:1px solid #2563EB"></div>Standard clause</div>';
+  }
+}
+
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
@@ -3485,6 +3629,136 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   </div>
 
+</section>
+
+
+<!-- ══ CONTRACT DOCUMENT VIEWER ══ -->
+<section class="section" id="sec-docviewer">
+  <div class="section-hero">
+    <div class="section-eyebrow">Contract Document Viewer</div>
+    <h2 class="section-title">See it on the document itself.</h2>
+    <p class="section-intro">Click any highlighted section of the contract to see what it means, what to check, and — on the bad contract — exactly what is wrong and why it is dangerous.</p>
+  </div>
+
+  <div class="doc-toggle">
+    <button class="doc-toggle-btn active" onclick="toggleDoc('good',this)">✅ Good Contract</button>
+    <button class="doc-toggle-btn" onclick="toggleDoc('bad',this)">⚠ Bad Contract</button>
+  </div>
+
+  <div class="doc-legend" id="docLegend">
+    <div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(254,243,199,0.8);border:1px solid #B45309"></div>Critical clause</div>
+    <div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(209,250,229,0.8);border:1px solid #059669"></div>Important clause</div>
+    <div class="doc-legend-item"><div class="doc-legend-swatch" style="background:rgba(219,234,254,0.8);border:1px solid #2563EB"></div>Standard clause</div>
+  </div>
+
+  <div class="doc-viewer-wrap">
+    <!-- THE CONTRACT DOCUMENT -->
+    <div id="contractDoc">
+
+      <!-- GOOD CONTRACT -->
+      <div id="doc-good" class="contract-doc">
+        <div class="contract-doc-title">Service Agreement</div>
+        <div class="contract-doc-subtitle">Mary Washington Healthcare &amp; MedTech Services, Inc.</div>
+        <hr>
+
+        <p><span class="clause-span cl-standard" onclick="annotate('parties')"><strong>1. PARTIES.</strong> This Service Agreement ("Agreement") is entered into as of <strong>January 1, 2025</strong> ("Effective Date") by and between <strong>Mary Washington Healthcare, Inc.</strong>, a Virginia nonprofit corporation with its principal place of business at 1001 Sam Perry Blvd, Fredericksburg, VA 22401 ("MWHC"), and <strong>MedTech Services, Inc.</strong>, a Delaware corporation authorized to do business in Virginia, with its principal place of business at 4500 Technology Drive, Richmond, VA 23219 ("Vendor").</span></p>
+        <br>
+
+        <p><span class="clause-span cl-standard" onclick="annotate('recitals')"><strong>2. RECITALS.</strong> MWHC operates a licensed healthcare facility and requires maintenance services for medical imaging equipment. Vendor is a qualified provider of such services with demonstrated experience in healthcare settings. The parties wish to enter into this Agreement to define the terms of their relationship.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="annotate('sow')"><strong>3. STATEMENT OF WORK.</strong> Vendor shall provide preventive maintenance and repair services for MWHC's MRI equipment as follows: (a) Quarterly preventive maintenance visits at each unit, with written service reports delivered within 5 business days; (b) Emergency response within <strong>4 hours</strong> of notification for critical failures during business hours and within <strong>8 hours</strong> after hours; (c) All parts, labor, and travel included; (d) Guaranteed system uptime of no less than <strong>99%</strong> calculated monthly, excluding scheduled maintenance windows mutually agreed upon in advance; (e) All work performed by certified biomedical engineers holding current AAMI or equivalent certifications.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-standard" onclick="annotate('term')"><strong>4. TERM.</strong> This Agreement shall commence on the Effective Date and continue for a period of <strong>three (3) years</strong>, unless earlier terminated as provided herein. Either party may elect not to renew by providing <strong>ninety (90) days</strong> written notice prior to the end of the then-current term. Absent such notice, this Agreement shall <strong>not</strong> automatically renew.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="annotate('payment')"><strong>5. COMPENSATION.</strong> MWHC shall pay Vendor <strong>$180,000 per year</strong>, invoiced quarterly in equal installments of $45,000. Invoices are due within <strong>30 days</strong> of receipt (Net 30). MWHC may dispute any invoice in writing within 15 days; disputed amounts shall be held pending resolution without penalty. Annual price adjustments shall not exceed the lesser of 3% or the change in CPI-U for the prior calendar year.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="annotate('baa')"><strong>6. HIPAA / BUSINESS ASSOCIATE AGREEMENT.</strong> The parties acknowledge that Vendor may have access to Protected Health Information ("PHI") as defined under HIPAA in the performance of services hereunder. Accordingly, the Business Associate Agreement attached hereto as <strong>Exhibit A</strong> is incorporated by reference and forms an integral part of this Agreement. Vendor shall comply with all applicable requirements of HIPAA, the HITECH Act, and any implementing regulations. Vendor shall notify MWHC of any suspected or confirmed breach of PHI within <strong>24 hours</strong> of discovery.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="annotate('indemnity')"><strong>7. INDEMNIFICATION.</strong> Vendor shall defend, indemnify, and hold harmless MWHC, its officers, directors, employees, and agents from and against any and all claims, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to: (a) Vendor's performance or failure to perform under this Agreement; (b) any negligent or willful act or omission of Vendor or its personnel; (c) any breach by Vendor of its representations, warranties, or obligations hereunder; or (d) any violation by Vendor of applicable law or regulation. This indemnification shall survive termination of this Agreement.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-critical" onclick="annotate('liability')"><strong>8. LIMITATION OF LIABILITY.</strong> Neither party's total aggregate liability shall exceed the <strong>total fees paid or payable in the twelve (12) months</strong> immediately preceding the event giving rise to the claim. Notwithstanding the foregoing, this limitation shall not apply to: (a) either party's indemnification obligations; (b) damages arising from gross negligence or willful misconduct; (c) breaches of confidentiality or HIPAA obligations; or (d) Vendor's infringement of MWHC's intellectual property rights.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-important" onclick="annotate('insurance')"><strong>9. INSURANCE.</strong> Vendor shall maintain throughout the term: (a) Commercial General Liability: <strong>$1,000,000 per occurrence / $2,000,000 aggregate</strong>; (b) Professional Liability / E&amp;O: <strong>$1,000,000 per claim / $3,000,000 aggregate</strong>; (c) Workers' Compensation: statutory limits; (d) Cyber Liability: <strong>$1,000,000 per occurrence</strong>. MWHC shall be named as an additional insured on all policies. Vendor shall provide a current Certificate of Insurance prior to commencement of services and upon each renewal.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-important" onclick="annotate('termination')"><strong>10. TERMINATION.</strong> Either party may terminate this Agreement for cause upon <strong>30 days</strong> written notice if the other party materially breaches this Agreement and fails to cure such breach within the notice period. MWHC may terminate this Agreement for convenience upon <strong>60 days</strong> written notice to Vendor, with no penalty. Upon termination, Vendor shall cooperate fully with the transition to a successor vendor.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-standard" onclick="annotate('governing')"><strong>11. GOVERNING LAW.</strong> This Agreement shall be governed by and construed in accordance with the laws of the <strong>Commonwealth of Virginia</strong>, without regard to its conflict of laws principles. Any disputes not resolved by good-faith negotiation shall be submitted to binding arbitration in Fredericksburg, Virginia, under the AAA Commercial Rules.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-standard" onclick="annotate('general')"><strong>12. GENERAL PROVISIONS.</strong> This Agreement constitutes the entire agreement between the parties with respect to its subject matter and supersedes all prior agreements. Amendments must be in writing and signed by authorized representatives of both parties. Neither party may assign this Agreement without the prior written consent of the other party. Notices shall be delivered in writing to the addresses set forth above.</span></p>
+        <hr>
+        <p style="font-size:11px;color:#888;text-align:center">IN WITNESS WHEREOF, the parties have executed this Agreement as of the Effective Date written above.</p>
+        <br>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px;font-size:12px">
+          <div><div style="border-top:1px solid #333;margin-bottom:6px;padding-top:6px">Authorized Signature — MWHC</div><div style="color:#888">Title: _______________________</div><div style="color:#888">Date: ________________________</div></div>
+          <div><div style="border-top:1px solid #333;margin-bottom:6px;padding-top:6px">Authorized Signature — Vendor</div><div style="color:#888">Title: _______________________</div><div style="color:#888">Date: ________________________</div></div>
+        </div>
+      </div>
+
+      <!-- BAD CONTRACT -->
+      <div id="doc-bad" class="contract-doc" style="display:none">
+        <div class="contract-doc-title">Service Agreement</div>
+        <div class="contract-doc-subtitle">Mary Washington Healthcare &amp; QuickVendor LLC</div>
+        <hr>
+
+        <p><span class="clause-span cl-bad" onclick="annotate('bad-nodate')"><strong>1. PARTIES.</strong> This agreement is between Mary Washington Healthcare ("MWHC") and QuickVendor LLC ("Vendor"). <span style="background:rgba(254,226,226,0.5)">[No effective date specified. No full legal addresses. "MWHC" not defined as the full legal entity name.]</span></span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="annotate('bad-scope')"><strong>2. SCOPE OF WORK.</strong> Vendor will provide <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">IT services as needed</span> to MWHC. Services may include support, maintenance, or other technology-related tasks as mutually agreed.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-warning" onclick="annotate('bad-term')"><strong>3. TERM.</strong> This Agreement shall commence upon signing and continue until terminated. Either party may terminate upon <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#B45309">180 days</span> written notice. This Agreement shall <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#B45309">automatically renew</span> for successive one-year terms unless terminated as provided herein.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="annotate('bad-payment')"><strong>4. PAYMENT.</strong> MWHC shall pay Vendor's invoices <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">upon receipt</span> without offset or deduction. Late payments shall accrue interest at <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">18% per annum</span>. <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">No dispute process is provided.</span></span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="annotate('bad-nobaa')"><strong>5. CONFIDENTIALITY.</strong> Both parties agree to keep confidential information confidential. <span style="background:rgba(254,226,226,0.6);border:1px dashed #DC2626;padding:0 3px;border-radius:2px">⚠ NO BUSINESS ASSOCIATE AGREEMENT (BAA) INCLUDED — Vendor will access patient scheduling and billing records.</span></span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="annotate('bad-indemnity')"><strong>6. INDEMNIFICATION.</strong> MWHC agrees to indemnify and hold harmless Vendor from any claims arising in connection with this Agreement. <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">[No reciprocal indemnification of MWHC by Vendor is provided.]</span></span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="annotate('bad-liability')"><strong>7. LIMITATION OF LIABILITY.</strong> Vendor's total liability under this Agreement shall not exceed <span style="background:rgba(254,226,226,0.7);font-weight:700;padding:0 3px;border-radius:2px">ONE DOLLAR ($1.00)</span>. MWHC waives all right to consequential, incidental, or punitive damages.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="annotate('bad-noinsurance')"><strong>8. INSURANCE.</strong> Vendor represents that it <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">carries appropriate insurance</span>. MWHC may request evidence of coverage upon reasonable notice. <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">[No types, amounts, or COI requirements specified.]</span></span></p>
+        <br>
+
+        <p><span class="clause-span cl-bad" onclick="annotate('bad-assign')"><strong>9. ASSIGNMENT.</strong> Vendor may assign this Agreement or any of its rights and obligations hereunder <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#DC2626">to any third party without the prior consent of MWHC</span>.</span></p>
+        <br>
+
+        <p><span class="clause-span cl-warning" onclick="annotate('bad-governing')"><strong>10. GOVERNING LAW.</strong> This Agreement shall be governed by the laws of the <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#B45309">State of Delaware</span>. Any disputes shall be resolved by litigation in the courts of <span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#B45309">New Castle County, Delaware</span>.</span></p>
+        <hr>
+        <p style="font-size:11px;color:#888;text-align:center">Agreed by the parties.</p>
+        <br>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px;font-size:12px">
+          <div><div style="border-top:1px solid #333;margin-bottom:6px;padding-top:6px">Signature — MWHC</div><div style="color:#888">Date: ________________________</div></div>
+          <div><div style="border-top:1px solid #333;margin-bottom:6px;padding-top:6px">Signature — Vendor</div><div style="color:#888">Date: ________________________</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ANNOTATION PANEL -->
+    <div class="annotation-panel">
+      <div id="annotationContent">
+        <div class="annotation-empty">
+          <div style="font-size:28px;margin-bottom:8px">&#128072;</div>
+          <div>Click any highlighted section of the contract to see the explanation here.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 </body>
