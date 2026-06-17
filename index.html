@@ -933,6 +933,112 @@
   .chat-sugg { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--blue-mid); color: var(--blue); background: var(--blue-light); cursor: pointer; transition: all 0.15s; text-align: left; }
   .chat-sugg:hover { background: var(--blue); color: white; }
 
+
+  /* ══ CONTRACT SIMULATION ══ */
+  .sim-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px; }
+  .sim-nav-btn { padding:8px 16px; border-radius:20px; border:1px solid var(--gray-200); background:white; font-size:13px; font-weight:500; color:var(--gray-600); cursor:pointer; transition:all 0.15s; }
+  body.dark .sim-nav-btn { background:#1F2937; border-color:#374151; color:#D1D5DB; }
+  .sim-nav-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+  .sim-panel { display:none; }
+  .sim-panel.active { display:block; animation:fadeIn 0.2s ease; }
+
+  /* Anatomy */
+  .anatomy-wrap { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:580px){ .anatomy-wrap { grid-template-columns:1fr; } }
+  .anatomy-clause { border:1px solid var(--gray-200); border-radius:10px; background:white; overflow:hidden; cursor:pointer; transition:all 0.15s; }
+  body.dark .anatomy-clause { background:#1F2937; border-color:#374151; }
+  .anatomy-clause:hover { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,0.1); }
+  .anatomy-clause.bad { border-color:var(--coral) !important; }
+  .anatomy-clause.bad .anatomy-head { background:#FEE2E2; }
+  body.dark .anatomy-clause.bad .anatomy-head { background:#501313; }
+  .anatomy-head { padding:10px 14px; display:flex; align-items:center; justify-content:space-between; background:var(--gray-50); border-bottom:1px solid var(--gray-200); }
+  body.dark .anatomy-head { background:#374151; border-color:#4B5563; }
+  .anatomy-head-title { font-size:13px; font-weight:600; color:var(--navy); }
+  body.dark .anatomy-head-title { color:#F9FAFB; }
+  .anatomy-badge { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; }
+  .anatomy-preview { padding:10px 14px; font-size:12px; color:var(--gray-600); line-height:1.5; }
+  body.dark .anatomy-preview { color:#D1D5DB; }
+  .anatomy-detail { display:none; padding:12px 14px; border-top:1px solid var(--gray-200); background:white; font-size:13px; color:var(--gray-600); line-height:1.65; }
+  body.dark .anatomy-detail { background:#1F2937; border-color:#374151; color:#D1D5DB; }
+  .anatomy-detail.open { display:block; animation:fadeIn 0.2s ease; }
+  .anatomy-why-bad { margin-top:8px; padding:8px 12px; background:#FEE2E2; border-radius:6px; font-size:12px; color:#7F1D1D; line-height:1.5; }
+  body.dark .anatomy-why-bad { background:#501313; color:#F7C1C1; }
+
+  /* Scenario / Simulation */
+  .scenario-wrap { border:1px solid var(--gray-200); border-radius:12px; overflow:hidden; }
+  body.dark .scenario-wrap { border-color:#374151; }
+  .scenario-header { background:var(--navy); color:white; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
+  .scenario-title { font-size:14px; font-weight:600; }
+  .scenario-badge { font-size:11px; padding:3px 10px; border-radius:20px; background:rgba(255,255,255,0.15); }
+  .scenario-body { padding:20px; }
+  .scenario-step { display:none; }
+  .scenario-step.active { display:block; animation:fadeIn 0.25s ease; }
+  .step-label { font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-400); margin-bottom:6px; }
+  .step-heading { font-size:17px; font-weight:600; color:var(--navy); margin-bottom:10px; }
+  body.dark .step-heading { color:#F9FAFB; }
+  .step-body { font-size:14px; color:var(--gray-600); line-height:1.65; margin-bottom:16px; }
+  body.dark .step-body { color:#D1D5DB; }
+
+  /* Email / memo card */
+  .memo-card { background:var(--gray-50); border:1px solid var(--gray-200); border-radius:10px; padding:16px 18px; margin-bottom:16px; font-size:13px; }
+  body.dark .memo-card { background:#374151; border-color:#4B5563; }
+  .memo-row { display:flex; gap:8px; margin-bottom:6px; font-size:12px; }
+  .memo-label { font-weight:600; color:var(--gray-400); min-width:60px; }
+  .memo-val { color:var(--gray-600); }
+  body.dark .memo-val { color:#D1D5DB; }
+  .memo-body { margin-top:12px; padding-top:12px; border-top:1px solid var(--gray-200); font-size:13px; color:var(--gray-600); line-height:1.65; }
+  body.dark .memo-body { border-color:#4B5563; color:#D1D5DB; }
+
+  /* Visual pipeline */
+  .pipeline { display:flex; align-items:center; gap:0; margin:16px 0; overflow-x:auto; padding-bottom:4px; }
+  .pipe-stage { display:flex; flex-direction:column; align-items:center; }
+  .pipe-box { padding:7px 12px; border-radius:8px; font-size:11px; font-weight:600; text-align:center; min-width:80px; white-space:nowrap; }
+  .pipe-sub { font-size:10px; color:var(--gray-400); margin-top:3px; text-align:center; }
+  .pipe-arrow { font-size:18px; color:var(--gray-300); padding:0 4px; flex-shrink:0; }
+  .pipe-done { opacity:1; }
+  .pipe-active { box-shadow:0 0 0 2px var(--blue); }
+  .pipe-pending { opacity:0.4; }
+
+  /* Form fields for interactive sim */
+  .sim-field { margin-bottom:14px; }
+  .sim-field label { display:block; font-size:12px; font-weight:600; color:var(--gray-600); margin-bottom:5px; }
+  body.dark .sim-field label { color:#9CA3AF; }
+  .sim-input { width:100%; padding:9px 12px; font-size:13px; border:1px solid var(--gray-200); border-radius:8px; background:white; color:var(--text); outline:none; transition:border 0.15s; }
+  body.dark .sim-input { background:#374151; border-color:#4B5563; color:#F9FAFB; }
+  .sim-input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,0.08); }
+  .sim-select { width:100%; padding:9px 12px; font-size:13px; border:1px solid var(--gray-200); border-radius:8px; background:white; color:var(--text); outline:none; }
+  body.dark .sim-select { background:#374151; border-color:#4B5563; color:#F9FAFB; }
+  .sim-textarea { width:100%; padding:9px 12px; font-size:13px; border:1px solid var(--gray-200); border-radius:8px; background:white; color:var(--text); outline:none; min-height:80px; resize:vertical; line-height:1.5; font-family:var(--sans); }
+  body.dark .sim-textarea { background:#374151; border-color:#4B5563; color:#F9FAFB; }
+  .sim-textarea:focus, .sim-input:focus, .sim-select:focus { border-color:var(--blue); }
+
+  /* Progress dots */
+  .sim-dots { display:flex; gap:6px; align-items:center; margin-bottom:20px; }
+  .sim-dot { width:10px; height:10px; border-radius:50%; background:var(--gray-200); transition:all 0.2s; }
+  body.dark .sim-dot { background:#4B5563; }
+  .sim-dot.done { background:var(--green); }
+  .sim-dot.active { background:var(--blue); transform:scale(1.3); }
+
+  /* Approval result */
+  .approval-result { border-radius:12px; padding:20px 22px; margin-top:16px; border:1px solid; }
+  .approval-approved { background:var(--green-light); border-color:#86EFAC; }
+  .approval-rejected { background:var(--coral-light); border-color:#FECACA; }
+  .approval-result-icon { font-size:28px; margin-bottom:8px; }
+  .approval-result-title { font-size:17px; font-weight:700; margin-bottom:8px; }
+  .approval-approved .approval-result-title { color:var(--green); }
+  .approval-rejected .approval-result-title { color:var(--coral); }
+  .approval-result-body { font-size:13px; color:var(--gray-600); line-height:1.65; }
+  .approval-issue { display:flex; gap:8px; padding:7px 0; border-bottom:1px solid rgba(0,0,0,0.06); font-size:13px; color:var(--coral); }
+  .approval-issue:last-child { border-bottom:none; }
+  .sim-btn { padding:10px 22px; border-radius:8px; border:none; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+  .sim-btn-primary { background:var(--blue); color:white; }
+  .sim-btn-primary:hover { background:#1D4ED8; }
+  .sim-btn-secondary { background:white; color:var(--gray-600); border:1px solid var(--gray-200); margin-left:8px; }
+  body.dark .sim-btn-secondary { background:#374151; color:#D1D5DB; border-color:#4B5563; }
+  .sim-btn-secondary:hover { background:var(--gray-50); }
+  .sim-btn-success { background:var(--green); color:white; }
+  .sim-hint { font-size:12px; color:var(--gray-400); margin-top:6px; font-style:italic; }
+
 </style>
 </head>
 <body>
@@ -961,6 +1067,7 @@
   <div class="nav-tab" onclick="showSection('quickref',this)">⚡ Quick Ref</div>
   <div class="nav-tab" onclick="showSection('progress',this)">📊 My Progress</div>
   <div class="nav-tab" onclick="showSection('ask',this)">💬 Ask the Manual</div>
+  <div class="nav-tab" onclick="showSection('simulation',this)">🎓 Sim Lab</div>
 </nav>
 
 <div class="nav-drawer" id="navDrawer" onclick="handleDrawerClick(event)">
@@ -983,6 +1090,7 @@
     <button class="nav-drawer-item" onclick="drawerNav('quickref')">⚡ Quick Reference</button>
     <button class="nav-drawer-item" onclick="drawerNav('progress')">📊 My Progress</button>
     <button class="nav-drawer-item" onclick="drawerNav('ask')">💬 Ask the Manual</button>
+    <button class="nav-drawer-item" onclick="drawerNav('simulation')">🎓 Sim Lab</button>
   </div>
 </div>
 <button class="dark-toggle" onclick="toggleDark()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
@@ -2083,6 +2191,403 @@ function removeTyping(id) {
   var el = document.getElementById(id);
   if (el) el.remove();
 }
+
+/* ══ CONTRACT SIMULATION ══ */
+function showSim(id, btn) {
+  document.querySelectorAll('.sim-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sim-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('sim-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+/* ── ANATOMY DATA ── */
+var CLAUSES = [
+  { title:'Parties', tag:'Required', text:'Identifies who is entering the contract — the full legal name of MWHC and the vendor. Must match exactly with their registered legal entities.', detail:'Check: Are both party names spelled correctly and in full? Is the vendor entity the same one that will actually perform the work (not a parent or subsidiary)? This seems simple but errors here can make enforcement difficult.' },
+  { title:'Recitals / Background', tag:'Standard', text:'A brief statement of why the parties are entering the agreement. Sets context but is generally not legally binding.', detail:'Check: Does the background accurately describe the relationship and purpose? Misstatements here can sometimes be used to interpret ambiguous clauses later.' },
+  { title:'Definitions', tag:'Critical', text:'Defines key terms used throughout the contract. Ambiguous definitions are one of the leading causes of contract disputes.', detail:'Check: Are all key terms defined? Is "Services," "Deliverables," "Confidential Information," and "PHI" clearly defined? Look for vague terms like "reasonable" or "timely" without specific metrics.' },
+  { title:'Statement of Work (SOW)', tag:'Critical', text:'The heart of the contract. Defines exactly what the vendor will deliver, by when, and to what standard. If it is not in the SOW, the vendor is not obligated to do it.', detail:'Check: Is the scope complete and unambiguous? Are deliverables specific and measurable? Are timelines clear? Are performance standards defined? Could a stranger read this and know exactly what to do?' },
+  { title:'Term and Termination', tag:'Critical', text:'Defines how long the contract lasts and how either party can end it — for cause, for convenience, or upon certain events.', detail:'Check: Is the initial term clear? Is there an auto-renewal (evergreen) clause — and is it acceptable? What is the notice period for termination? Are termination for cause and for convenience both addressed?' },
+  { title:'Compensation and Payment Terms', tag:'Critical', text:'Defines what MWHC pays, when, and under what conditions. Includes payment schedules, invoicing requirements, and any penalties for late payment.', detail:'Check: Is the total value clearly stated? Are payment terms defined (Net 30, etc.)? Are price escalation provisions acceptable? Are there any hidden fees or costs not covered in the base price?' },
+  { title:'Representations and Warranties', tag:'Important', text:'The vendor makes specific promises about their qualifications, the quality of their work, and compliance with applicable laws.', detail:'Check: Does the vendor warrant that they are licensed and insured? Do they warrant HIPAA compliance if they touch PHI? Do they warrant that deliverables will meet specifications?' },
+  { title:'Indemnification', tag:'Critical', text:'Specifies who pays if something goes wrong and a third party makes a claim. Typically the vendor agrees to indemnify MWHC for claims arising from the vendor\'s actions.', detail:'Check: Does the indemnification cover negligence AND willful misconduct? Does it cover third-party claims? Is it mutual or one-sided? Does MWHC have adequate protection if the vendor causes patient harm?' },
+  { title:'Limitation of Liability', tag:'Critical', text:'Caps the maximum amount either party can recover from the other. This is often the most heavily negotiated clause in a contract.', detail:'Check: Is the cap reasonable relative to the contract value? Is it at least equal to 12 months of fees? Are there carve-outs for gross negligence, fraud, and intentional misconduct? Does it cap MWHC liability as well as the vendor\'s?' },
+  { title:'Confidentiality and BAA', tag:'Critical', text:'Protects sensitive information exchanged during the contract. For any vendor touching patient data, a Business Associate Agreement (BAA) is legally required under HIPAA.', detail:'Check: Is a BAA included if the vendor will access PHI? Does the confidentiality clause cover both parties\' proprietary information? What are the permitted disclosures? What happens to confidential information at contract end?' },
+  { title:'Insurance Requirements', tag:'Important', text:'Specifies the types and amounts of insurance the vendor must carry throughout the contract. MWHC must verify a current Certificate of Insurance (COI) before work begins.', detail:'Check: Does the vendor carry general liability (minimum $1M/$2M)? Professional liability/E&O? Workers\' compensation? Cyber liability if they handle data? Is MWHC listed as additional insured? Is the COI current?' },
+  { title:'Governing Law and Disputes', tag:'Standard', text:'Specifies Virginia as the governing law and the process for resolving disagreements — typically escalating through negotiation, mediation, and arbitration before litigation.', detail:'Check: Is Virginia specified as the governing law? Is the dispute resolution process practical for MWHC? Is there a clear escalation path before litigation? Does arbitration favor one party?' },
+  { title:'General Provisions', tag:'Standard', text:'Miscellaneous but important clauses: entire agreement (integration), severability, amendment procedures, assignment restrictions, and notice requirements.', detail:'Check: Is there an integration clause stating this is the entire agreement? Can the vendor assign the contract to a third party without consent? How must notices be delivered? How must amendments be made?' }
+];
+
+var BAD_CLAUSES = [
+  { title:'Missing effective date', why:'No effective date means neither party knows when obligations begin. The vendor could argue they owe nothing because the contract never started.' },
+  { title:'Vague scope: "IT services as needed"', why:'This gives the vendor no specific obligations. They can deliver anything and claim they met the contract. Without measurable deliverables, disputes are nearly impossible to resolve.' },
+  { title:'Vendor liability capped at $1', why:'A $1 liability cap on a $500,000 contract means the hospital recovers essentially nothing if the vendor fails catastrophically. This must be negotiated to at least 12 months of contract fees.' },
+  { title:'No BAA for a software handling patient data', why:'This is a federal HIPAA violation. If the vendor accesses PHI without a signed BAA, MWHC faces potential fines of up to $1.9M per violation category per year — regardless of whether a breach occurs.' },
+  { title:'Auto-renewal with 180-day cancellation window', why:'If MWHC misses the 180-day cancellation window by even one day, the contract automatically renews for another full term. These windows must be tracked in the CMS with reminders set at 270, 210, and 180 days.' },
+  { title:'Payment due "upon receipt" with no dispute process', why:'Without a dispute process, MWHC must pay every invoice immediately with no mechanism to challenge incorrect charges. This removes a critical financial protection.' },
+  { title:'Vendor can assign to any third party without consent', why:'If the vendor is acquired or merges, the contract obligations pass to the new entity automatically. MWHC could end up in a contract with a company it never vetted or approved.' },
+  { title:'No insurance requirements stated', why:'Without specified insurance requirements, the vendor could be completely uninsured. If they cause injury on-site or a data breach, MWHC has no financial protection and the vendor may have no assets to pursue.' },
+  { title:'Governing law: Delaware (not Virginia)', why:'This means any dispute would be litigated under Delaware law, potentially in Delaware courts. This disadvantages MWHC geographically and legally. Always negotiate for Virginia governing law.' },
+  { title:'Termination requires 365-day notice', why:'A one-year termination notice period effectively locks MWHC into the contract forever. Standard notice periods are 30-90 days. This clause eliminates the hospital\'s operational flexibility.' }
+];
+
+function renderAnatomy() {
+  var grid = document.getElementById('anatomyGrid');
+  if (!grid || grid.children.length > 0) return;
+  CLAUSES.forEach(function(c, i) {
+    var color = c.tag === 'Critical' ? '#FAEEDA' : c.tag === 'Important' ? '#E1F5EE' : '#F3F4F6';
+    var textColor = c.tag === 'Critical' ? '#633806' : c.tag === 'Important' ? '#085041' : '#4B5563';
+    var div = document.createElement('div');
+    div.className = 'anatomy-clause';
+    div.innerHTML = '<div class="anatomy-head"><span class="anatomy-head-title">' + c.title + '</span><span class="anatomy-badge" style="background:' + color + ';color:' + textColor + '">' + c.tag + '</span></div><div class="anatomy-preview">' + c.text + '</div><div class="anatomy-detail" id="ac-' + i + '"><strong>What to check:</strong> ' + c.detail + '</div>';
+    div.onclick = function() { toggleAnatomy(i); };
+    grid.appendChild(div);
+  });
+}
+
+function toggleAnatomy(i) {
+  var el = document.getElementById('ac-' + i);
+  if (el) el.classList.toggle('open');
+}
+
+function renderBadContract() {
+  var grid = document.getElementById('badGrid');
+  if (!grid || grid.children.length > 0) return;
+  BAD_CLAUSES.forEach(function(c, i) {
+    var div = document.createElement('div');
+    div.className = 'anatomy-clause bad';
+    div.innerHTML = '<div class="anatomy-head"><span class="anatomy-head-title">&#9888; ' + c.title + '</span><span class="anatomy-badge" style="background:#FEE2E2;color:#7F1D1D">Problem</span></div><div class="anatomy-detail open"><div class="anatomy-why-bad"><strong>Why this is dangerous:</strong> ' + c.why + '</div></div>';
+    grid.appendChild(div);
+  });
+}
+
+/* ── WATCH MODE ── */
+var WATCH_STEPS = [
+  { label:'Step 1 of 8', heading:'The request arrives', body:'You receive an email from the Director of Facilities, requesting a new 3-year maintenance contract for two MRI machines. She needs it in place before the current contract expires in 60 days.', visual:'memo', from:'Jennifer Walsh, Director of Facilities', to:'Contract Administrator', subject:'MRI Maintenance Contract — Renewal Needed', message:'Hi, our current MRI maintenance agreement with MedTech Services expires June 30. We need a new contract in place before then. The machines are critical to imaging operations. Can you take the lead on this? Budget approved at $180,000/year. Thanks, Jennifer.' },
+  { label:'Step 2 of 8', heading:'Classify and assess', body:'Before drafting anything, you classify the contract type, assess its risk level, and confirm what procurement process is required. A $540,000 total value with clinical equipment involvement means this is high risk and requires VP + Legal approval minimum.', visual:'pipeline', stages:['Identify','Procure','Draft','Review','Approve','Execute','Monitor'], active:0 },
+  { label:'Step 3 of 8', heading:'Determine procurement approach', body:'$180,000/year is above the competitive bidding threshold. You issue an RFP to three qualified vendors. MedTech Services (incumbent), BioMed Solutions, and ProCare Equipment all submit proposals. After evaluation, MedTech Services scores highest on response time and pricing.', visual:'pipeline', stages:['Identify','Procure','Draft','Review','Approve','Execute','Monitor'], active:1 },
+  { label:'Step 4 of 8', heading:'Draft the contract', body:'You pull the standard equipment maintenance template and customize it. You add the specific SOW: quarterly preventive maintenance, 4-hour response time for critical failures, 99% uptime guarantee, and all parts included. You also add the required insurance clause and prepare a BAA since MedTech technicians will access rooms with patient information.', visual:'pipeline', stages:['Identify','Procure','Draft','Review','Approve','Execute','Monitor'], active:2 },
+  { label:'Step 5 of 8', heading:'Legal and compliance review', body:'You route the draft to Legal (who redlines two clauses — the liability cap and the assignment clause) and Compliance (who confirms the BAA language meets OCR standards). Risk Management confirms the vendor carries adequate insurance. You incorporate all changes and confirm final language with Legal.', visual:'pipeline', stages:['Identify','Procure','Draft','Review','Approve','Execute','Monitor'], active:3 },
+  { label:'Step 6 of 8', heading:'Route for approval', body:'At $180,000/year ($540,000 total value), this requires VP approval plus Legal sign-off. You route through the CMS, the VP approves, and Legal countersigns. You confirm MedTech\'s COI is current before the final signature page is prepared.', visual:'pipeline', stages:['Identify','Procure','Draft','Review','Approve','Execute','Monitor'], active:4 },
+  { label:'Step 7 of 8', heading:'Execute and kick off', body:'Both parties sign. You upload the fully executed contract to the CMS immediately, set a renewal alert for 90 days before the 3-year expiration, and send the vendor a kickoff email. You host a brief kickoff call to align on response protocols and key contacts.', visual:'pipeline', stages:['Identify','Procure','Draft','Review','Approve','Execute','Monitor'], active:5 },
+  { label:'Step 8 of 8', heading:'Ongoing monitoring', body:'Every 6 months you audit the contract: Are response times being met? Are preventive maintenance visits documented? You file a formal performance report in the CMS. At the 2.5-year mark, you begin renewal planning. The contract lifecycle is complete.', visual:'pipeline', stages:['Identify','Procure','Draft','Review','Approve','Execute','Monitor'], active:6 }
+];
+
+var watchIdx = 0;
+
+function renderWatchDots() {
+  var d = document.getElementById('watch-dots');
+  d.innerHTML = '';
+  WATCH_STEPS.forEach(function(s, i) {
+    var dot = document.createElement('div');
+    dot.className = 'sim-dot' + (i < watchIdx ? ' done' : i === watchIdx ? ' active' : '');
+    d.appendChild(dot);
+  });
+}
+
+function renderWatchStep() {
+  var s = WATCH_STEPS[watchIdx];
+  var html = '<div class="step-label">' + s.label + '</div><div class="step-heading">' + s.heading + '</div><div class="step-body">' + s.body + '</div>';
+  if (s.visual === 'memo') {
+    html += '<div class="memo-card"><div class="memo-row"><span class="memo-label">From:</span><span class="memo-val">' + s.from + '</span></div><div class="memo-row"><span class="memo-label">To:</span><span class="memo-val">' + s.to + '</span></div><div class="memo-row"><span class="memo-label">Subject:</span><span class="memo-val">' + s.subject + '</span></div><div class="memo-body">' + s.message + '</div></div>';
+  } else if (s.visual === 'pipeline') {
+    html += '<div class="pipeline">';
+    s.stages.forEach(function(st, i) {
+      var cls = i < s.active ? 'pipe-done' : i === s.active ? 'pipe-active' : 'pipe-pending';
+      var bg = i < s.active ? '#D1FAE5' : i === s.active ? '#DBEAFE' : '#F3F4F6';
+      var fg = i < s.active ? '#065F46' : i === s.active ? '#1E3A8A' : '#6B7280';
+      html += '<div class="pipe-stage"><div class="pipe-box ' + cls + '" style="background:' + bg + ';color:' + fg + '">' + st + '</div></div>';
+      if (i < s.stages.length - 1) html += '<div class="pipe-arrow">&#8594;</div>';
+    });
+    html += '</div>';
+  }
+  document.getElementById('watch-steps').innerHTML = html;
+  document.getElementById('watch-prev').disabled = watchIdx === 0;
+  document.getElementById('watch-next').textContent = watchIdx === WATCH_STEPS.length - 1 ? 'Restart' : 'Next \u2192';
+  renderWatchDots();
+}
+
+function watchNav(dir) {
+  watchIdx += dir;
+  if (watchIdx >= WATCH_STEPS.length) { watchIdx = 0; }
+  if (watchIdx < 0) { watchIdx = 0; }
+  renderWatchStep();
+}
+
+/* ── GUIDED MODE ── */
+var GUIDED_STEPS = [
+  { label:'Step 1 of 6', heading:'A request lands in your inbox', body:'The Director of Information Technology has sent you the following request. Read it carefully — you will need to make decisions based on this information.', visual:'memo', from:'Marcus Thompson, Director of IT', to:'Contract Administrator', subject:'EHR Software License Renewal', message:'We need to renew our EHR software license with ClinicalSoft Inc. Current license expires in 45 days. Annual cost is $95,000. This is cloud-hosted and our clinical staff use it daily to access patient records. Please handle. Thanks.' },
+  { label:'Step 2 of 6', heading:'What type of solicitation do you use?', body:'The IT Director wants to renew with the same vendor. However, policy requires you to consider your options. Based on the request, which procurement approach is correct?', question:true, qid:'guided-q1', options:['Issue an RFP — the cost is significant and we should evaluate alternatives', 'Issue an RFQ — we know exactly what we want and just need a price', 'Sole source directly to ClinicalSoft — they are the incumbent', 'No solicitation needed — just renew automatically'], correct:0, hint:'The contract is $95,000/year which exceeds competitive bid thresholds. Even with an incumbent vendor, evaluating alternatives protects the hospital and is often required by policy.' },
+  { label:'Step 3 of 6', heading:'Do you need a BAA?', body:'ClinicalSoft\'s software is cloud-hosted and clinical staff use it to access patient records. Before drafting the contract, do you need a Business Associate Agreement?', question:true, qid:'guided-q2', options:['No — the software is in the cloud so MWHC is not responsible', 'Yes — this is mandatory under HIPAA since the vendor handles PHI', 'Only if there is a data breach', 'Only if the vendor is not already HIPAA certified'], correct:1, hint:'Any vendor that accesses, stores, or transmits Protected Health Information (PHI) on behalf of MWHC must have a signed BAA. Cloud hosting does not eliminate this requirement.' },
+  { label:'Step 4 of 6', heading:'Who must approve this contract?', body:'The contract is $95,000/year. The software handles patient data, making it medium-to-high risk. Based on your delegation of authority policy, who must approve before execution?', question:true, qid:'guided-q3', options:['Department Manager — it is under $100,000', 'Director + Legal — medium risk contract at this value', 'CFO + Legal + Compliance — high risk involving PHI', 'CEO — any contract involving patient data requires CEO sign-off'], correct:2, hint:'At $95,000 with PHI involvement, this is a high-risk contract. High-risk contracts require CFO plus Legal plus Compliance review regardless of value. The PHI access elevates the risk tier.' },
+  { label:'Step 5 of 6', heading:'The vendor sends their standard contract', body:'ClinicalSoft sends their standard MSA. You review it and notice their limitation of liability is capped at $5,000 — but the annual contract value is $95,000. What do you do?', question:true, qid:'guided-q4', options:['Accept it — limitation of liability clauses are standard', 'Flag it to Legal and negotiate to raise the cap significantly', 'Reject the contract entirely and find a new vendor', 'Accept it but add a side letter with higher coverage'], correct:1, hint:'A $5,000 liability cap on a $95,000 contract is grossly inadequate. If the system fails and causes operational disruption or a data breach, MWHC could only recover $5,000. This must be renegotiated. Minimum acceptable cap is typically 12 months of fees.' },
+  { label:'Step 6 of 6', heading:'Contract complete — what is your last step?', body:'The contract is fully negotiated, approved, and signed. What is the most important administrative action before you close the file?', question:true, qid:'guided-q5', options:['Send a thank-you email to the vendor', 'Upload to CMS, set a renewal alert, and send kickoff email to IT Director', 'File a paper copy in your desk and move on', 'Wait for the vendor to send their own copy for your records'], correct:1, hint:'Execution is not the finish line — it is the starting line of monitoring. Uploading to the CMS, setting renewal alerts (90/60/30 days before expiration), and kicking off the relationship properly are all required steps.' }
+];
+
+var guidedIdx = 0;
+var guidedAnswers = {};
+
+function renderGuidedDots() {
+  var d = document.getElementById('guided-dots');
+  d.innerHTML = '';
+  GUIDED_STEPS.forEach(function(s, i) {
+    var dot = document.createElement('div');
+    dot.className = 'sim-dot' + (i < guidedIdx ? ' done' : i === guidedIdx ? ' active' : '');
+    d.appendChild(dot);
+  });
+}
+
+function renderGuidedStep() {
+  var s = GUIDED_STEPS[guidedIdx];
+  var html = '<div class="step-label">' + s.label + '</div><div class="step-heading">' + s.heading + '</div><div class="step-body">' + s.body + '</div>';
+  if (s.visual === 'memo') {
+    html += '<div class="memo-card"><div class="memo-row"><span class="memo-label">From:</span><span class="memo-val">' + s.from + '</span></div><div class="memo-row"><span class="memo-label">To:</span><span class="memo-val">' + s.to + '</span></div><div class="memo-row"><span class="memo-label">Subject:</span><span class="memo-val">' + s.subject + '</span></div><div class="memo-body">' + s.message + '</div></div>';
+  }
+  if (s.question) {
+    var answered = guidedAnswers[s.qid];
+    html += '<div style="margin-top:12px">';
+    s.options.forEach(function(opt, oi) {
+      var style = '';
+      var disabled = answered !== undefined ? 'pointer-events:none;' : '';
+      if (answered !== undefined) {
+        if (oi === s.correct) style = 'background:#D1FAE5;border-color:#059669;color:#065F46;';
+        else if (oi === answered && oi !== s.correct) style = 'background:#FEE2E2;border-color:#DC2626;color:#7F1D1D;';
+        else style = 'opacity:0.5;';
+      }
+      html += '<div onclick="guidedAnswer(' + guidedIdx + ',' + oi + ')" style="' + disabled + 'padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;font-size:13px;cursor:pointer;transition:all 0.15s;' + style + '">' + opt + '</div>';
+    });
+    html += '</div>';
+    if (answered !== undefined) {
+      var correct = answered === s.correct;
+      html += '<div style="margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px;background:' + (correct ? 'var(--green-light)' : 'var(--amber-light)') + ';color:' + (correct ? '#065F46' : '#78350F') + '">' + (correct ? '&#10003; Correct! ' : '&#9432; Not quite. ') + s.hint + '</div>';
+    }
+  }
+  document.getElementById('guided-steps').innerHTML = html;
+  var nextBtn = document.getElementById('guided-next');
+  if (s.question && guidedAnswers[s.qid] === undefined) {
+    nextBtn.style.opacity = '0.4';
+    nextBtn.style.pointerEvents = 'none';
+  } else {
+    nextBtn.style.opacity = '1';
+    nextBtn.style.pointerEvents = 'auto';
+    nextBtn.textContent = guidedIdx === GUIDED_STEPS.length - 1 ? 'Restart' : 'Continue \u2192';
+  }
+  renderGuidedDots();
+}
+
+function guidedAnswer(stepIdx, optIdx) {
+  var s = GUIDED_STEPS[stepIdx];
+  if (guidedAnswers[s.qid] !== undefined) return;
+  guidedAnswers[s.qid] = optIdx;
+  renderGuidedStep();
+}
+
+function guidedNav(dir) {
+  guidedIdx += dir;
+  if (guidedIdx >= GUIDED_STEPS.length) { guidedIdx = 0; guidedAnswers = {}; }
+  if (guidedIdx < 0) { guidedIdx = 0; }
+  renderGuidedStep();
+}
+
+/* ── SOLO MODE ── */
+var SOLO_STEPS = [
+  { label:'Step 1 of 5', heading:'New request from Nursing Leadership', body:'', visual:'memo', from:'Sarah Mitchell, VP of Nursing', to:'Contract Administrator', subject:'Travel Nurse Staffing Agency Contract', message:'We need a contract with QuickStaff Agency for travel nurse placements. Anticipated spend: $220,000 over 6 months, potentially renewable. These nurses will work directly with patients in our ICU and med-surg units. Please process asap.' },
+  { label:'Step 2 of 5', heading:'Classify the contract', body:'Based on the request, answer the classification questions to determine the right approach.', fields:[
+    { id:'s-type', label:'Contract type (fixed-price, T&M, IDIQ, or cost-reimbursable):', type:'select', options:['Select...','Fixed-price','Time and Materials (T&M)','IDIQ / Blanket Purchase Agreement','Cost-reimbursable'] },
+    { id:'s-solicit', label:'Solicitation type required:', type:'select', options:['Select...','RFI','RFQ','RFP','Sole source'] },
+    { id:'s-risk', label:'Risk level:', type:'select', options:['Select...','Low','Medium','High'] },
+    { id:'s-baa', label:'Is a BAA required?', type:'select', options:['Select...','Yes','No','Maybe'] }
+  ]},
+  { label:'Step 3 of 5', heading:'Draft the key contract terms', body:'Fill in the essential contract terms. Be specific — vague terms create disputes.', fields:[
+    { id:'s-scope', label:'Scope of work (what exactly will QuickStaff provide):', type:'textarea', placeholder:'Describe the specific services, qualifications, and expectations...' },
+    { id:'s-term', label:'Contract term and renewal options:', type:'input', placeholder:'e.g., 6 months with two 3-month renewal options...' },
+    { id:'s-insurance', label:'Required insurance types and minimum amounts:', type:'textarea', placeholder:'List each insurance type and the minimum coverage required...' }
+  ]},
+  { label:'Step 4 of 5', heading:'Approval routing', body:'Determine the correct approval chain and explain your reasoning.', fields:[
+    { id:'s-approvers', label:'Who must approve this contract (list in order):', type:'textarea', placeholder:'List each approver in sequence and why they are required...' },
+    { id:'s-concerns', label:'Flag any legal or compliance concerns that must be addressed before approval:', type:'textarea', placeholder:'List any issues Legal or Compliance must review...' }
+  ]},
+  { label:'Step 5 of 5', heading:'Submit for approval', body:'Review your work and submit the contract for approval. The system will evaluate your responses and provide detailed feedback.', fields:[], submit:true }
+];
+
+var soloIdx = 0;
+var soloData = {};
+var soloSubmitted = false;
+
+function renderSoloDots() {
+  var d = document.getElementById('solo-dots');
+  d.innerHTML = '';
+  SOLO_STEPS.forEach(function(s, i) {
+    var dot = document.createElement('div');
+    dot.className = 'sim-dot' + (i < soloIdx ? ' done' : i === soloIdx ? ' active' : '');
+    d.appendChild(dot);
+  });
+}
+
+function renderSoloStep() {
+  var s = SOLO_STEPS[soloIdx];
+  var html = '<div class="step-label">' + s.label + '</div><div class="step-heading">' + s.heading + '</div>';
+  if (s.body) html += '<div class="step-body">' + s.body + '</div>';
+  if (s.visual === 'memo') {
+    html += '<div class="memo-card"><div class="memo-row"><span class="memo-label">From:</span><span class="memo-val">' + s.from + '</span></div><div class="memo-row"><span class="memo-label">To:</span><span class="memo-val">' + s.to + '</span></div><div class="memo-row"><span class="memo-label">Subject:</span><span class="memo-val">' + s.subject + '</span></div><div class="memo-body">' + s.message + '</div></div>';
+  }
+  if (s.fields && s.fields.length > 0) {
+    s.fields.forEach(function(f) {
+      html += '<div class="sim-field"><label>' + f.label + '</label>';
+      if (f.type === 'select') {
+        html += '<select class="sim-select" id="' + f.id + '" onchange="soloSave(\'' + f.id + '\',this.value)">';
+        f.options.forEach(function(o) {
+          var sel = (soloData[f.id] === o) ? ' selected' : '';
+          html += '<option' + sel + '>' + o + '</option>';
+        });
+        html += '</select>';
+      } else if (f.type === 'textarea') {
+        html += '<textarea class="sim-textarea" id="' + f.id + '" placeholder="' + f.placeholder + '" oninput="soloSave(\'' + f.id + '\',this.value)">' + (soloData[f.id] || '') + '</textarea>';
+      } else {
+        html += '<input class="sim-input" type="text" id="' + f.id + '" placeholder="' + f.placeholder + '" value="' + (soloData[f.id] || '') + '" oninput="soloSave(\'' + f.id + '\',this.value)">';
+      }
+      html += '</div>';
+    });
+  }
+  if (s.submit && !soloSubmitted) {
+    html += '<div class="tip-box" style="margin-bottom:16px">Review your answers from steps 2-4 before submitting. Once submitted, you will receive detailed feedback and a pass or fail result.</div>';
+    html += '<button class="sim-btn sim-btn-primary" onclick="soloSubmit()" style="margin-top:8px">Submit for Approval</button>';
+  }
+  if (soloSubmitted && soloIdx === SOLO_STEPS.length - 1) {
+    html += renderSoloResult();
+  }
+  document.getElementById('solo-steps').innerHTML = html;
+  document.getElementById('solo-next').style.display = (soloIdx === SOLO_STEPS.length - 1) ? 'none' : 'inline-block';
+  renderSoloDots();
+}
+
+function soloSave(id, val) { soloData[id] = val; }
+
+function soloSubmit() {
+  soloSubmitted = true;
+  renderSoloStep();
+}
+
+function renderSoloResult() {
+  var issues = [];
+  var contractType = soloData['s-type'] || '';
+  var solicit = soloData['s-solicit'] || '';
+  var risk = soloData['s-risk'] || '';
+  var baa = soloData['s-baa'] || '';
+  var scope = (soloData['s-scope'] || '').trim();
+  var term = (soloData['s-term'] || '').trim();
+  var insurance = (soloData['s-insurance'] || '').trim();
+  var approvers = (soloData['s-approvers'] || '').trim();
+  var concerns = (soloData['s-concerns'] || '').trim();
+
+  if (contractType.indexOf('T&M') === -1 && contractType.indexOf('IDIQ') === -1) {
+    issues.push('Contract type: Staffing agency contracts are typically T&M (pay per hour worked) or IDIQ (order nurses as needed). Fixed-price and cost-reimbursable are not appropriate for staffing.');
+  }
+  if (solicit.indexOf('RFP') === -1) {
+    issues.push('Solicitation: At $220,000 this exceeds competitive bid thresholds. An RFP is required — you must evaluate at least three qualified staffing agencies before selecting one.');
+  }
+  if (risk.indexOf('High') === -1) {
+    issues.push('Risk level: This is High risk — it involves direct patient care, PHI access, and $220,000 in value. High risk requires additional scrutiny and a fuller approval chain.');
+  }
+  if (baa.indexOf('Yes') === -1) {
+    issues.push('BAA: Yes is required. Travel nurses will access patient records and provide direct care — this is PHI access. A BAA must be in place before any nurse begins work.');
+  }
+  if (scope.length < 40) {
+    issues.push('Scope of work: Too vague. Your scope must specify nurse qualifications (RN, ICU certification), minimum experience requirements, onboarding/credentialing process, scheduling expectations, and supervision structure.');
+  }
+  if (insurance.length < 30) {
+    issues.push('Insurance: Must specify at minimum: general liability ($1M/$2M), professional liability/malpractice ($1M/$3M), workers\' compensation (statutory limits), and require MWHC as additional insured.');
+  }
+  if (approvers.length < 20) {
+    issues.push('Approvals: At $220,000 high-risk, you need: Director, VP, CFO, Legal review, and Compliance review (because PHI and clinical care are involved). All must be listed in routing order.');
+  }
+  if (concerns.toLowerCase().indexOf('baa') === -1 && concerns.toLowerCase().indexOf('hipaa') === -1) {
+    issues.push('Compliance concerns: You must flag HIPAA/BAA requirement, Joint Commission vendor credentialing requirements, nurse licensing verification, and malpractice tail coverage for any incidents after contract end.');
+  }
+
+  var passed = issues.length === 0;
+  var html = '<div class="approval-result ' + (passed ? 'approval-approved' : 'approval-rejected') + '">';
+  html += '<div class="approval-result-icon">' + (passed ? '&#10003;' : '&#10007;') + '</div>';
+  html += '<div class="approval-result-title">' + (passed ? 'Approved — Excellent work!' : 'Returned for Corrections — ' + issues.length + ' issue' + (issues.length !== 1 ? 's' : '') + ' found') + '</div>';
+  if (passed) {
+    html += '<div class="approval-result-body">Your contract package meets all required standards. It has been forwarded to Legal for final review. Outstanding work — this is exactly the level of thoroughness expected from an experienced Contract Administrator.</div>';
+  } else {
+    html += '<div class="approval-result-body" style="margin-bottom:12px">The following issues must be corrected before this contract can be approved. Address each one, then resubmit.</div>';
+    issues.forEach(function(issue) {
+      html += '<div class="approval-issue">&#9888; ' + issue + '</div>';
+    });
+    html += '<div style="margin-top:14px"><button class="sim-btn sim-btn-primary" onclick="soloReset()">Correct and resubmit</button></div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function soloReset() {
+  soloSubmitted = false;
+  soloIdx = 1;
+  renderSoloStep();
+}
+
+function soloNav(dir) {
+  soloIdx += dir;
+  if (soloIdx >= SOLO_STEPS.length) soloIdx = SOLO_STEPS.length - 1;
+  if (soloIdx < 0) soloIdx = 0;
+  renderSoloStep();
+}
+
+/* ── CHECKLIST ── */
+var CHECKLIST_ITEMS = [
+  { section:'Before drafting', items:['Procurement need is documented in writing from an authorized requestor','Dollar value confirmed and correct contract type selected','Competitive bid threshold checked — RFP/RFQ issued if required','Sole source justification documented if applicable','Vendor is credentialed (insurance, licenses, background checks verified)'] },
+  { section:'Contract content', items:['SOW is specific, measurable, and complete — no vague language','All key definitions are included','Term, renewal options, and notice periods are clearly stated','Payment terms and invoicing requirements are specified','Performance standards and SLAs are defined with measurable metrics','Indemnification clause protects MWHC adequately','Limitation of liability is reasonable relative to contract value','Insurance requirements stated and COI requested','Governing law is Virginia','Termination for cause AND convenience both addressed','Assignment clause requires MWHC consent'] },
+  { section:'Regulatory compliance', items:['BAA included if vendor touches any PHI (no exceptions)','Anti-Kickback and Stark Law reviewed if physician or referral relationship','OSHA compliance required if vendor works on-site','Joint Commission documentation requirements met if clinical/food/life safety service','All required MWHC-specific clauses included per Corporate Contract Policy'] },
+  { section:'Approval and execution', items:['Correct approval chain identified per DOA policy','All required reviewers have signed off (Legal, Compliance, Finance, Risk as applicable)','Only authorized signatory executing the contract','Fully executed copy uploaded to CMS immediately after signature','Expiration reminders set at 90, 60, and 30 days in CMS','Kickoff email sent to vendor and internal department'] }
+];
+
+var checkStates = {};
+
+function renderChecklist() {
+  var el = document.getElementById('checklistContent');
+  if (!el) return;
+  var html = '';
+  var total = 0, done = 0;
+  CHECKLIST_ITEMS.forEach(function(section, si) {
+    html += '<div style="margin-bottom:20px"><div class="section-label" style="margin-top:0">' + section.section + '</div>';
+    section.items.forEach(function(item, ii) {
+      var key = 'cl_' + si + '_' + ii;
+      var checked = checkStates[key];
+      if (checked) done++;
+      total++;
+      html += '<div onclick="toggleCheck(\'' + key + '\',this)" style="display:flex;align-items:flex-start;gap:10px;padding:9px 4px;border-bottom:0.5px solid var(--gray-100);cursor:pointer;border-radius:6px" onmouseover="this.style.background=\'var(--gray-50)\'" onmouseout="this.style.background=\'transparent\'">';
+      html += '<div style="width:20px;height:20px;border-radius:4px;border:2px solid ' + (checked ? 'var(--green)' : 'var(--gray-200)') + ';background:' + (checked ? 'var(--green)' : 'white') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;color:white;font-size:13px">' + (checked ? '&#10003;' : '') + '</div>';
+      html += '<div style="font-size:13px;color:' + (checked ? 'var(--green)' : 'var(--gray-600)') + ';' + (checked ? 'text-decoration:line-through;text-decoration-color:#86EFAC' : '') + '">' + item + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  el.innerHTML = html;
+  var score = document.getElementById('checklist-score');
+  if (score) score.textContent = done + ' of ' + total + ' items checked';
+}
+
+function toggleCheck(key, row) {
+  checkStates[key] = !checkStates[key];
+  renderChecklist();
+}
+
+function resetChecklist() {
+  checkStates = {};
+  renderChecklist();
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  renderAnatomy();
+  renderBadContract();
+  renderWatchStep();
+  renderGuidedStep();
+  renderSoloStep();
+  renderChecklist();
+});
+
 </script>
 
 <!-- ══ DECISION TOOLS ══ -->
@@ -2881,6 +3386,105 @@ function removeTyping(id) {
       <div class="chat-disclaimer">AI-generated answers based on this Field Manual. Always verify important decisions with your supervisor or Legal.</div>
     </div>
   </div>
+</section>
+
+
+<!-- ══ CONTRACT SIMULATION ══ -->
+<section class="section" id="sec-simulation">
+  <div class="section-hero">
+    <div class="section-eyebrow">Contract Simulation Lab</div>
+    <h2 class="section-title">Practice before you do it for real.</h2>
+    <p class="section-intro">Four training modes — from watching a contract come to life, to building one yourself. Start with Watch, then work your way to Solo.</p>
+  </div>
+
+  <div class="sim-nav">
+    <button class="sim-nav-btn active" onclick="showSim('anatomy',this)">📄 Contract Anatomy</button>
+    <button class="sim-nav-btn" onclick="showSim('badcontract',this)">⚠ Bad Contract</button>
+    <button class="sim-nav-btn" onclick="showSim('watch',this)">👀 Watch Mode</button>
+    <button class="sim-nav-btn" onclick="showSim('guided',this)">🧭 Guided Mode</button>
+    <button class="sim-nav-btn" onclick="showSim('solo',this)">🎯 Solo Mode</button>
+    <button class="sim-nav-btn" onclick="showSim('checklist',this)">☑ Checklist</button>
+  </div>
+
+  <!-- ── ANATOMY ── -->
+  <div class="sim-panel active" id="sim-anatomy">
+    <div class="tip-box" style="margin-bottom:16px">Click any section to expand it and learn what it means, why it matters, and what to look for.</div>
+    <div class="anatomy-wrap" id="anatomyGrid"></div>
+  </div>
+
+  <!-- ── BAD CONTRACT ── -->
+  <div class="sim-panel" id="sim-badcontract">
+    <div class="card" style="border-top:3px solid var(--coral);margin-bottom:16px">
+      <div class="card-title" style="color:var(--coral)">⚠ Warning — This contract has serious problems</div>
+      <div class="card-body">Study each highlighted section. Understanding what makes a bad contract is just as important as knowing what makes a good one. Each red section explains the risk it creates for the hospital.</div>
+    </div>
+    <div class="anatomy-wrap" id="badGrid"></div>
+  </div>
+
+  <!-- ── WATCH MODE ── -->
+  <div class="sim-panel" id="sim-watch">
+    <div class="scenario-wrap">
+      <div class="scenario-header">
+        <span class="scenario-title">Scenario: Medical Equipment Maintenance Contract</span>
+        <span class="scenario-badge">Watch Mode — Observe</span>
+      </div>
+      <div class="scenario-body">
+        <div class="sim-dots" id="watch-dots"></div>
+        <div id="watch-steps"></div>
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button class="sim-btn sim-btn-secondary" onclick="watchNav(-1)" id="watch-prev">&#8592; Previous</button>
+          <button class="sim-btn sim-btn-primary" onclick="watchNav(1)" id="watch-next">Next &#8594;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GUIDED MODE ── -->
+  <div class="sim-panel" id="sim-guided">
+    <div class="scenario-wrap">
+      <div class="scenario-header">
+        <span class="scenario-title">Scenario: IT Software License Agreement</span>
+        <span class="scenario-badge">Guided Mode — Your turn with hints</span>
+      </div>
+      <div class="scenario-body">
+        <div class="sim-dots" id="guided-dots"></div>
+        <div id="guided-steps"></div>
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button class="sim-btn sim-btn-secondary" onclick="guidedNav(-1)">&#8592; Back</button>
+          <button class="sim-btn sim-btn-primary" onclick="guidedNav(1)" id="guided-next">Continue &#8594;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SOLO MODE ── -->
+  <div class="sim-panel" id="sim-solo">
+    <div class="scenario-wrap">
+      <div class="scenario-header">
+        <span class="scenario-title">Solo Challenge: Staffing Agency Contract</span>
+        <span class="scenario-badge">Solo Mode — No hints</span>
+      </div>
+      <div class="scenario-body" id="solo-body">
+        <div class="sim-dots" id="solo-dots"></div>
+        <div id="solo-steps"></div>
+        <div style="display:flex;gap:8px;margin-top:16px" id="solo-nav">
+          <button class="sim-btn sim-btn-secondary" onclick="soloNav(-1)">&#8592; Back</button>
+          <button class="sim-btn sim-btn-primary" onclick="soloNav(1)" id="solo-next">Continue &#8594;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHECKLIST ── -->
+  <div class="sim-panel" id="sim-checklist">
+    <div class="tip-box" style="margin-bottom:16px">Use this before routing any contract for approval. Check every box — do not skip items to save time.</div>
+    <div id="checklistContent"></div>
+    <div style="margin-top:20px">
+      <button class="sim-btn sim-btn-secondary" onclick="resetChecklist()">Reset checklist</button>
+      <span id="checklist-score" style="margin-left:12px;font-size:13px;color:var(--gray-400)"></span>
+    </div>
+  </div>
+
 </section>
 
 </body>
